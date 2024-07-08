@@ -9,13 +9,28 @@
 #include "log.h"
 #include "defs.h"
 #include "engine.h"
+#include "Plugin.h"
+#include "PluginControl.h"
 
 class PluginUI {
     std::vector <Gtk::Scale> sliders ;
     Gtk::Label name ;
     Gtk::ToggleButton onoff ;
     Gtk::Button del ;
+    Engine * engine ;
+    Plugin * plugin ;
     
+    PluginUI (Engine * _engine, Plugin * _plugin, std::string pluginName) {
+        engine = _engine ;
+        plugin = _plugin ;
+
+        name = Gtk::Label (pluginName) ;
+        for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
+            PluginControl control = plugin->pluginControls.at (i) ;
+            Gtk::Scale * scale = new Gtk::Scale (control.min, control.max) ;
+            scale -> set
+        }
+    }
 } ;
 
 class Rack {
