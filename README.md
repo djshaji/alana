@@ -1,4 +1,4 @@
-# Proposal
+# The Alana Project
 * Port / Clone Amp Rack for PC (Linux, Windows)
 * Custom Amp Rack Pedal Board 
 
