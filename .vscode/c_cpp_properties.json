@@ -4,7 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/gtkmm-4.0/**"
+                "/usr/include/gtkmm-4.0/**",
+                "/usr/include/gtkmm-4.0/",
+                "~/projects/alana/gtk4/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

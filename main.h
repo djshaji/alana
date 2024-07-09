@@ -14,7 +14,7 @@ public:
     Gtk::Stack  stack ;
     Gtk::StackSwitcher  switcher ;
     Gtk::Box box, stack_box ;
-    Rack  rack ;
+    Rack * rack ;
     Presets presets ; 
   MyWindow();
 };
@@ -32,6 +32,7 @@ MyWindow::MyWindow()
     pane.set_orientation (Gtk::Orientation::HORIZONTAL);
 
     stack_box = Gtk::Box () ;
+    stack_box.set_spacing (10);
     box.append (stack_box);
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
@@ -44,12 +45,12 @@ MyWindow::MyWindow()
     switcher = Gtk::StackSwitcher () ;
     stack_box.append (switcher);
 
-    rack = Rack () ;
+    rack = new Rack () ;
     stack.add (pane);
     
     presets = Presets () ;
     pane.set_start_child (presets.master);
-    pane.set_end_child (rack.master);
+    pane.set_end_child (rack->master);
     
 }
 

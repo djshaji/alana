@@ -11,39 +11,21 @@
 #include "engine.h"
 #include "Plugin.h"
 #include "PluginControl.h"
-
-class PluginUI {
-    std::vector <Gtk::Scale> sliders ;
-    Gtk::Label name ;
-    Gtk::ToggleButton onoff ;
-    Gtk::Button del ;
-    Engine * engine ;
-    Plugin * plugin ;
-    
-    PluginUI (Engine * _engine, Plugin * _plugin, std::string pluginName) {
-        engine = _engine ;
-        plugin = _plugin ;
-
-        name = Gtk::Label (pluginName) ;
-        for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
-            PluginControl control = plugin->pluginControls.at (i) ;
-            Gtk::Scale * scale = new Gtk::Scale (control.min, control.max) ;
-            scale -> set
-        }
-    }
-} ;
+#include "pluginui.h"
 
 class Rack {
 public:
     Engine * engine ;
     Gtk::Box master, button_box, mixer;
-    Gtk::ListBox list_box ;
+    Gtk::Box list_box ;
     Gtk::Overlay overlay ;
     Gtk::Button add_effect ;
+    Gtk::ScrolledWindow sw ;
     
     Gtk::Button logo, menu_button ;
     Gtk::ToggleButton mixer_toggle, onoff, record ;
-        
+
+    std::vector <PluginUI> plugins ;        
     void add ();
 
     Rack () {
@@ -53,7 +35,8 @@ public:
         button_box = Gtk::Box ();
         mixer = Gtk::Box ();
         
-        list_box = Gtk::ListBox () ;
+        list_box = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
+        sw = Gtk::ScrolledWindow () ;
         overlay = Gtk::Overlay ();
         
         add_effect = Gtk::Button () ;
@@ -70,13 +53,26 @@ public:
         record.set_label ("Rec");
         
         master.set_orientation (Gtk::Orientation::VERTICAL);
+        master.set_vexpand (true);
+        list_box.set_vexpand (true);
+        master.set_hexpand (true);
         button_box.set_orientation (Gtk::Orientation::HORIZONTAL);
 
+        list_box.set_orientation (Gtk::Orientation::VERTICAL);
+        // list_box.set_visible (false);
         master.append (button_box);
         master.append (mixer);
-        master.append (list_box);
+        master.append (sw);
+        sw.set_child (list_box);
+        Gtk::Separator sep = Gtk::Separator () ;
+        // list_box.append (sep);
+        // sep.set_vexpand (true);
         master.append (add_effect);
         add_effect.set_label ("+ Effect");
+        add_effect.set_valign (Gtk::Align::END);
+        // list_box.set_valign (Gtk::Align::END);
+        // sw.set_propagate_natural_height (true);
+        add_effect.set_halign (Gtk::Align::CENTER);
         
         add_effect.signal_clicked().connect(sigc::mem_fun(*this,
               &Rack::add));
