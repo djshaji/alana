@@ -6,8 +6,8 @@ all: main.o rack.o presets.o SharedLibrary.o engine.o
 main.o: main.cc main.h
 	g++ main.cc -c $(GTKMM) 
 
-rack.o: rack.cc rack.h pluginui.h
-	g++ rack.cc -c $(GTKMM) 
+rack.o: rack.cc rack.h pluginui.cpp pluginui.h
+	g++ rack.cc pluginui.cpp -c $(GTKMM) 
 
 presets.o:
 	g++ presets.cc -c $(GTKMM) 

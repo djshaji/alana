@@ -17,7 +17,8 @@ public:
     Engine * engine ;
     Plugin * plugin ;
     Gtk::Box  card ;
-    
+    static int index ;
+  
     PluginUI (Engine * _engine, Plugin * _plugin, std::string pluginName) {
         engine = _engine ;
         plugin = _plugin ;
@@ -26,8 +27,29 @@ public:
         onoff =  Gtk::ToggleButton ();
         card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
         card.set_orientation (Gtk::Orientation::VERTICAL);
-        card.append (name);
+        Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
+        card.append (header);
+        header.set_hexpand (true);
+        name.set_hexpand (true);
+        name.set_justify (Gtk::Justification::LEFT);
+        header.append (name);
+        header.set_margin (10);
+        header.set_margin_start (0);
+
+        onoff = Gtk::ToggleButton ("On") ;
+        header.append (onoff) ;
+        onoff.set_halign (Gtk::Align::END);
+        name.set_halign (Gtk::Align::START);
+
         card.set_margin (10);
+        del = Gtk::Button ("Delete") ;
+
+        del.set_halign (Gtk::Align::END);
+        del.set_valign (Gtk::Align::END);
+        del.set_margin (10);
+
+        del.signal_clicked().connect(sigc::mem_fun(*this,
+              &PluginUI::remove));
 
         for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
             PluginControl * control = plugin->pluginControls.at (i) ;
@@ -49,5 +71,9 @@ public:
 
             card.append (box);
         }
+
+        card.append (del);
     }
+
+    void remove () ;
 } ;
