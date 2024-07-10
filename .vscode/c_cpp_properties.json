@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/include/gtkmm-4.0/**",
                 "/usr/include/gtkmm-4.0/",
-                "~/projects/alana/gtk4/"
+                "~/projects/alana/gtk4/",
+                "/usr/include/gtk-4.0/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

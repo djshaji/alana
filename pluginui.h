@@ -1,4 +1,8 @@
+#ifndef PLUGINUI_H
+#define PLUGINUI_H
+
 #include <gtkmm.h>
+#include <gtk/gtk.h>
 #include <vector>
 #include <iostream>
 
@@ -8,6 +12,9 @@
 #include "engine.h"
 #include "Plugin.h"
 #include "PluginControl.h"
+#include "callback_data.h"
+
+void callback (void * p, void *c);
 
 class PluginUI {
 public:    
@@ -17,13 +24,20 @@ public:
     Engine * engine ;
     Plugin * plugin ;
     Gtk::Box  card ;
-    static int index ;
+    Gtk::Box * parent ;
+    int index ;
   
-    PluginUI (Engine * _engine, Plugin * _plugin, std::string pluginName) {
+    PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index) {
         engine = _engine ;
         plugin = _plugin ;
+        index = _index ;
+        parent = _parent ;
 
-        name =  Gtk::Label (pluginName) ;
+        char * s = (char *) malloc (pluginName.size () + 3) ;
+        sprintf (s, "%d %s", index, pluginName.c_str ());
+        // name =  Gtk::Label (s) ;
+        name = Gtk::Label (pluginName);
+        free (s);
         onoff =  Gtk::ToggleButton ();
         card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
         card.set_orientation (Gtk::Orientation::VERTICAL);
@@ -48,8 +62,15 @@ public:
         del.set_valign (Gtk::Align::END);
         del.set_margin (10);
 
-        del.signal_clicked().connect(sigc::mem_fun(*this,
-              &PluginUI::remove));
+        // del.signal_clicked().connect(sigc::ptr_fun(&callback));
+        CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
+        cd->index = index ;
+        cd -> card = & card ;
+        cd -> parent = parent ;
+
+        card.set_name ("hello");
+
+        g_signal_connect (del.gobj (), "clicked", (GCallback) callback, cd);
 
         for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
             PluginControl * control = plugin->pluginControls.at (i) ;
@@ -77,3 +98,5 @@ public:
 
     void remove () ;
 } ;
+
+#endif

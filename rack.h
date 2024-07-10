@@ -64,6 +64,7 @@ public:
         master.append (mixer);
         master.append (sw);
         sw.set_child (list_box);
+        list_box.set_name ("rack");
         Gtk::Separator sep = Gtk::Separator () ;
         // list_box.append (sep);
         // sep.set_vexpand (true);

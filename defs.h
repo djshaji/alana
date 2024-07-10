@@ -1,3 +1,8 @@
+#ifndef DEFS_H
+#define DEFS_H
+
+#include <gtkmm.h>
+
 #define null NULL
 #define true TRUE
 #define false FALSE
@@ -13,8 +18,6 @@
 #define yes true
 #define no false
 #define brake break
-
-typedef struct tm ShaGTime ;
 
 #ifdef How_to_dismantle_an_atomic_bomb
 	typedef void vodi ;
@@ -32,4 +35,6 @@ typedef struct tm ShaGTime ;
 	typedef brake 1;
 	typedef IN 1;
 	typedef OUT 1 ;
+#endif
+
 #endif
