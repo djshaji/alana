@@ -42,8 +42,37 @@ void Rack::createPluginDialog () {
     GtkWidget * chooser = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
     gtk_box_append ((GtkBox *)master, chooser);
     
-    GtkWidget * sortBy = gtk_spinner_new () ;
-    GtkWidget * categories = gtk_spinner_new () ;
+    char * category [50] ;
+    char * creators [60] ;
+    
+    int i = 0 ;
+    for (auto cat=engine->categories.begin () ; cat != engine -> categories.end () ; cat ++) {
+        std::string a = cat.key () ;
+        //~ LOGD ("[category] %s\n", a.c_str ());
+        category [i] = strdup (a.c_str ());
+        i ++ ;
+    }
+    
+    category [i] = NULL;
+    
+    i = 0 ;
+    for (auto cat=engine->creators.begin () ; cat != engine -> creators.end () ; cat ++) {
+        std::string a = cat.key () ;
+        //~ LOGD ("[creator] %s\n", a.c_str ());
+        creators [i] = strdup (a.c_str ());
+        i ++ ;
+    }
+
+    creators [i] = NULL;
+    
+    char * ob [] = {
+        "Category",
+        "Creator",
+        NULL
+    } ;
+    
+    GtkWidget * sortBy = gtk_drop_down_new_from_strings (ob) ;
+    GtkWidget * categories = gtk_drop_down_new_from_strings (category);
     
     gtk_box_append ((GtkBox *)chooser, sortBy);
     gtk_box_append ((GtkBox *)chooser, categories);

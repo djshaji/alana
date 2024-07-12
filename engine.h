@@ -12,7 +12,7 @@ class Engine {
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
 public:
-    nlohmann::json ladspaJson, lv2Json ;
+    nlohmann::json ladspaJson, lv2Json, creators, categories ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
 
     Engine ();

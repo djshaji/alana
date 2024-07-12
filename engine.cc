@@ -55,20 +55,35 @@ Engine::Engine () {
         std::stringstream buffer;
         buffer << fJson.rdbuf();
         ladspaJson = nlohmann::json::parse(buffer.str ());
-
     }
     
     for (auto plugin : ladspaJson) {
         std::string a = plugin ["name"].dump() ;
         ladspaPlugins->push_back (a.substr (1, a.size () - 2));
-        LOGD ("[ladspa] %s", a.c_str ());
+        //~ LOGD ("[ladspa] %s", a.c_str ());
     }
 
     for (auto plugin : lv2Json) {
         std::string a = plugin ["name"].dump() ;
         lv2Plugins->push_back (a.substr (1, a.size () - 2));
-        LOGD ("[lv2] %s", a.c_str ());
+        //~ LOGD ("[lv2] %s", a.c_str ());
     }
+    
+    
+    {
+        std::ifstream fJson("assets/plugins.json");
+        std::stringstream buffer;
+        buffer << fJson.rdbuf();
+        categories = nlohmann::json::parse(buffer.str ());
+    }
+
+    {
+        std::ifstream fJson("assets/creator.json");
+        std::stringstream buffer;
+        buffer << fJson.rdbuf();
+        creators = nlohmann::json::parse(buffer.str ());
+    }
+    
 }
 
 void Engine::buildPluginChain () {
