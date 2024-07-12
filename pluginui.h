@@ -96,8 +96,13 @@ public:
             box.append (scale);
             box.append (spin);
 
-            Gtk::Adjustment  adj =  Gtk::Adjustment (control->val, control->min, control->max);
-            // scale.set_adjustment (adj);
+            GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
+            printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
+            
+            spin.set_digits (2);
+            
+            gtk_spin_button_set_adjustment ((GtkSpinButton *)spin.gobj (), adj);
+            gtk_range_set_adjustment ((GtkRange *)scale.gobj (), adj);
             // spin.set_adjustment (adj);
             box.set_spacing (0);
 
