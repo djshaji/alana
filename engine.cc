@@ -31,3 +31,4 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
 
     return true ;
 }
+
