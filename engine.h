@@ -14,6 +14,7 @@ class Engine {
 
 public:
     Engine ();
+    void buildPluginChain ();
     static std::vector<Plugin *> * activePlugins ;
     bool addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) ;
     bool openAudio ();
