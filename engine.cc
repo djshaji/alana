@@ -13,10 +13,10 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
         return false;
     }
 
-    LOGD("loaded shared library [ok] ... now trying to load plugin");
+    LOGD("loaded shared library [ok] ... now trying to load plugin\n");
     Plugin * plugin = new Plugin (sharedLibrary->descriptors.at(pluginIndex), (long) sampleRate, _type);
     plugin->sharedLibrary = sharedLibrary;
-    if (_type == SharedLibrary::LV2) {
+    if (_type != SharedLibrary::LADSPA) {
         plugin -> load () ;
     }
 
