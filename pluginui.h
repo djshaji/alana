@@ -81,13 +81,24 @@ public:
             // Gtk::Adjustment  adj =  Gtk::Adjustment (control->val, control->min, control->max, 1, 1, 1);
             Gtk::SpinButton  spin =  Gtk::SpinButton ();
 
-            Gtk::Label  label =  Gtk::Label (control->name);
+            Gtk::Label  label =  Gtk::Label ();
+            LOGD ("control name: %s\n", control->lv2_name.c_str());
+            if (plugin->type == SharedLibrary::PluginType::LILV) {
+                label.set_label (control->lv2_name.c_str ());
+            } else {
+                label.set_label (control->name);
+            }
+            
             Gtk::Box  box =  Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
             
             box.set_orientation (Gtk::Orientation::HORIZONTAL);
             box.append (label);
             box.append (scale);
             box.append (spin);
+
+            Gtk::Adjustment  adj =  Gtk::Adjustment (control->val, control->min, control->max);
+            // scale.set_adjustment (adj);
+            // spin.set_adjustment (adj);
             box.set_spacing (0);
 
             card.append (box);
