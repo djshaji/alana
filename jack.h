@@ -6,11 +6,16 @@
 #include <cstdio>
 #include <cstring>
 
-#include "jack.h"
 #include "log.h"
+#include "process.h"
 
 class AudioDriver {
 public:    
+    Processor * processor = nullptr;
+    AudioDriver (Processor * e) {
+        processor = e ;
+    }
+    
     jack_port_t *input_port;
     jack_port_t *output_port;
     jack_client_t *client;
@@ -23,7 +28,6 @@ public:
     
     bool open ();
     void close ();
-    
 } ;
 
 #endif

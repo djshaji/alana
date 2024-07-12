@@ -33,10 +33,12 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
 }
 
 bool Engine::openAudio () {
-    driver = new AudioDriver ();
+    driver = new AudioDriver (processor);
     return driver->open ();
 }
 
 Engine::Engine () {
+    processor = new Processor () ;
     openAudio () ;
 }
+

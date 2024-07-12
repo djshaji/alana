@@ -8,8 +8,8 @@ process (jack_nframes_t nframes, void *arg)
 	
 	in = (float *)jack_port_get_buffer (driver -> input_port, nframes);
 	out = (float *)jack_port_get_buffer (driver -> output_port, nframes);
-	memcpy (out, in,
-		sizeof (jack_default_audio_sample_t) * nframes);
+	
+    driver -> processor -> process (nframes, in, out);
 
 	return 0;      
 }

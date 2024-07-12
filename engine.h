@@ -4,11 +4,13 @@
 #include "SharedLibrary.h"
 #include "Plugin.h"
 #include "jack.h"
+#include "process.h"
 
 class Engine {
     int sampleRate ;
     AudioDriver * driver = nullptr;
     std::vector <SharedLibrary *> libraries ;
+    Processor * processor = nullptr ;
 
 public:
     Engine ();
