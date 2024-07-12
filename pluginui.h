@@ -15,6 +15,8 @@
 #include "callback_data.h"
 
 void callback (void * p, void *c);
+void bypass (void * p, void * c)  ;
+void control_changed (void * p, void * c);
 
 class PluginUI {
 public:    
@@ -51,6 +53,7 @@ public:
         header.set_margin_start (0);
 
         onoff = Gtk::ToggleButton ("On") ;
+        onoff.set_active (true);
         header.append (onoff) ;
         onoff.set_halign (Gtk::Align::END);
         name.set_halign (Gtk::Align::START);
@@ -67,6 +70,7 @@ public:
         cd->index = index ;
         cd -> card = & card ;
         cd -> parent = parent ;
+        cd->engine = engine;
 
         card.set_name ("hello");
 
@@ -98,6 +102,16 @@ public:
 
             GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
             printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
+            
+            CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
+            cd->index = index ;
+            cd -> card = & card ;
+            cd -> parent = parent ;
+            cd->engine = engine;
+            cd->control = i ;
+            
+            g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
+            g_signal_connect (onoff.gobj (), "toggled", (GCallback) bypass, cd) ;
             
             spin.set_digits (2);
             
