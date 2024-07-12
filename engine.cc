@@ -32,3 +32,11 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
     return true ;
 }
 
+bool Engine::openAudio () {
+    driver = new AudioDriver ();
+    return driver->open ();
+}
+
+Engine::Engine () {
+    openAudio () ;
+}
