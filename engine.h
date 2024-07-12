@@ -11,8 +11,10 @@ class Engine {
     AudioDriver * driver = nullptr;
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
-
 public:
+    nlohmann::json ladspaJson, lv2Json ;
+    std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
+
     Engine ();
     void buildPluginChain ();
     static std::vector<Plugin *> * activePlugins ;

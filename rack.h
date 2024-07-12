@@ -2,6 +2,7 @@
 #define RACK_H
 
 #include <gtkmm.h>
+#include <gtk/gtk.h>
 #include <vector>
 #include <iostream>
 
@@ -24,10 +25,15 @@ public:
     
     Gtk::Button logo, menu_button ;
     Gtk::ToggleButton mixer_toggle, onoff, record ;
-
+    GtkWidget * listBox ;
+    
     std::vector <PluginUI> plugins ;        
     void add ();
-
+    
+    GtkWidget * pluginDialog ;
+    void createPluginDialog () ;
+    void addPluginEntry (std::string plug) ;
+    
     Rack () {
         engine = new Engine () ;
         
@@ -97,7 +103,8 @@ public:
         //~ overlay.set_halign (Gtk::Align::END);
         //~ overlay.set_valign (Gtk::Align::END);
         //~ add_effect.set_label ("+ Effect");
-             
+
+        createPluginDialog () ;
     }
 };
 

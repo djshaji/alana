@@ -40,6 +40,35 @@ bool Engine::openAudio () {
 Engine::Engine () {
     processor = new Processor () ;
     openAudio () ;
+    
+    ladspaPlugins  = new std::vector <std::string> ();
+    lv2Plugins = new std::vector <std::string> ();
+    
+    std::ifstream fJson("assets/lv2_plugins.json");
+    std::stringstream buffer;
+    buffer << fJson.rdbuf();
+
+    lv2Json = nlohmann::json::parse(buffer.str());
+
+    {
+        std::ifstream fJson("assets/all_plugins.json");
+        std::stringstream buffer;
+        buffer << fJson.rdbuf();
+        ladspaJson = nlohmann::json::parse(buffer.str ());
+
+    }
+    
+    for (auto plugin : ladspaJson) {
+        std::string a = plugin ["name"].dump() ;
+        ladspaPlugins->push_back (a.substr (1, a.size () - 2));
+        LOGD ("[ladspa] %s", a.c_str ());
+    }
+
+    for (auto plugin : lv2Json) {
+        std::string a = plugin ["name"].dump() ;
+        lv2Plugins->push_back (a.substr (1, a.size () - 2));
+        LOGD ("[lv2] %s", a.c_str ());
+    }
 }
 
 void Engine::buildPluginChain () {
