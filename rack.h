@@ -14,6 +14,10 @@
 #include "PluginControl.h"
 #include "pluginui.h"
 
+typedef struct _Sorter {
+    GtkWidget * creators, * categories;
+} Sorter;
+
 class Rack {
 public:
     Engine * engine ;

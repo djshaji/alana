@@ -1,5 +1,18 @@
 #include "rack.h"
 
+void change_sort_by (void * w, int event, void * d) {
+    GtkWidget * sortBy = (GtkWidget *) w;
+    Sorter * sorter = (Sorter *) d;
+    
+    if (gtk_drop_down_get_selected ((GtkDropDown *)sortBy) == 0) {
+        gtk_widget_set_visible (sorter -> categories, true);
+        gtk_widget_set_visible (sorter -> creators, false);
+    } else {
+        gtk_widget_set_visible (sorter -> categories, false);
+        gtk_widget_set_visible (sorter -> creators, true);        
+    }    
+}
+
 void Rack::addPluginEntry (std::string plug) {
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         GtkWidget * label = gtk_label_new (plug.c_str ());
@@ -73,9 +86,21 @@ void Rack::createPluginDialog () {
     
     GtkWidget * sortBy = gtk_drop_down_new_from_strings (ob) ;
     GtkWidget * categories = gtk_drop_down_new_from_strings (category);
+    GtkWidget * creators_w = gtk_drop_down_new_from_strings (creators);
+    
+    Sorter * sorter = (Sorter *) malloc (sizeof (Sorter));
+    sorter->categories = categories;
+    sorter->creators = creators_w ;
     
     gtk_box_append ((GtkBox *)chooser, sortBy);
     gtk_box_append ((GtkBox *)chooser, categories);
+    gtk_box_append ((GtkBox *)chooser, creators_w);
+    
+    gtk_box_set_homogeneous ((GtkBox *) chooser, true);
+    
+    gtk_widget_set_visible (creators_w, false);
+    
+    g_signal_connect (sortBy, "notify::selected", (GCallback)change_sort_by, sorter);
     
     gtk_widget_set_hexpand (sortBy, true);
     gtk_widget_set_hexpand (categories, true);
