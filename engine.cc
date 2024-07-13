@@ -83,7 +83,10 @@ Engine::Engine () {
         buffer << fJson.rdbuf();
         creators = nlohmann::json::parse(buffer.str ());
     }
-    
+
+    LilvWorld* world = (LilvWorld* )lilv_world_new();
+    lilv_world_load_all(world);
+    plugins = (LilvPlugins* )lilv_world_get_all_plugins(world);    
 }
 
 void Engine::buildPluginChain () {
@@ -120,4 +123,19 @@ void Engine::buildPluginChain () {
     }
 
     OUT
+}
+
+bool Engine::addPluginByName (char * pluginName) {
+    LILV_FOREACH (plugins, i, plugins) {
+        const LilvPlugin* p = (LilvPlugin* )lilv_plugins_get(plugins, i);
+        const char * name = lilv_node_as_string (lilv_plugin_get_name (p));
+        
+        if (strcmp (pluginName, name) == 0) {
+            printf("[LV2] %s\n", name);        
+            const char * uri = lilv_node_as_string (lilv_plugin_get_uri (p));
+            return addPlugin ((char *)uri, 0, SharedLibrary::PluginType::LILV);
+        }
+    }
+
+    return false ;
 }

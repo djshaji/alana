@@ -8,10 +8,10 @@ all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK)
 	
 main.o: main.cc main.h
-	g++ main.cc -c $(GTKMM)  $(GTK)
+	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2)
 
 rack.o: rack.cc rack.h pluginui.cpp pluginui.h 
-	g++ rack.cc pluginui.cpp -c $(GTKMM)  $(GTK)
+	g++ rack.cc pluginui.cpp -c $(GTKMM)  $(GTK)  $(LV2)
 
 presets.o:
 	g++ presets.cc -c $(GTKMM)  $(GTK)
@@ -20,7 +20,7 @@ SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h
 	g++ SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp -c $(LV2)
 
 engine.o: engine.cc engine.h 
-	g++ engine.cc -c $(JACK) 
+	g++ engine.cc -c $(JACK) $(LV2)
 
 clean:
 	rm -v *.o

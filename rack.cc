@@ -55,6 +55,23 @@ void change_sort_by (void * w, int event, void * d) {
     }    
 }
 
+void addPluginCallback (void * b, void * c) {
+    GtkWidget * button = (GtkWidget *) b ;
+    Rack * rack = (Rack *) c ;
+    Engine * engine = (Engine *) rack -> engine ;
+    
+    int res = engine ->addPluginByName ((char *) gtk_widget_get_name (button));
+    if (res) {
+        int index = engine -> activePlugins->size () - 1;
+        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & rack -> list_box, std::string ((char *) gtk_widget_get_name (button)), index);
+        // ui.index = index ;
+        rack -> list_box.set_orientation (Gtk::Orientation::VERTICAL);
+        rack -> list_box.set_vexpand (true);
+        rack -> list_box.append (ui->card);
+        
+    }
+}
+
 GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         GtkWidget * label = gtk_label_new (plug.c_str ());
@@ -62,6 +79,10 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         gtk_button_set_label ((GtkButton *) fav, "♥");
         GtkWidget * button = gtk_button_new () ;
         gtk_button_set_label ((GtkButton *) button, "+");
+        
+        gtk_widget_set_name (button, plug.c_str ());
+        
+        g_signal_connect (button, "clicked", GCallback (addPluginCallback), this);
         
         gtk_widget_set_hexpand (box, true);
         gtk_widget_set_hexpand (label, true);
