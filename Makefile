@@ -1,3 +1,4 @@
+# add optimizations
 GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`

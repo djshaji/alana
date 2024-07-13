@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 #include <vector>
 #include <iostream>
+#include <map>
 
 #include "json.hpp"
 #include "log.h"
@@ -15,12 +16,15 @@
 #include "pluginui.h"
 
 typedef struct _Sorter {
-    GtkWidget * creators, * categories;
+    GtkWidget * creators, * categories, * listBox;
+    Engine * engine ;
+    std::vector <GtkWidget *> boxes;
 } Sorter;
 
 class Rack {
 public:
     Engine * engine ;
+    std::map <int, GtkWidget*> pMap ;
     Gtk::Box master, button_box, mixer;
     Gtk::Box list_box ;
     Gtk::Overlay overlay ;
@@ -36,7 +40,7 @@ public:
     
     GtkWidget * pluginDialog ;
     void createPluginDialog () ;
-    void addPluginEntry (std::string plug) ;
+    GtkWidget * addPluginEntry (std::string plug) ;
     
     Rack () {
         engine = new Engine () ;

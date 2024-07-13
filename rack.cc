@@ -1,5 +1,47 @@
 #include "rack.h"
 
+void show_only_categories (void * w, int event, void * d) {
+    GtkWidget * dropdown = (GtkWidget * ) w ;
+    Sorter * sorter = (Sorter *) d;
+    
+    printf ("select %s\n", gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown)));    
+    char * name = (char *) malloc (20);
+    std::vector <int> ps ;
+
+    bool all = false ;
+    if (strcmp ((char *) gtk_widget_get_name (dropdown), "categories") == 0) {
+        if (strcmp (gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown)), "All") == 0) {
+            all = true ;
+        }
+        
+        ps = sorter -> engine ->categories [gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown))].get <std::vector<int>>() ;
+    }
+    else
+        ps = sorter -> engine ->creators [gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown))].get <std::vector<int>>() ;
+    
+    for (int i = 0 ; i < sorter -> boxes.size (); i ++) {
+        GtkWidget * w = (GtkWidget * )sorter->boxes.at (i);
+        char * wname = (char *)gtk_widget_get_name (w);
+        
+        if (all) {           
+            gtk_widget_set_visible (gtk_widget_get_parent (w), true);
+            continue ;
+        }
+            
+        gtk_widget_set_visible (gtk_widget_get_parent (w), false);
+        for (int i = 0 ; i < ps.size();  i++) {
+            int plugin = ps.at (i);
+            sprintf (name, "%d", plugin);
+            if (strcmp (name, wname) == 0) {
+                gtk_widget_set_visible (gtk_widget_get_parent (w), true);
+            }
+        }
+    }
+
+    
+    free (name);
+}
+
 void change_sort_by (void * w, int event, void * d) {
     GtkWidget * sortBy = (GtkWidget *) w;
     Sorter * sorter = (Sorter *) d;
@@ -13,7 +55,7 @@ void change_sort_by (void * w, int event, void * d) {
     }    
 }
 
-void Rack::addPluginEntry (std::string plug) {
+GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         GtkWidget * label = gtk_label_new (plug.c_str ());
         GtkWidget * fav = gtk_toggle_button_new ();
@@ -31,7 +73,8 @@ void Rack::addPluginEntry (std::string plug) {
         gtk_box_append ((GtkBox *)box, button);
         gtk_box_append ((GtkBox *)box, fav);
         
-        gtk_list_box_append ((GtkListBox *)listBox, box);            
+        gtk_list_box_append ((GtkListBox *)listBox, box);      
+        return box ;      
 }
 
 void Rack::add () {
@@ -86,11 +129,15 @@ void Rack::createPluginDialog () {
     
     GtkWidget * sortBy = gtk_drop_down_new_from_strings (ob) ;
     GtkWidget * categories = gtk_drop_down_new_from_strings (category);
+    gtk_widget_set_name(categories, "categories");
     GtkWidget * creators_w = gtk_drop_down_new_from_strings (creators);
+    gtk_widget_set_name (creators_w, "creators");
     
     Sorter * sorter = (Sorter *) malloc (sizeof (Sorter));
     sorter->categories = categories;
     sorter->creators = creators_w ;
+    sorter -> engine = engine ;
+    sorter -> listBox = listBox ;
     
     gtk_box_append ((GtkBox *)chooser, sortBy);
     gtk_box_append ((GtkBox *)chooser, categories);
@@ -101,6 +148,8 @@ void Rack::createPluginDialog () {
     gtk_widget_set_visible (creators_w, false);
     
     g_signal_connect (sortBy, "notify::selected", (GCallback)change_sort_by, sorter);
+    g_signal_connect (categories, "notify::selected", (GCallback)show_only_categories, sorter);
+    g_signal_connect (creators_w, "notify::selected", (GCallback)show_only_categories, sorter);
     
     gtk_widget_set_hexpand (sortBy, true);
     gtk_widget_set_hexpand (categories, true);
@@ -116,14 +165,37 @@ void Rack::createPluginDialog () {
     gtk_widget_set_vexpand (listBox, true);
     gtk_widget_set_hexpand (listBox, true);
     
-    for (int i = 0 ; i < engine -> lv2Plugins->size () ; i ++) {
-        addPluginEntry (engine -> lv2Plugins->at (i));
+    char * name = (char *) malloc (100);
+    for (auto plugin : engine ->lv2Json) {
+        std::string a = plugin ["name"].dump() ;
+        int id = plugin ["id"].get <int>() ;
+        printf ("plugin %d: %s\n", id, a.c_str());
+        GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
+        sorter -> boxes.push_back (w);
+        sprintf (name, "%d", id);
+        gtk_widget_set_name (w, name);
+    }
+   
+    for (auto plugin : engine ->ladspaJson) {
+        std::string a = plugin ["name"].dump() ;
+        int id = plugin ["id"].get <int>() ;
+        printf ("plugin %d: %s\n", id, a.c_str());
+        GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
+        sprintf (name, "%d", id);
+        sorter -> boxes.push_back (w);
+        gtk_widget_set_name (w, name);
     }
     
-    for (int i = 0 ; i < engine -> ladspaPlugins->size () ; i ++) {
-        addPluginEntry (engine -> ladspaPlugins->at (i));
-    }
+    free (name);
+
+    //~ for (int i = 0 ; i < engine -> lv2Plugins->size () ; i ++) {
+        //~ addPluginEntry (engine -> lv2Plugins->at (i));
+    //~ }
     
+    //~ for (int i = 0 ; i < engine -> ladspaPlugins->size () ; i ++) {
+        //~ addPluginEntry (engine -> ladspaPlugins->at (i));
+    //~ }
+       
     gtk_window_present ((GtkWindow *)pluginDialog);
     OUT
 }
