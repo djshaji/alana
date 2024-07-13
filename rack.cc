@@ -190,7 +190,7 @@ void Rack::createPluginDialog () {
     for (auto plugin : engine ->lv2Json) {
         std::string a = plugin ["name"].dump() ;
         int id = plugin ["id"].get <int>() ;
-        printf ("plugin %d: %s\n", id, a.c_str());
+        //~ printf ("plugin %d: %s\n", id, a.c_str());
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
         sorter -> boxes.push_back (w);
         sprintf (name, "%d", id);
@@ -200,7 +200,7 @@ void Rack::createPluginDialog () {
     for (auto plugin : engine ->ladspaJson) {
         std::string a = plugin ["name"].dump() ;
         int id = plugin ["id"].get <int>() ;
-        printf ("plugin %d: %s\n", id, a.c_str());
+        //~ printf ("plugin %d: %s\n", id, a.c_str());
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
         sprintf (name, "%d", id);
         sorter -> boxes.push_back (w);

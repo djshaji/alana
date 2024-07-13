@@ -84,9 +84,66 @@ Engine::Engine () {
         creators = nlohmann::json::parse(buffer.str ());
     }
 
+    initLilv ();
+}
+
+void Engine::initLilv () {
+    IN
     LilvWorld* world = (LilvWorld* )lilv_world_new();
     lilv_world_load_all(world);
-    plugins = (LilvPlugins* )lilv_world_get_all_plugins(world);    
+    plugins = (LilvPlugins* )lilv_world_get_all_plugins(world);        
+    
+    {
+        std::ifstream fJson("assets/lv2_map.json");
+        std::stringstream buffer;
+        buffer << fJson.rdbuf();
+        //~ std::cout << buffer.str () ;
+        lv2Map = nlohmann::json::parse(buffer.str ());
+    }
+    
+    OUT
+}
+
+std::vector <std::string> Engine::scanMissingLV2 () {
+    std::vector <std::string> missing ;
+    for (auto plugin : lv2Json) {
+        std::string a = plugin ["name"].dump() ;
+        bool found = false ;
+        
+        LILV_FOREACH (plugins, i, plugins) {
+            const LilvPlugin* p = (LilvPlugin* )lilv_plugins_get(plugins, i);
+            const char * name = lilv_node_as_string (lilv_plugin_get_name (p));
+            
+            if (strcmp (a.c_str (), name) == 0) {
+                found = true ;
+                break ;
+            }
+            
+            std::string uri (lilv_node_as_string (lilv_plugin_get_uri (p)));
+            LOGD ("[lilv] name no match, trying uri %s ... ", uri.c_str ());
+            int c = uri.find ("#") ;
+            if (c == -1)
+                c = uri.find_last_of ("/");
+            
+            if (c != -1) {
+                std::string stub = uri.substr (c + 1, uri.size () - 1) ;
+                printf ("stub: %s ", stub.c_str ());
+                if (strcmp (stub.c_str (), a.c_str ()) == 0) {
+                    found = true ;
+                    break ;
+                }
+            }
+            
+            LOGD (" give up\n");
+        }
+
+        if (! found) {
+            missing.push_back (std::string (a.c_str ()));
+            LOGD ("[missing] %s\n", a.c_str ());
+        }
+    }
+    
+    return missing ;
 }
 
 void Engine::buildPluginChain () {
@@ -126,13 +183,29 @@ void Engine::buildPluginChain () {
 }
 
 bool Engine::addPluginByName (char * pluginName) {
+    std::string stub = "";
+    if (lv2Map .contains (pluginName)) {
+        stub = lv2Map [pluginName].dump();
+    } 
+
     LILV_FOREACH (plugins, i, plugins) {
         const LilvPlugin* p = (LilvPlugin* )lilv_plugins_get(plugins, i);
         const char * name = lilv_node_as_string (lilv_plugin_get_name (p));
+        const char * uri = lilv_node_as_string (lilv_plugin_get_uri (p));
         
         if (strcmp (pluginName, name) == 0) {
             printf("[LV2] %s\n", name);        
-            const char * uri = lilv_node_as_string (lilv_plugin_get_uri (p));
+            return addPlugin ((char *)uri, 0, SharedLibrary::PluginType::LILV);
+        }
+
+        std::string s (uri);
+        int x = s.find ("#");
+        if (x == -1)
+            x = s.find_last_of ("/");
+        
+        s = s.substr (x + 1, s.size ());
+        if (s == stub) {
+            LOGD ("found mapped plugin %s -> %s\n", pluginName, stub);
             return addPlugin ((char *)uri, 0, SharedLibrary::PluginType::LILV);
         }
     }

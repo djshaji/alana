@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <lilv/lilv.h>
+#include <iostream>
 #include "SharedLibrary.h"
 #include "Plugin.h"
 #include "jack.h"
@@ -13,7 +14,7 @@ class Engine {
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
 public:
-    nlohmann::json ladspaJson, lv2Json, creators, categories ;
+    nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
     
@@ -23,6 +24,8 @@ public:
     bool addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) ;
     bool openAudio ();
     bool addPluginByName (char *);
+    void initLilv () ;
+    std::vector <std::string> scanMissingLV2 ();
 };
 
 #endif 
