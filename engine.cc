@@ -5,7 +5,7 @@ std::vector <Plugin *> *Engine::activePlugins = nullptr;
 bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) {
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
 
-    sharedLibrary ->setLibraryPath(std::string ("libs"));
+    sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
     sharedLibrary->load();
 
     if (sharedLibrary->descriptors.size() == 0) {
@@ -38,20 +38,22 @@ bool Engine::openAudio () {
 }
 
 Engine::Engine () {
+    libraryPath = strdup ("libs/linux/x86_64/");
+    
     processor = new Processor () ;
     openAudio () ;
     
     ladspaPlugins  = new std::vector <std::string> ();
     lv2Plugins = new std::vector <std::string> ();
     
-    std::ifstream fJson("assets/lv2_plugins.json");
+    std::ifstream fJson("lv2_plugins.json");
     std::stringstream buffer;
     buffer << fJson.rdbuf();
 
     lv2Json = nlohmann::json::parse(buffer.str());
 
     {
-        std::ifstream fJson("assets/all_plugins.json");
+        std::ifstream fJson("all_plugins.json");
         std::stringstream buffer;
         buffer << fJson.rdbuf();
         ladspaJson = nlohmann::json::parse(buffer.str ());

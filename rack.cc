@@ -59,8 +59,40 @@ void addPluginCallback (void * b, void * c) {
     GtkWidget * button = (GtkWidget *) b ;
     Rack * rack = (Rack *) c ;
     Engine * engine = (Engine *) rack -> engine ;
+    char * requested = (char *) gtk_widget_get_name (button) ;
     
-    int res = engine ->addPluginByName ((char *) gtk_widget_get_name (button));
+    bool res = false ;
+    
+    for (auto plugin : engine ->lv2Json) {
+        std::string a = plugin ["name"].dump() ;
+        a = a.substr (1, a.size () - 2);
+        //~ LOGD ("[lv2] %s | %s\n", requested, a.c_str());
+        if (strcmp (a.c_str (), requested) == 0) {
+            int index = plugin ["index"].get <int> () ;
+            std::string lib = plugin ["library"].dump () ;
+            lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
+            LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
+            res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LV2);
+            break ;
+        }
+    }
+    
+    if (! res) {
+        for (auto plugin : engine ->ladspaJson) {
+            std::string a = plugin ["name"].dump() ;
+            a = a.substr (1, a.size () - 2);
+            //~ LOGD ("[ladspa] %s | %s\n", requested, a.c_str());
+            if (strcmp (a.c_str (), requested) == 0) {
+                int index = plugin ["index"].get <int> () ;
+                std::string lib = plugin ["library"].dump () ;
+                lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
+                LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
+                res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LADSPA);
+                break ;
+            }
+        }
+    }
+    
     if (res) {
         int index = engine -> activePlugins->size () - 1;
         PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & rack -> list_box, std::string ((char *) gtk_widget_get_name (button)), index);
@@ -69,6 +101,8 @@ void addPluginCallback (void * b, void * c) {
         rack -> list_box.set_vexpand (true);
         rack -> list_box.append (ui->card);
         
+    } else {
+        LOGD ("ERROR: failed to load plugin: %s\n", requested);
     }
 }
 

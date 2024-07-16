@@ -3,7 +3,7 @@ GTKMM=`pkg-config --cflags --libs gtkmm-4.0`
 GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
-OPTIMIZE=-Ofast 
+#OPTIMIZE=-Ofast 
 
 all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE)
