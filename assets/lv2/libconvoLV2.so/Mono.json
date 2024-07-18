@@ -1,0 +1,36 @@
+{
+  "-1": {
+    "pluginName": "convoLV2"
+  },
+  "0": {
+    "InputPort": true,
+    "ControlPort": true,
+    "default": "0.0",
+    "index": 8,
+    "maximum": "24.0",
+    "minimum": "-24.0",
+    "name": "Output Gain",
+    "symbol": "gain"
+  },
+  "1": {
+    "AudioPort": true,
+    "OutputPort": true,
+    "index": 3,
+    "name": "Out",
+    "symbol": "out"
+  },
+  "2": {
+    "AudioPort": true,
+    "InputPort": true,
+    "index": 5,
+    "name": "In",
+    "symbol": "in"
+  },
+  "3": {
+    "InputPort": true,
+    "AtomPort": true,
+    "index": 0,
+    "name": "Impulse file",
+    "symbol": "control_port"
+  }
+}

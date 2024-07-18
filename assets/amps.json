@@ -1,0 +1,695 @@
+{
+  "C* ToneStack - Classic amplifier tone stack emulation": {
+    "0": [
+      "Basswoman",
+      "Stanford",
+      "Wookie",
+      "DC 30",
+      "Juice 800",
+      "Twin",
+      "AK 20",
+      "Nihon Ace",
+      "Porky"
+    ]
+  },
+
+  "C* AmpVTS - Idealised guitar amplification": {
+    "4": [
+      "Basswoman",
+      "Stanford",
+      "Wookie",
+      "DC 30",
+      "Juice 800",
+      "Twin",
+      "AK 20",
+      "Nihon Ace",
+      "Porky"
+    ]
+  },
+
+  "rkr Cabinet": {
+    "2": [
+      "Marshall 4-12\"",
+      "Celestion G12M",
+      "Jensen Alinco P12-N" ,
+      "Jensen Alinco P15-N"  ,
+      "Eminence Delta Demon"  ,
+      "Celestion EVH12"  ,
+      "Eminence Copperhead"  ,
+      "Mesa Boogie"  ,
+      "Jazz-Chorus"  ,
+      "Vox-Bright"  ,
+      "Marshall I"
+
+    ]
+  },
+
+  "C* CabinetIII - Simplistic loudspeaker cabinet emulation": {
+    "0": [
+      "Off",
+      "Twin",
+      "Wookie",
+      "Blue",
+      "Indigo",
+      "Supra",
+      "Tweedie",
+      "Basswoman",
+      "Martial",
+      "Poser",
+      "Cabby",
+      "Angel",
+      "Matched",
+      "Yellow",
+      "Piquey",
+      "Paladin",
+      "Turtle"
+    ]
+  },
+
+  "C* CabinetIV - Idealised loudspeaker cabinet": {
+    "0": [
+      "Mega wookie 800",
+      "Mega wookie 812",
+      "Mega wookie 828",
+      "Mega wookie 868",
+      "Mega wookie 908",
+      "Mega wookie 912",
+      "Mega wookie 936",
+      "Mega wookie 968",
+      "Mega wookie 992",
+      "Unmatched",
+      "Twin A",
+      "Twin B",
+      "Twin C",
+      "Blue A",
+      "Blue B",
+      "Tweedie A",
+      "Tweedie B",
+      "Mini Wookie A",
+      "Mini Wookie B",
+      "Rosie A",
+      "Rosie B",
+      "Indigo",
+      "Angel",
+      "Sixty-one",
+      "Sixty-two"
+    ]
+  },
+
+  "C* Saturate - Various static nonlinearities, 8x oversampled": {
+    "0": [
+      "Bypass",
+      "Atan",
+      "Atan15",
+      "Clip",
+      "One5",
+      "One53",
+      "Clip3",
+      "Clip9",
+      "Sin1",
+      "Pow7",
+      "Tanh",
+      "Rectify"
+    ]
+  },
+
+  "TAP Reverberator": {
+    "7": [
+      "AfterBurn" ,
+      "AfterBurn (Long)" ,
+      "Ambience" ,
+      "Ambience (Thick)" ,
+      "Ambience (Thick) - HD" ,
+      "Cathedral" ,
+      "Cathedral - HD" ,
+      "Drum Chamber" ,
+      "Garage" ,
+      "Garage (Bright)" ,
+      "Gymnasium" ,
+      "Gymnasium (Bright)" ,
+      "Gymnasium (Bright) - HD" ,
+      "Hall (Small)" ,
+      "Hall (Medium)" ,
+      "Hall (Large)" ,
+      "Hall (Large) - HD" ,
+      "Plate (Small)" ,
+      "Plate (Medium)" ,
+      "Plate (Large)" ,
+      "Plate (Large) - HD" ,
+      "Pulse Chamber" ,
+      "Pulse Chamber (Reverse)" ,
+      "Resonator (96 ms)" ,
+      "Resonator (152 ms)" ,
+      "Resonator (208 ms)" ,
+      "Room (Small)" ,
+      "Room (Medium)" ,
+      "Room (Large)" ,
+      "Room (Large) - HD" ,
+      "Slap Chamber" ,
+      "Slap Chamber - HD" ,
+      "Slap Chamber (Bright)" ,
+      "Slap Chamber (Bright) - HD" ,
+      "Smooth Hall (Small)" ,
+      "Smooth Hall (Medium)" ,
+      "Smooth Hall (Large)" ,
+      "Smooth Hall (Large) - HD" ,
+      "Vocal Plate" ,
+      "Vocal Plate - HD" ,
+      "Warble Chamber" ,
+      "Warehouse" ,
+      "Warehouse - HD"
+
+    ]
+  },
+
+  "MDA Combo": {
+    "0": [
+      "D.I. (flat frequency response)",
+      "Tradtional speaker simulator",
+      "Small radio speaker",
+      "Small combo (close mic)",
+      "Small combo (far mic)",
+      "Large stack (front mic)",
+      "Large stack (side mic, scooped mids)"
+    ]
+  },
+
+  "Gx_cabsim_": {
+    "1": [
+      "Cream",
+      "JMP",
+      "JTM",
+      "Laney",
+      "Triamp",
+      "Triaxis",
+      "V-Twin",
+      "Tubeman"
+    ]
+  },
+
+  "rkr Reverb": {
+    "3": [
+      "Freeverb",
+      "Random"
+    ]
+  }, "GxAmplifier": {
+    "13": [
+      "12ax7",
+      "12AU7",
+      "12AT7",
+      "6DJ8",
+      "6C16",
+      "6V6",
+      "12ax7 feedback",
+      "12AU7 feedback",
+      "12AT7 feedback",
+      "6DJ8 feedback",
+      "pre 12ax7/ master 6V6",
+      "pre 12AU7/ master 6V6",
+      "pre 12AT7/ master 6V6",
+      "pre 6DJ8/ master 6V6",
+      "pre 12ax7/ push-pull 6V6",
+      "pre 12AU7/ push-pull 6V6",
+      "pre 12AT7/ push pull 6V6",
+      "pre 6DJ8/ push-pull 6V6",
+      "--"
+    ],
+    "2": [
+      "default",
+      "Bassman Style",
+      "Twin Reverb Style",
+      "Princeton Style",
+      "JCM-800 Style",
+      "JCM-2000 Style",
+      "M-Lead Style",
+      "M2199 Style",
+      "AC-30 Style",
+      "Mesa Boogie Style",
+      "SOL 100 Style",
+      "JTM-45 Style",
+      "AC-15 Style",
+      "Peavey Style",
+      "Ibanez Style",
+      "Roland Style",
+      "Ampeg Style",
+      "Rev.Rocket Style",
+      "MIG 100 H Style",
+      "Triple Giant Style",
+      "Trio Preamp Style",
+      "Hughes&Kettner Style",
+      "Fender Junior Style",
+      "Fender Style",
+      "Fender Deville Style",
+      "Gibsen Style",
+      "Off"
+    ],
+  "3": [
+    "4x12",
+    "2x12",
+    "1x12",
+    "4x10",
+    "2x10",
+    "HighGain Style",
+    "Twin Style",
+    "Bassman Style",
+    "Marshall Style",
+    "AC30 Style",
+    "Princeton Style",
+    "A2 Style",
+    "1x15",
+    "Mesa Style",
+    "Briliant",
+    "Vitalize",
+    "Charisma",
+    "1x8",
+    "Off"
+  ]
+  },
+  "GxCabinet": {
+    "3": [
+      "4x12",
+      "2x12",
+      "1x12",
+      "4x10",
+      "2x10",
+      "HighGain Style",
+      "Twin Style",
+      "Bassman Style",
+      "Marshall Style",
+      "AC30 Style",
+      "Princeton Style",
+      "A2 Style",
+      "1x15",
+      "Mesa Style",
+      "Briliant",
+      "Vitalize",
+      "Charisma",
+      "1x8",
+      "Off"
+    ]
+  },
+  "rkr Arpie": {
+    "4": [
+      "Ascending",
+      "Descending",
+      "Up-Down",
+      "Stutter",
+      "Interrupted Descent",
+      "Double Descend"
+    ],
+    "5": [
+      "1",
+      "1/2",
+      "1/3",
+      "1/4",
+      "1/5",
+      "1/6"
+    ]
+  },
+  "rkr Distorsion": {
+    "0": [
+      "Arctangent",
+      "Asymmetric 1",
+      "Power",
+      "Sine",
+      "Quantize",
+      "Zigzag",
+      "Limiter",
+      "Upper Limiter",
+      "Lower Limiter",
+      "Inverse Limiter",
+      "Clip",
+      "Asymmetric 2",
+      "Power 2",
+      "Sigmoid",
+      "Crunch",
+      "Hard Crunch",
+      "Dirty Octave Up",
+      "Modulated Square",
+      "Modulated Saw",
+      "Compression",
+      "Overdrive",
+      "Soft",
+      "Super Soft",
+      "Hard Compression",
+      "Limit, No Gain",
+      "JFET",
+      "Dyno JFET",
+      "Valve 1",
+      "Valve 2",
+      "Diode Clipper"
+    ]
+  },
+  "rkr AlienWah": {
+    "11": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Analog Phaser": {
+    "13": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+      
+    ]
+  },
+  "rkr Flanger/Chorus": {
+    "12": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Echoverse": {
+    "3": [
+       "1",
+       "1/2",
+       "1/3",
+       "1/4",
+       "1/5",
+       "1/6"
+      
+    ]
+  },
+  "rkr Harmonizer (no midi)": {
+    "1": [
+       "C",
+       "Db",
+       "D",
+       "Eb",
+       "E",
+       "F",
+       "Gb",
+       "G",
+       "Ab",
+       "A",
+       "Bb",
+       "B",
+       "C",
+       "C#",
+       "D",
+       "D#",
+       "E",
+       "F",
+       "F#",
+       "G",
+       "G#",
+       "A",
+       "A#",
+       "A"
+    ],
+    "2": [
+       "None",
+       "6",
+       "Maj7",
+       "lyd",
+       "Maj(9)",
+       "Maj7(9)",
+       "6/9",
+       "+",
+       "min",
+       "min6",
+       "min7",
+       "min7(b5)",
+       "min9",
+       "min7(9)",
+       "min7(11)",
+       "min(Maj7)",
+       "min(Maj7)(9)",
+       "dim",
+       "dim7",
+       "7",
+       "7(Sus4)",
+       "7(b5)",
+       "7(9)",
+       "7(#11)",
+       "7(13)",
+       "7(b9)",
+       "7(b13)",
+       "7(#9)",
+       "+Maj7",
+       "+7",
+       "1+8",
+       "1+5",
+       "(Sus4)",
+       "2"
+    ]
+  },
+  "rkr OpticalTrem": {
+    "6": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+      
+    ]
+  },
+  "rkr Pan": {
+    "9": [
+       "Sine",
+       "Triangle",
+       "Ramp Up",
+       "Ramp Down",
+       "ZigZag",
+       "Modulated Square",
+       "Modulated Saw",
+       "Lorenz Fractal",
+       "Lorenz Fractal XY",
+       "Random Sample and Hold",
+       "Triangle Topped Sine",
+       "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr Phaser": {
+    "12": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+    ]
+  },
+  "rkr Sequence": {
+    "8": [
+       "Lineal (Filter)",
+       "UpDown (Filter)",
+       "Stepper (Filter)",
+       "Shifter (Pitch)",
+       "Tremor (Gain)",
+       "Arpeggiator (Pitch)",
+       "Chorus (Pitch)",
+       "TrigStepper (Filter)",
+       "Sequenced Delay"
+    ],
+    "9": [
+       "450-2.5k",
+       "150-4k",
+       "40-800",
+       "100-1.6k",
+       "80-16k",
+       "60-18k",
+       "40-2.2k",
+       "20-6k"
+      
+    ]
+  },
+  "rkr Shuffle": {
+    "5": [
+       "Mid",
+       "Side"
+
+    ]
+  },
+  "rkr Synthfilter": {
+    "16": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+    ]
+  },
+  "rkr Vibe": {
+    "10": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+
+    ]
+  },
+  "rkr WahWah": {
+    "11": [
+      "Sine",
+      "Triangle",
+      "Ramp Up",
+      "Ramp Down",
+      "ZigZag",
+      "Modulated Square",
+      "Modulated Saw",
+      "Lorenz Fractal",
+      "Lorenz Fractal XY",
+      "Random Sample and Hold",
+      "Triangle Topped Sine",
+      "Triangle Bottomed Sine"
+
+    ],
+    "5": [
+       "Analog Low-Pass",
+       "State Variable LPF",
+       "Analog Band-Pass",
+       "Formant 1",
+       "Formant 2"
+      
+    ]
+  },
+  "MDA Bandisto": {
+    "0": [
+      "Low" ,
+      "Mid" ,
+      "High" ,
+      "Out"
+      
+    ],
+    "9": [
+      "Bipolar",
+      "Unipolar"
+    ]
+  },
+  "MDA Shepard": {
+    "0": [
+       "Tones only" ,
+       "Input ring modulated by tones" ,
+       "Tones mixed with input"
+
+    ]
+  },
+  "State Variable Filter": {
+    "2": [
+      "No Filtering",
+      "Low Pass",
+      "High Pass",
+      "Band Pass",
+      "Band Reject",
+      "All pass"
+    ]
+  },
+  "Diode Processor": {
+    "0": [
+      "None",
+      "Half Wave",
+      "Full Wave"
+    ]
+  },
+  "Gx_ampegsvt_": {
+    "6": [
+       "LOWCUT",
+       "OFF",
+       "ULTRALOW"
+    ], 
+    "7": [
+       "220Hz",
+       "800Hz",
+       "3kHz"
+
+    ], 
+    "8": [
+       "OFF",
+       "ON"
+
+    ],
+    "0": [
+       "OFF",
+       "ON"
+
+    ]
+  },
+  "SWH Impulse convolver": {
+    "0": [
+      "Unit impulse (identity) ",
+      "My flat (light natural reverb) ",
+      "Yamaha Marshall stack simulator ",
+      "Fender 68 Vibrolux (SM57 on axis) ",
+      "Fender 68 Vibrolux (SM57 off axis) ",
+      "Fender 68 Vibrolux (Audio-technica AT4050) ",
+      "Fender 68 Vibrolux (Neumann U87) ",
+      "Fender Bassman (SM57 on axis) ",
+      "Fender Bassman (SM57 off axis) ",
+      "Fender Bassman (Audio-technica AT4050) ",
+      "Fender Bassman (Neumann U87) ",
+      "Fender Superchamp (SM57 on axis) ",
+      "Fender Superchamp (SM57 off axis) ",
+      "Fender Superchamp (Audio-technica AT4050) ",
+      "Fender Superchamp (Neumann U87) ",
+      "Marshall JCM2000 (SM57 on axis) ",
+      "Marshall JCM2000 (SM57 off axis) ",
+      "Marshall Plexi (SM57 on axis) ",
+      "Marshall Plexi (SM57 off axis) ",
+      "Matchless Chieftan (SM57 on axis) ",
+      "Matchless Chieftan (SM57 off axis) ",
+      "Custom"
+    ]
+  }
+}
