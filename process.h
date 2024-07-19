@@ -30,6 +30,6 @@ public:
 
     int activePlugins = 0;
     void process (int, float *, float *);
-
+    bool bypass = false ;
 };
 #endif

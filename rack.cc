@@ -83,10 +83,10 @@ void addPluginCallback (void * b, void * c) {
             a = a.substr (1, a.size () - 2);
             //~ LOGD ("[ladspa] %s | %s\n", requested, a.c_str());
             if (strcmp (a.c_str (), requested) == 0) {
-                int index = plugin ["index"].get <int> () ;
                 std::string lib = plugin ["library"].dump () ;
+                LOGD ("[ladspa] found plugin %s: loading %s\n", requested, lib.c_str ());
+                int index = plugin ["plugin"].get <int> () ;
                 lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
-                LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
                 res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LADSPA);
                 break ;
             }
@@ -177,8 +177,8 @@ void Rack::createPluginDialog () {
     creators [i] = NULL;
     
     char * ob [] = {
-        "Category",
-        "Creator",
+        strdup ("Category"),
+        strdup ("Creator"),
         NULL
     } ;
     

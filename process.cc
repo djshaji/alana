@@ -2,6 +2,9 @@
 
 void Processor::process (int n_samples, float * in, float * data) {
     memcpy (data, in, sizeof (float) * n_samples);
+    if (bypass)
+        return ;
+        
     for (int i = 0 ; i < activePlugins ; i ++) {
         if (inputPorts [i] != -1)
             connect_port [i] (handle [i], inputPorts [i], (LADSPA_Data *) data);

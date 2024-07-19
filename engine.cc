@@ -3,15 +3,18 @@
 std::vector <Plugin *> *Engine::activePlugins = nullptr;
 
 bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) {
+    IN
+    processor->bypass = true ;
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
 
     sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
-    sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
+    //~ sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
     sharedLibrary ->lv2_config_path = std::string ("assets/lv2");
     sharedLibrary->load();
 
     if (sharedLibrary->descriptors.size() == 0) {
         LOGE("Unable to load shared library!") ;
+        processor->bypass = false ;
         return false;
     }
 
@@ -31,6 +34,8 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
     // todo
 
     buildPluginChain();
+    processor->bypass = false ;
+    OUT
     return true ;
 }
 
