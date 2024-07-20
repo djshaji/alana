@@ -110,15 +110,15 @@ public:
             cd->engine = engine;
             cd->control = i ;
             
-            g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
-            g_signal_connect (onoff.gobj (), "toggled", (GCallback) bypass, cd) ;
-            
             spin.set_digits (2);
             
             gtk_spin_button_set_adjustment ((GtkSpinButton *)spin.gobj (), adj);
             gtk_range_set_adjustment ((GtkRange *)scale.gobj (), adj);
             // spin.set_adjustment (adj);
             box.set_spacing (0);
+            
+            g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
+            g_signal_connect (onoff.gobj (), "toggled", (GCallback) bypass, cd) ;
 
             card.append (box);
         }

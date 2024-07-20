@@ -28,6 +28,7 @@ public:
     
     bool open ();
     void close ();
+    int get_sample_rate () ;
 } ;
 
 #endif

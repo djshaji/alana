@@ -93,6 +93,7 @@ void addPluginCallback (void * b, void * c) {
         }
     }
     
+    return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
         PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & rack -> list_box, std::string ((char *) gtk_widget_get_name (button)), index);
@@ -221,8 +222,17 @@ void Rack::createPluginDialog () {
     gtk_widget_set_hexpand (listBox, true);
     
     char * name = (char *) malloc (100);
-    for (auto plugin : engine ->lv2Json) {
+    for (auto it=engine->lv2Json.begin () ; it != engine -> lv2Json.end () ; it ++) {
+    //~ for (auto plugin : engine ->lv2Json) {
+        auto plugin = it .value ();
         std::string a = plugin ["name"].dump() ;
+        //~ LOGD ("p: %s\n", it.key ().c_str ());
+        
+        if (blacklist.contains (it.key ().c_str ())) {
+            //~ LOGD ("blacklisted plugin: %s\n", a.c_str ()) ;
+            continue;
+        }
+        
         int id = plugin ["id"].get <int>() ;
         //~ printf ("plugin %d: %s\n", id, a.c_str());
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
@@ -237,6 +247,10 @@ void Rack::createPluginDialog () {
         //~ printf ("plugin %d: %s\n", id, a.c_str());
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
         sprintf (name, "%d", id);
+        if (blacklist.contains (name)) {
+            //~ LOGD ("blacklisted plugin: %s\n", a.c_str ()) ;
+            continue;
+        }        
         sorter -> boxes.push_back (w);
         gtk_widget_set_name (w, name);
     }

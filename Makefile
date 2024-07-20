@@ -5,7 +5,7 @@ LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
 #OPTIMIZE=-Ofast 
 
-all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o
+all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE)
 	
 main.o: main.cc main.h
@@ -37,3 +37,6 @@ jack: jack.cc jack.h
 
 process: process.cc process.h
 	cc process.cc -c
+
+util.o: util.c util.h
+	c++ util.c -c

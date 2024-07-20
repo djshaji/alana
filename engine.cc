@@ -41,7 +41,13 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
 
 bool Engine::openAudio () {
     driver = new AudioDriver (processor);
-    return driver->open ();
+    bool val = driver->open ();
+    if (val) {
+        sampleRate = driver->get_sample_rate () ;
+    } else 
+        sampleRate = 48000 ; // sane default
+    
+    return val ;
 }
 
 Engine::Engine () {

@@ -116,3 +116,8 @@ bool AudioDriver::open () {
 void AudioDriver::close () {
 	jack_client_close (client);    
 }
+
+int AudioDriver::get_sample_rate () {
+    return jack_get_sample_rate (client);
+}
+

@@ -14,6 +14,7 @@
 #include "Plugin.h"
 #include "PluginControl.h"
 #include "pluginui.h"
+#include "util.h"
 
 typedef struct _Sorter {
     GtkWidget * creators, * categories, * listBox;
@@ -42,9 +43,15 @@ public:
     void createPluginDialog () ;
     GtkWidget * addPluginEntry (std::string plug) ;
     
+    json blacklist ;
+    
     Rack () {
         engine = new Engine () ;
+        blacklist = filename_to_json ("assets/blacklist.json");
         
+        //~ for (auto b = blacklist.begin () ; b != blacklist.end () ; b ++) {
+            //~ LOGD ("[blacklist] %s\n", b.key ()) ;
+        //~ }
         master = Gtk::Box ();
         button_box = Gtk::Box ();
         mixer = Gtk::Box ();
