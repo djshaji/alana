@@ -26,7 +26,8 @@ class Rack {
 public:
     Engine * engine ;
     std::map <int, GtkWidget*> pMap ;
-    Gtk::Box master, button_box, mixer;
+    Gtk::Box master, mixer;
+    Gtk::HeaderBar button_box ;
     Gtk::Box list_box ;
     Gtk::Overlay overlay ;
     Gtk::Button add_effect ;
@@ -54,7 +55,7 @@ public:
             //~ LOGD ("[blacklist] %s\n", b.key ()) ;
         //~ }
         master = Gtk::Box ();
-        button_box = Gtk::Box ();
+        button_box = Gtk::HeaderBar ();
         mixer = Gtk::Box ();
         
         list_box = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
@@ -84,11 +85,11 @@ public:
         master.set_vexpand (true);
         list_box.set_vexpand (true);
         master.set_hexpand (true);
-        button_box.set_orientation (Gtk::Orientation::HORIZONTAL);
+        //~ button_box.set_orientation (Gtk::Orientation::HORIZONTAL);
 
         list_box.set_orientation (Gtk::Orientation::VERTICAL);
         // list_box.set_visible (false);
-        master.append (button_box);
+        //~ master.append (button_box);
         master.append (mixer);
         master.append (sw);
         sw.set_child (list_box);
@@ -106,11 +107,11 @@ public:
         add_effect.signal_clicked().connect(sigc::mem_fun(*this,
               &Rack::add));
 
-        button_box.set_halign (Gtk::Align::CENTER);
-        button_box.set_hexpand (true);
+        //~ button_box.set_halign (Gtk::Align::CENTER);
+        //~ button_box.set_hexpand (true);
         
-        button_box.append (logo);
-        button_box.append (mixer_toggle);
+        button_box.pack_start (logo);
+        button_box.pack_start (mixer_toggle);
         logo.set_halign (Gtk::Align::START);
         
         Gtk::Box m = Gtk::Box () ;
@@ -123,9 +124,25 @@ public:
         Gtk::Label l = Gtk::Label ("On") ;
         
         m.append (l);
-        button_box.append (m);
-        button_box.append (record);
-        button_box.append (menu_button);
+        //~ button_box.pack_start (m);
+        Gtk::Box v = Gtk::Box (Gtk::Orientation::HORIZONTAL, 5) ;
+        button_box.set_title_widget (v);
+        Gtk::Label title = Gtk::Label ("Amp Rack 5 alpha") ;
+        title.set_markup ("<big><b>Amp Rack 5 alpha</b></big>");
+
+        v.append (title);
+        v.append (m) ;
+        
+        title.set_margin_end (10);
+        
+        m.set_halign (Gtk::Align::END);
+        v.set_halign (Gtk::Align::END);
+        v.set_hexpand (true);
+        
+        button_box.pack_start (record);
+        button_box.pack_start (menu_button);
+        
+        //~ button_box.set_margin (10);
         
         //~ overlay.set_child (master);
         //~ overlay.add_overlay (add_effect);

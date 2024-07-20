@@ -48,6 +48,8 @@ MyWindow::MyWindow()
     rack = new Rack () ;
     stack.add (pane);
     
+    set_titlebar (rack->button_box);
+    
     presets = Presets () ;
     pane.set_start_child (presets.master);
     pane.set_end_child (rack->master);
