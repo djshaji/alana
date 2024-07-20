@@ -93,7 +93,7 @@ void addPluginCallback (void * b, void * c) {
         }
     }
     
-    return ;
+    //~ return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
         PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & rack -> list_box, std::string ((char *) gtk_widget_get_name (button)), index);

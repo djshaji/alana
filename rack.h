@@ -33,8 +33,9 @@ public:
     Gtk::ScrolledWindow sw ;
     
     Gtk::Button logo, menu_button ;
-    Gtk::ToggleButton mixer_toggle, onoff, record ;
+    Gtk::ToggleButton mixer_toggle, record ;
     GtkWidget * listBox ;
+    Gtk::Switch onoff ;
     
     std::vector <PluginUI> plugins ;        
     void add ();
@@ -68,10 +69,16 @@ public:
         
         mixer_toggle = Gtk::ToggleButton ();
         mixer_toggle.set_label ("Mixer");
-        onoff = Gtk::ToggleButton ();
-        onoff.set_label ("On");
+        onoff = Gtk::Switch ();
+        //~ onoff.set_label ("On");
         record = Gtk::ToggleButton ();
         record.set_label ("Rec");
+        
+        menu_button.set_margin (5);
+        logo.set_margin (5);
+        mixer_toggle.set_margin (5);
+        record.set_margin (5);
+        onoff.set_margin (5);
         
         master.set_orientation (Gtk::Orientation::VERTICAL);
         master.set_vexpand (true);
@@ -105,8 +112,18 @@ public:
         button_box.append (logo);
         button_box.append (mixer_toggle);
         logo.set_halign (Gtk::Align::START);
+        
+        Gtk::Box m = Gtk::Box () ;
+        m.set_orientation (Gtk::Orientation::VERTICAL);
+        
+        m.append (onoff);
+        
         mixer_toggle.set_halign (Gtk::Align::END);
-        button_box.append (onoff);
+        
+        Gtk::Label l = Gtk::Label ("On") ;
+        
+        m.append (l);
+        button_box.append (m);
         button_box.append (record);
         button_box.append (menu_button);
         
