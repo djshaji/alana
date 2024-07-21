@@ -51,9 +51,12 @@ MyWindow::MyWindow()
     set_titlebar (rack->button_box);
     
     presets = Presets () ;
+    gtk_notebook_append_page (presets.notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
+    
+    presets.my () ;
+    
     pane.set_start_child (presets.master);
     pane.set_end_child (rack->master);
-    
 }
 
 #endif

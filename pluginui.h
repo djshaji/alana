@@ -15,13 +15,13 @@
 #include "callback_data.h"
 
 void callback (void * p, void *c);
-void bypass (void * p, void * c)  ;
+void bypass (void * p, bool, void * c)  ;
 void control_changed (void * p, void * c);
 
 class PluginUI {
 public:    
     Gtk::Label name ;
-    Gtk::ToggleButton  onoff ;
+    Gtk::Switch  onoff ;
     Gtk::Button  del,  up,  down ;
     Engine * engine ;
     Plugin * plugin ;
@@ -39,8 +39,9 @@ public:
         sprintf (s, "%d %s", index, pluginName.c_str ());
         // name =  Gtk::Label (s) ;
         name = Gtk::Label (pluginName);
+        auto n = std::string ("<big><b>").append (pluginName).append ("</b></big>");
+        name.set_markup (n.c_str ());
         free (s);
-        onoff =  Gtk::ToggleButton ();
         card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
         card.set_orientation (Gtk::Orientation::VERTICAL);
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
@@ -52,13 +53,15 @@ public:
         header.set_margin (10);
         header.set_margin_start (0);
 
-        onoff = Gtk::ToggleButton ("On") ;
+        onoff = Gtk::Switch () ;
         onoff.set_active (true);
         header.append (onoff) ;
         onoff.set_halign (Gtk::Align::END);
         name.set_halign (Gtk::Align::START);
 
         card.set_margin (10);
+        card.set_margin_bottom (0);
+        
         del = Gtk::Button ("Delete") ;
 
         del.set_halign (Gtk::Align::END);
@@ -118,7 +121,7 @@ public:
             box.set_spacing (0);
             
             g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
-            g_signal_connect (onoff.gobj (), "toggled", (GCallback) bypass, cd) ;
+            g_signal_connect (onoff.gobj (), "state-set", (GCallback) bypass, cd) ;
 
             card.append (box);
         }

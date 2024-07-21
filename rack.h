@@ -41,8 +41,8 @@ public:
     std::vector <PluginUI> plugins ;        
     void add ();
     
-    GtkWidget * pluginDialog ;
-    void createPluginDialog () ;
+    GtkWidget * pluginDialog, * rack ;
+    GtkWidget * createPluginDialog () ;
     GtkWidget * addPluginEntry (std::string plug) ;
     
     json blacklist ;
@@ -153,7 +153,7 @@ public:
         //~ overlay.set_valign (Gtk::Align::END);
         //~ add_effect.set_label ("+ Effect");
 
-        createPluginDialog () ;
+        rack = createPluginDialog () ;
     }
 };
 

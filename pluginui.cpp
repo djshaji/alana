@@ -10,11 +10,11 @@ void callback (void * p, void *c) {
   // printf ("%s\n", cd -> card -> get_name  ());
 }
 
-void bypass (void * p, void * c) {
+void bypass (void * p, bool value, void * c) {
     IN
     GtkToggleButton * t = (GtkToggleButton * ) p;
     CallbackData * cd = (CallbackData *) c ;
-    cd -> engine -> activePlugins -> at (cd -> index)-> active = gtk_toggle_button_get_active (t);
+    cd -> engine -> activePlugins -> at (cd -> index)-> active = value;
     cd -> engine -> buildPluginChain () ;
     OUT
 }

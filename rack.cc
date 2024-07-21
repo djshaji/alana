@@ -144,12 +144,12 @@ void Rack::add () {
     list_box.append (ui->card);
 }
 
-void Rack::createPluginDialog () {
+GtkWidget * Rack::createPluginDialog () {
     IN
     pluginDialog = gtk_window_new ();
     gtk_window_set_default_size ((GtkWindow *)pluginDialog, 400, 800);
     GtkWidget * master = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
-    gtk_window_set_child ((GtkWindow *)pluginDialog, master);
+    //~ gtk_window_set_child ((GtkWindow *)pluginDialog, master);
     
     GtkWidget * chooser = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
     gtk_box_append ((GtkBox *)master, chooser);
@@ -265,6 +265,7 @@ void Rack::createPluginDialog () {
         //~ addPluginEntry (engine -> ladspaPlugins->at (i));
     //~ }
        
-    gtk_window_present ((GtkWindow *)pluginDialog);
+    //~ gtk_window_present ((GtkWindow *)pluginDialog);
     OUT
+    return master ;
 }

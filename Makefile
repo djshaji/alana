@@ -8,7 +8,7 @@ JACK=`pkg-config jack --libs --cflags`
 all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE)
 	
-main.o: main.cc main.h
+main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
 rack.o: rack.cc rack.h pluginui.cpp pluginui.h 
