@@ -227,3 +227,8 @@ bool Engine::addPluginByName (char * pluginName) {
 
     return false ;
 }
+
+bool Engine:savePreset (std::string filename) {
+    auto json = {} ;
+    for (int i = 0 ; i < )
+}

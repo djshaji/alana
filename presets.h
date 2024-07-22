@@ -5,10 +5,12 @@
 
 class Presets {
 public:
-    Gtk::Box master, my_presets, quick, library ;
+    Gtk::Box master, my_presets, quick, library, my_presets_rack ;
     Gtk::Notebook notebook, presets ;
     Gtk::Button add ;
     void my () ;
+    
+    void add_preset (int);
     
     std::string dir ;
     

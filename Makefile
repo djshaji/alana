@@ -14,7 +14,7 @@ main.o: main.cc main.h rack.o presets.o
 rack.o: rack.cc rack.h pluginui.cpp pluginui.h 
 	g++ rack.cc pluginui.cpp -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
-presets.o:
+presets.o: presets.cc presets.h
 	g++ presets.cc -c $(GTKMM)  $(GTK) $(OPTIMIZE)
 
 SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h PluginControl.cpp PluginControl.h
