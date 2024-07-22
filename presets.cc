@@ -17,7 +17,7 @@ void Presets::my () {
     presets.append_page (library, l3);
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
-    Gtk::Button add = Gtk::Button ("Save");
+    add = Gtk::Button ("Save");
     //~ bbox.set_valign (Gtk::Align::END);
     //~ bbox.set_hexpand (true);
     add.set_halign (Gtk::Align::CENTER);

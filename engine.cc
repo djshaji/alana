@@ -228,7 +228,34 @@ bool Engine::addPluginByName (char * pluginName) {
     return false ;
 }
 
-bool Engine:savePreset (std::string filename) {
-    auto json = {} ;
-    for (int i = 0 ; i < )
+bool Engine::savePreset (std::string filename) {
+    IN
+    LOGD ("[save preset] to file %s\n", filename.c_str ());
+    if (activePlugins == nullptr || activePlugins->size () == 0) {
+        LOGD ("no active plugins\n");
+        return false;
+    }
+    
+    json preset = {} ;
+    for (int i = 0 ; i < activePlugins->size () ; i ++) {
+        Plugin * plugin = activePlugins->at (i);
+        json p = {};
+        
+        p ["name"] = plugin->lv2_name;
+        
+        std::string controls = std::string () ;
+        for (int x = 0 ; x < plugin->pluginControls.size () ; x ++) {
+            controls.append (std::to_string (*plugin->pluginControls.at (x)->def));
+            if (x < (plugin->pluginControls.size () + 2))
+                controls.append (";");
+        }
+        
+        p ["controls"] = controls ;
+        preset [std::to_string (i)] = p ;
+    }
+    
+    LOGD ("[preset save] %s\n", preset.dump ().c_str ());
+    json_to_filename (preset, filename);
+    OUT
+    return true ;
 }

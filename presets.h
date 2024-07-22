@@ -12,17 +12,24 @@ public:
     
     void add_preset (int);
     
-    std::string dir ;
+    std::string dir, presets_dir ;
     
     Presets () {
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
         LOGD ("[presets] dir: %s\n", dir.c_str ());
         
+        presets_dir = std::string (dir);
+        presets_dir.append ("/presets/");
+        
         if (! g_file_test (dir.c_str (), G_FILE_TEST_IS_DIR)) {
             LOGD ("[presets] creating %s\n", dir.c_str ());
             if (g_mkdir_with_parents (dir.c_str (), 0777)) {
                 LOGD ("error creating dir: %s\n", strerror (errno)) ;
-            }
+            }        
+        }
+        
+        if (g_mkdir_with_parents (presets_dir.c_str (), 0777)) {
+            LOGD ("error creating dir: %s\n", strerror (errno)) ;
         }
         
         master = Gtk::Box () ;

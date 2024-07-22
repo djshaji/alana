@@ -7,6 +7,9 @@
 #include "Plugin.h"
 #include "jack.h"
 #include "process.h"
+#include "util.h"
+
+using json = nlohmann::json;
 
 class Engine {
     int sampleRate ;
@@ -27,6 +30,7 @@ public:
     bool addPluginByName (char *);
     void initLilv () ;
     std::vector <std::string> scanMissingLV2 ();
+    bool savePreset (std::string);
 };
 
 #endif 

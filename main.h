@@ -6,6 +6,16 @@
 #include "rack.h"
 #include "presets.h"
 
+class CB {
+    public:
+        Presets * presets ;
+        Engine * engine ;
+};
+
+void save_preset_cb (void * w, void * d) {
+    CB * cb = (CB *) d ;
+    cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"));
+}
 
 class MyWindow : public Gtk::Window
 {
@@ -15,7 +25,7 @@ public:
     Gtk::StackSwitcher  switcher ;
     Gtk::Box box, stack_box ;
     Rack * rack ;
-    Presets presets ; 
+    Presets * presets ; 
   MyWindow();
 };
 
@@ -50,12 +60,18 @@ MyWindow::MyWindow()
     
     set_titlebar (rack->button_box);
     
-    presets = Presets () ;
-    gtk_notebook_append_page (presets.notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
+    presets = new Presets () ;
+    gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
     
-    presets.my () ;
+    presets->my () ;
     
-    pane.set_start_child (presets.master);
+    CB * cb = new CB () ;
+    cb -> engine = rack -> engine ;
+    cb -> presets = presets ;
+    
+    g_signal_connect (presets->add.gobj (), "clicked", (GCallback) save_preset_cb, cb);
+    
+    pane.set_start_child (presets->master);
     pane.set_end_child (rack->master);
 }
 
