@@ -55,12 +55,7 @@ void change_sort_by (void * w, int event, void * d) {
     }    
 }
 
-void addPluginCallback (void * b, void * c) {
-    GtkWidget * button = (GtkWidget *) b ;
-    Rack * rack = (Rack *) c ;
-    Engine * engine = (Engine *) rack -> engine ;
-    char * requested = (char *) gtk_widget_get_name (button) ;
-    
+PluginUI * Rack::addPluginByName (char * requested) {
     bool res = false ;
     
     for (auto plugin : engine ->lv2Json) {
@@ -96,15 +91,24 @@ void addPluginCallback (void * b, void * c) {
     //~ return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
-        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & rack -> list_box, std::string ((char *) gtk_widget_get_name (button)), index);
+        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index);
         // ui.index = index ;
-        rack -> list_box.set_orientation (Gtk::Orientation::VERTICAL);
-        rack -> list_box.set_vexpand (true);
-        rack -> list_box.append (ui->card);
+        list_box.set_orientation (Gtk::Orientation::VERTICAL);
+        list_box.set_vexpand (true);
+        list_box.append (ui->card);
         
+        return ui ;
     } else {
         LOGD ("ERROR: failed to load plugin: %s\n", requested);
-    }
+        return NULL ;
+    }    
+}
+void addPluginCallback (void * b, void * c) {
+    GtkWidget * button = (GtkWidget *) b ;
+    Rack * rack = (Rack *) c ;
+    Engine * engine = (Engine *) rack -> engine ;
+    char * requested = (char *) gtk_widget_get_name (button) ;
+    rack -> addPluginByName (requested);
 }
 
 GtkWidget * Rack::addPluginEntry (std::string plug) {
@@ -268,4 +272,17 @@ GtkWidget * Rack::createPluginDialog () {
     //~ gtk_window_present ((GtkWindow *)pluginDialog);
     OUT
     return master ;
+}
+
+
+bool Rack::load_preset (json j) {
+    IN
+    auto plugins = j ["controls"];
+    for (auto p: plugins) {
+        auto plugin = p ["name"].dump () ;
+        plugin = plugin.substr (1, plugin.size () - 2) ;
+        addPluginByName ((char *) plugin.c_str ());
+    }
+    OUT
+    return true;
 }

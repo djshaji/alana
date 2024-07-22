@@ -40,6 +40,8 @@ public:
     
     std::vector <PluginUI> plugins ;        
     void add ();
+    PluginUI * addPluginByName (char *);
+    bool load_preset (json);
     
     GtkWidget * pluginDialog, * rack ;
     GtkWidget * createPluginDialog () ;

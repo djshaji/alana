@@ -29,6 +29,7 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
         LOGD ("first run\n");
         activePlugins = new std::vector <Plugin *> () ;
     }
+
     activePlugins ->push_back(plugin);
     LOGD ("adding plugin to active chain %d\n", activePlugins->size ());
     // todo
@@ -228,7 +229,7 @@ bool Engine::addPluginByName (char * pluginName) {
     return false ;
 }
 
-bool Engine::savePreset (std::string filename) {
+bool Engine::savePreset (std::string filename, std::string description) {
     IN
     LOGD ("[save preset] to file %s\n", filename.c_str ());
     if (activePlugins == nullptr || activePlugins->size () == 0) {
@@ -237,6 +238,10 @@ bool Engine::savePreset (std::string filename) {
     }
     
     json preset = {} ;
+    json plugins = {} ;
+    preset ["desc"] = description ;
+    preset ["name"] = std::string (filename).substr (filename.find_last_of ("/") + 1, filename.size ()) ;
+    
     for (int i = 0 ; i < activePlugins->size () ; i ++) {
         Plugin * plugin = activePlugins->at (i);
         json p = {};
@@ -251,11 +256,22 @@ bool Engine::savePreset (std::string filename) {
         }
         
         p ["controls"] = controls ;
-        preset [std::to_string (i)] = p ;
+        plugins [std::to_string (i)] = p ;
     }
-    
+
+    preset ["controls"] = plugins;
     LOGD ("[preset save] %s\n", preset.dump ().c_str ());
     json_to_filename (preset, filename);
     OUT
     return true ;
+}
+
+bool Engine::load_preset (json j) {
+    IN
+    auto plugins = j ["controls"];
+    for (auto p: plugins) {
+        
+    }
+    OUT
+    return true;
 }

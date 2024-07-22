@@ -14,7 +14,7 @@ class CB {
 
 void save_preset_cb (void * w, void * d) {
     CB * cb = (CB *) d ;
-    cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"));
+    cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"), "description");
 }
 
 class MyWindow : public Gtk::Window
@@ -61,6 +61,9 @@ MyWindow::MyWindow()
     set_titlebar (rack->button_box);
     
     presets = new Presets () ;
+    presets->engine = rack -> engine ;
+    presets->rack = rack ;
+    
     gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
     
     presets->my () ;

@@ -1,4 +1,10 @@
 #include "presets.h"
+void load_preset_cb (void * c, void * d) {
+    CB_Preset * cb = (CB_Preset *) d ;
+    //~ cb -> engine -> load_preset (cb -> j) ;    
+    cb -> rack -> load_preset (cb -> j);
+    
+}
 
 void Presets::my () {
     presets = Gtk::Notebook () ;
@@ -30,10 +36,11 @@ void Presets::my () {
     add.set_margin (10);
     
     my_presets_rack.set_vexpand (true);
-    add_preset (1) ;
+    //~ add_preset (1) ;
+    load_user ();
 }
 
-void Presets::add_preset (int which) {
+void Presets::add_preset (json j, int which) {
     Gtk::Box h = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box h2 = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box v = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
@@ -56,9 +63,9 @@ void Presets::add_preset (int which) {
             break;
     }
     
-    Gtk::Label title = Gtk::Label ("<big><b>Rock and roll</b></big>") ;
-    title.set_markup ("<big><b>Rock and roll</b></big>");
-    Gtk::Label desc = Gtk::Label ("This is an example preset");
+    Gtk::Label title = Gtk::Label () ;
+    title.set_markup (std::string ("<big><b>").append (j ["name"]).append ( "</b></big>").c_str ());
+    Gtk::Label desc = Gtk::Label (j ["desc"].dump ().c_str ());
     
     //~ title.set_hexpand (true);
     h.set_hexpand (true);
@@ -71,9 +78,27 @@ void Presets::add_preset (int which) {
     Gtk::Button del = Gtk::Button ("Delete");
     h.append (load);
     
+    CB_Preset * cb = new CB_Preset ();
+    cb -> engine = engine ;
+    cb -> rack = rack ;
+    cb -> j = j ;
+    
+    g_signal_connect (load.gobj (), "clicked", (GCallback) load_preset_cb, cb);
+    
     load.set_halign (Gtk::Align::END);
     
     v.append (h2);
     h2.append (del);
     del.set_halign (Gtk::Align::CENTER);
+}
+
+void Presets::load_user () {
+    IN
+    for (const auto & entry : std::filesystem::directory_iterator(presets_dir)) {
+        std::cout << entry.path() << std::endl;
+    
+        json j = filename_to_json (entry.path ());
+        add_preset (j, 1);
+    } 
+    OUT   
 }

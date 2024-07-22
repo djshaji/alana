@@ -30,7 +30,8 @@ public:
     bool addPluginByName (char *);
     void initLilv () ;
     std::vector <std::string> scanMissingLV2 ();
-    bool savePreset (std::string);
+    bool savePreset (std::string, std::string);
+    bool load_preset (json );
 };
 
 #endif 

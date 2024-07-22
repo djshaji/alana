@@ -14,6 +14,8 @@
 #include "PluginControl.h"
 #include "callback_data.h"
 
+using json = nlohmann::json;
+
 void callback (void * p, void *c);
 void bypass (void * p, bool, void * c)  ;
 void control_changed (void * p, void * c);
@@ -28,6 +30,8 @@ public:
     Gtk::Box  card ;
     Gtk::Box * parent ;
     int index ;
+  
+    void load_preset (json);
   
     PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index) {
         engine = _engine ;

@@ -2,6 +2,21 @@
 #define PRESETS_H
 #include <gtkmm.h>
 #include "logging_macros.h"
+#include <filesystem>
+#include "json.hpp"
+#include <iostream>
+#include "util.h"
+#include "engine.h"
+#include "rack.h"
+
+using json = nlohmann::json;
+
+class CB_Preset {
+    public:
+        Engine * engine ;
+        json j ;
+        Rack * rack ;
+};
 
 class Presets {
 public:
@@ -9,8 +24,11 @@ public:
     Gtk::Notebook notebook, presets ;
     Gtk::Button add ;
     void my () ;
+    Engine * engine ;
+    Rack * rack ;
     
-    void add_preset (int);
+    void add_preset (json, int);
+    void load_user ();
     
     std::string dir, presets_dir ;
     
