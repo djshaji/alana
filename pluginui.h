@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 #include "json.hpp"
 #include "log.h"
@@ -30,8 +31,9 @@ public:
     Gtk::Box  card ;
     Gtk::Box * parent ;
     int index ;
+    std::vector <GtkScale *> sliders ;
   
-    void load_preset (json);
+    void load_preset (std::string);
   
     PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index) {
         engine = _engine ;
@@ -86,6 +88,7 @@ public:
         for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
             PluginControl * control = plugin->pluginControls.at (i) ;
             Gtk::Scale  scale =  Gtk::Scale () ;
+            sliders.push_back (scale.gobj ());
             scale . set_value (control->val);
             scale.set_hexpand (true);
 

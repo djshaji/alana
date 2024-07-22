@@ -281,7 +281,10 @@ bool Rack::load_preset (json j) {
     for (auto p: plugins) {
         auto plugin = p ["name"].dump () ;
         plugin = plugin.substr (1, plugin.size () - 2) ;
-        addPluginByName ((char *) plugin.c_str ());
+        PluginUI * ui = addPluginByName ((char *) plugin.c_str ());
+        auto controls = p ["controls"].dump () ;
+        controls = controls.substr (1, controls.size () - 2);
+        ui -> load_preset (controls) ;
     }
     OUT
     return true;
