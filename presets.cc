@@ -40,6 +40,20 @@ void Presets::my () {
     load_user ();
 }
 
+void delete_callback (void * b, void * d) {
+    IN
+    GtkWidget * button = (GtkWidget *) b ;
+    Presets * presets = (Presets *) d ;
+    std::string name = std::string (gtk_widget_get_name (button));
+    LOGV (name.c_str ());
+    std::string filename = std::string (presets->presets_dir);
+    filename.append (name);
+    LOGV (filename.c_str ());
+    
+    alert_yesno (name, "Do you want to delete this preset?", null, null);
+    OUT
+}
+
 void Presets::add_preset (json j, int which) {
     Gtk::Box h = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box h2 = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
@@ -76,6 +90,10 @@ void Presets::add_preset (json j, int which) {
    
     Gtk::Button load = Gtk::Button ("Load");
     Gtk::Button del = Gtk::Button ("Delete");
+    del.set_name (j ["name"].dump().c_str ());
+    
+    g_signal_connect (del.gobj (), "clicked", (GCallback)delete_callback, this);
+    
     h.append (load);
     
     CB_Preset * cb = new CB_Preset ();

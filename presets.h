@@ -11,6 +11,8 @@
 
 using json = nlohmann::json;
 
+void delete_callback (void * b, void * d) ;
+
 class CB_Preset {
     public:
         Engine * engine ;
@@ -24,6 +26,7 @@ public:
     Gtk::Notebook notebook, presets ;
     Gtk::Button add ;
     void my () ;
+    void * _this ;
     Engine * engine ;
     Rack * rack ;
     

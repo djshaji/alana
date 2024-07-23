@@ -61,6 +61,7 @@ MyWindow::MyWindow()
     set_titlebar (rack->button_box);
     
     presets = new Presets () ;
+    presets->_this = (void *) presets ;
     presets->engine = rack -> engine ;
     presets->rack = rack ;
     

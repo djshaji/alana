@@ -3,6 +3,7 @@
 
 #include <lilv/lilv.h>
 #include <iostream>
+#include <gtkmm.h>
 #include "SharedLibrary.h"
 #include "Plugin.h"
 #include "jack.h"

@@ -21,7 +21,7 @@ SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h PluginCon
 	g++ SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp -c $(LV2) $(OPTIMIZE)
 
 engine.o: engine.cc engine.h 
-	g++ engine.cc -c $(JACK) $(LV2) $(OPTIMIZE)
+	g++ engine.cc -c $(JACK) $(LV2) $(OPTIMIZE) $(GTKMM)
 
 clean:
 	rm -v *.o
@@ -39,4 +39,4 @@ process: process.cc process.h
 	cc process.cc -c
 
 util.o: util.c util.h
-	c++ util.c -c
+	c++ util.c -c $(GTKMM)
