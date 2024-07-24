@@ -31,7 +31,12 @@ void Presets::my () {
     //~ bbox.append (add);
     
     my_presets_rack = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
-    my_presets.append (my_presets_rack);
+    Gtk::ScrolledWindow sw = Gtk::ScrolledWindow () ;
+    
+    //~ sw.append (my_presets_rack);
+    gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)my_presets_rack.gobj ());
+    my_presets.append (sw);
+    
     my_presets.append (add);
     add.set_margin (10);
     
@@ -120,7 +125,7 @@ void Presets::add_preset (json j, int which) {
     load.set_halign (Gtk::Align::END);
     
     v.append (h2);
-    h2.append (del);
+    h.append (del);
     del.set_halign (Gtk::Align::CENTER);
     OUT
 }

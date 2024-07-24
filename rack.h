@@ -32,7 +32,8 @@ public:
     Gtk::Overlay overlay ;
     Gtk::Button add_effect ;
     Gtk::ScrolledWindow sw ;
-    
+    std::vector <GtkWidget *> plugs;
+
     Gtk::Button logo, menu_button ;
     Gtk::ToggleButton mixer_toggle, record ;
     GtkWidget * listBox ;
@@ -49,114 +50,8 @@ public:
     
     json blacklist ;
     
-    Rack () {
-        engine = new Engine () ;
-        blacklist = filename_to_json ("assets/blacklist.json");
-        
-        //~ for (auto b = blacklist.begin () ; b != blacklist.end () ; b ++) {
-            //~ LOGD ("[blacklist] %s\n", b.key ()) ;
-        //~ }
-        master = Gtk::Box ();
-        button_box = Gtk::HeaderBar ();
-        mixer = Gtk::Box ();
-        
-        list_box = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
-        sw = Gtk::ScrolledWindow () ;
-        overlay = Gtk::Overlay ();
-        
-        add_effect = Gtk::Button () ;
-        logo = Gtk::Button () ;
-        logo.set_label ("Amp Rack");
-        menu_button = Gtk::Button () ;
-        menu_button.set_label (":");
-        
-        mixer_toggle = Gtk::ToggleButton ();
-        mixer_toggle.set_label ("Mixer");
-        onoff = Gtk::Switch ();
-        //~ onoff.set_label ("On");
-        record = Gtk::ToggleButton ();
-        record.set_label ("Rec");
-        
-        menu_button.set_margin (5);
-        logo.set_margin (5);
-        mixer_toggle.set_margin (5);
-        record.set_margin (5);
-        onoff.set_margin (5);
-        
-        master.set_orientation (Gtk::Orientation::VERTICAL);
-        master.set_vexpand (true);
-        list_box.set_vexpand (true);
-        master.set_hexpand (true);
-        //~ button_box.set_orientation (Gtk::Orientation::HORIZONTAL);
-
-        list_box.set_orientation (Gtk::Orientation::VERTICAL);
-        // list_box.set_visible (false);
-        //~ master.append (button_box);
-        master.append (mixer);
-        master.append (sw);
-        sw.set_child (list_box);
-        list_box.set_name ("rack");
-        Gtk::Separator sep = Gtk::Separator () ;
-        // list_box.append (sep);
-        // sep.set_vexpand (true);
-        master.append (add_effect);
-        add_effect.set_label ("+ Effect");
-        add_effect.set_valign (Gtk::Align::END);
-        // list_box.set_valign (Gtk::Align::END);
-        // sw.set_propagate_natural_height (true);
-        add_effect.set_halign (Gtk::Align::CENTER);
-        
-        add_effect.signal_clicked().connect(sigc::mem_fun(*this,
-              &Rack::add));
-
-        //~ button_box.set_halign (Gtk::Align::CENTER);
-        //~ button_box.set_hexpand (true);
-        
-        button_box.pack_start (logo);
-        button_box.pack_start (mixer_toggle);
-        logo.set_halign (Gtk::Align::START);
-        
-        Gtk::Box m = Gtk::Box () ;
-        m.set_orientation (Gtk::Orientation::VERTICAL);
-        
-        m.append (onoff);
-        
-        mixer_toggle.set_halign (Gtk::Align::END);
-        
-        Gtk::Label l = Gtk::Label ("On") ;
-        
-        m.append (l);
-        //~ button_box.pack_start (m);
-        Gtk::Box v = Gtk::Box (Gtk::Orientation::HORIZONTAL, 5) ;
-        button_box.set_title_widget (v);
-        Gtk::Label title = Gtk::Label ("Amp Rack 5 alpha") ;
-        title.set_markup ("<big><b>Amp Rack 5 alpha</b></big>");
-
-        v.append (title);
-        v.append (m) ;
-        
-        title.set_margin_end (10);
-        
-        m.set_halign (Gtk::Align::END);
-        v.set_halign (Gtk::Align::END);
-        v.set_hexpand (true);
-        
-        button_box.pack_start (record);
-        button_box.pack_start (menu_button);
-        
-        //~ button_box.set_margin (10);
-        
-        //~ overlay.set_child (master);
-        //~ overlay.add_overlay (add_effect);
-        //~ overlay.set_clip_overlay (add_effect, false);
-        //~ overlay.set_measure_overlay (add_effect, false);
-        
-        //~ overlay.set_halign (Gtk::Align::END);
-        //~ overlay.set_valign (Gtk::Align::END);
-        //~ add_effect.set_label ("+ Effect");
-
-        rack = createPluginDialog () ;
-    }
+    void clear () ;
+    Rack () ;
 };
 
 #endif // RACK_H
