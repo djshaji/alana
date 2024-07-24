@@ -1,10 +1,13 @@
 #include "util.h"
 
 json filename_to_json (std::string filename) {
+    IN
     std::ifstream fJson(filename);
     std::stringstream buffer;
     buffer << fJson.rdbuf();
+    LOGD ("reading file %s\n%s\n", filename.c_str (), buffer.str ());
     auto j = json::parse(buffer.str ());
+    OUT
     return j ;
 }
 
@@ -33,4 +36,38 @@ void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gp
     //~ gtk_alert_dialog_show(dialog, null);
     gtk_alert_dialog_choose (dialog, (GtkWindow *)g_list_model_get_item (list, 0), null, cb, data);
     OUT
+}
+
+void alert (char * title, char * msg, AlertType type, gpointer callback, gpointer data) {
+    GtkDialogFlags flags = (GtkDialogFlags) (GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
+    GtkWidget * dialog = gtk_message_dialog_new (null,
+                                     (GtkDialogFlags)flags,
+                                     GTK_MESSAGE_INFO,
+                                     GTK_BUTTONS_OK_CANCEL,
+                                     title,
+                                     msg,
+                                     null);
+    // Destroy the dialog when the user responds to it
+    // (e.g. clicks a button)
+
+    Alert_CB * cb = new Alert_CB () ;
+    cb -> data = data ;
+
+    GtkWidget * box = (GtkWidget *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 10) ;
+    gtk_box_append ((GtkBox *)gtk_dialog_get_content_area ((GtkDialog *)dialog), box);
+    
+    GtkWidget * label = gtk_label_new (msg);
+    gtk_box_append ((GtkBox *)gtk_message_dialog_get_message_area ((GtkMessageDialog *)dialog), label);
+    
+    GtkWidget * entry = gtk_entry_new ();
+    gtk_box_append ((GtkBox *)box, entry);    
+
+    cb -> widget = entry ;
+    cb -> dialog = dialog ;
+    g_signal_connect (dialog, "response",
+                      G_CALLBACK (callback),
+                      cb);
+    
+    gtk_widget_set_size_request (dialog, 400, 300);
+    gtk_window_present ((GtkWindow *) dialog);
 }

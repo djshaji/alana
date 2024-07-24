@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include <fstream>
+#include <iostream>
 
 #include "json.hpp"
 #include "log.h"
@@ -10,8 +11,21 @@
 
 using json = nlohmann::json;
 
+typedef enum {
+    ALERT_MESSAGE,
+    ALERT_YESNO,
+    ALERT_TEXT
+} AlertType ;
+
+class Alert_CB {
+    public:
+        GtkWidget * widget, * dialog ;
+        gpointer data ;
+};
+
 json filename_to_json (std::string filename);
 bool json_to_filename (json j, std::string filename) ;
 void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gpointer data) ;
+void alert (char * title, char * msg, AlertType type, gpointer callback, gpointer data) ;
 
 #endif

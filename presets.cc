@@ -40,6 +40,7 @@ void Presets::my () {
     load_user ();
 }
 
+
 void delete_callback (void * b, void * d) {
     IN
     GtkWidget * button = (GtkWidget *) b ;
@@ -63,6 +64,8 @@ void delete_callback (void * b, void * d) {
 }
 
 void Presets::add_preset (json j, int which) {
+    IN
+    std::cout << j << std::endl;
     Gtk::Box h = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box h2 = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box v = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
@@ -94,7 +97,8 @@ void Presets::add_preset (json j, int which) {
     title.set_justify (Gtk::Justification::LEFT);
     
     v2.append (title);
-    v2.append (desc);
+    // todo: description
+    //~ v2.append (desc);
    
     Gtk::Button load = Gtk::Button ("Load");
     Gtk::Button del = Gtk::Button ("Delete");
@@ -118,6 +122,7 @@ void Presets::add_preset (json j, int which) {
     v.append (h2);
     h2.append (del);
     del.set_halign (Gtk::Align::CENTER);
+    OUT
 }
 
 void Presets::load_user () {

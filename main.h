@@ -12,9 +12,30 @@ class CB {
         Engine * engine ;
 };
 
+void add_cb (GtkDialog* self, gint response_id, gpointer user_data) {
+    Alert_CB * cb = (Alert_CB *) user_data ;
+    char * filename = (char *)gtk_entry_buffer_get_text ((GtkEntryBuffer *) gtk_entry_get_buffer ((GtkEntry *) cb -> widget));
+    if (response_id == -6 /* ?? */ || strlen (filename) == 0) {
+        gtk_window_destroy ((GtkWindow *)cb->dialog);
+        delete (cb);
+        return ;
+    }
+    
+    LOGD ("[cb] id: %d\n", response_id);
+    Presets * presets = (Presets *) cb -> data;
+    std::string f = std::string (presets -> presets_dir).append (filename) ;
+    presets -> engine -> savePreset (f, "");    
+    json j = filename_to_json (f);
+    presets->add_preset (j, 1);
+
+    gtk_window_destroy ((GtkWindow *)cb->dialog);
+    delete (cb);
+}
+
 void save_preset_cb (void * w, void * d) {
     CB * cb = (CB *) d ;
-    cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"), "description");
+    alert ("Save Preset", "Enter preset name", ALERT_TEXT, (void *)add_cb, cb ->presets);
+    //~ cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"), "description");
 }
 
 class MyWindow : public Gtk::Window

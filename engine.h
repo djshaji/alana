@@ -33,6 +33,7 @@ public:
     std::vector <std::string> scanMissingLV2 ();
     bool savePreset (std::string, std::string);
     bool load_preset (json );
+    json getPreset ();
 };
 
 #endif 
