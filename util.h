@@ -19,7 +19,7 @@ typedef enum {
 
 class Alert_CB {
     public:
-        GtkWidget * widget, * dialog ;
+        GtkWidget * widget, * dialog , *widget2;
         gpointer data ;
 };
 

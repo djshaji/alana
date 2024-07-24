@@ -18,9 +18,15 @@ void Presets::my () {
     Gtk::Label l2 = Gtk::Label ("Quick Presets");
     Gtk::Label l3 = Gtk::Label ("Library");
     
-    presets.append_page (quick, l2);
+    Gtk::ScrolledWindow sw_q = Gtk::ScrolledWindow (), 
+        sw_l = Gtk::ScrolledWindow () ;
+    
+    gtk_scrolled_window_set_child (sw_q.gobj (), (GtkWidget *) quick.gobj ());
+    gtk_scrolled_window_set_child (sw_l.gobj (), (GtkWidget *) library.gobj ());
+    
+    presets.append_page (sw_q, l2);
     presets.append_page (my_presets, l1);
-    presets.append_page (library, l3);
+    presets.append_page (sw_l, l3);
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     add = Gtk::Button ("Save");
@@ -43,6 +49,7 @@ void Presets::my () {
     my_presets_rack.set_vexpand (true);
     //~ add_preset (1) ;
     load_user ();
+    add_preset_multi (std::string ("quick.json"), 0);
 }
 
 
@@ -88,6 +95,12 @@ void Presets::add_preset (json j, int which) {
     v.append (h2);
        
     switch (which) {
+        case 0:
+            quick.append (v);
+            break ;
+        case 2:
+            library.append (v);
+            break ;
         case 1:
             my_presets_rack.append (v);
             break;
@@ -101,9 +114,15 @@ void Presets::add_preset (json j, int which) {
     h.set_hexpand (true);
     title.set_justify (Gtk::Justification::LEFT);
     
-    v2.append (title);
+    Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+    v2.append (tb);
+    tb.append (title);
     // todo: description
-    //~ v2.append (desc);
+    if (j ["desc"].dump () != std::string ("\"\"")) {
+        Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+        v2.append (tb);
+        tb.append (desc);
+    }
    
     Gtk::Button load = Gtk::Button ("Load");
     Gtk::Button del = Gtk::Button ("Delete");
@@ -139,4 +158,19 @@ void Presets::load_user () {
         add_preset (j, 1);
     } 
     OUT   
+}
+
+void Presets::add_preset_multi (std::string s, int which) {
+    IN
+    add_preset_multi (filename_to_json (s), which);
+    OUT
+}
+
+void Presets::add_preset_multi (json j, int which) {
+    IN
+    for (auto n: j) {
+        add_preset (n, which);
+    }
+    
+    OUT
 }

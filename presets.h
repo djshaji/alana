@@ -32,6 +32,8 @@ public:
     
     void add_preset (json, int);
     void load_user ();
+    void add_preset_multi (json, int) ;
+    void add_preset_multi (std::string, int) ;
     
     std::string dir, presets_dir ;
     

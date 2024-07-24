@@ -15,6 +15,7 @@ class CB {
 void add_cb (GtkDialog* self, gint response_id, gpointer user_data) {
     Alert_CB * cb = (Alert_CB *) user_data ;
     char * filename = (char *)gtk_entry_buffer_get_text ((GtkEntryBuffer *) gtk_entry_get_buffer ((GtkEntry *) cb -> widget));
+    char * desc = (char *)gtk_entry_buffer_get_text ((GtkEntryBuffer *) gtk_entry_get_buffer ((GtkEntry *) cb -> widget2));
     if (response_id == -6 /* ?? */ || strlen (filename) == 0) {
         gtk_window_destroy ((GtkWindow *)cb->dialog);
         delete (cb);
@@ -24,7 +25,7 @@ void add_cb (GtkDialog* self, gint response_id, gpointer user_data) {
     LOGD ("[cb] id: %d\n", response_id);
     Presets * presets = (Presets *) cb -> data;
     std::string f = std::string (presets -> presets_dir).append (filename) ;
-    presets -> engine -> savePreset (f, "");    
+    presets -> engine -> savePreset (f, std::string (desc));    
     json j = filename_to_json (f);
     presets->add_preset (j, 1);
 
@@ -32,9 +33,53 @@ void add_cb (GtkDialog* self, gint response_id, gpointer user_data) {
     delete (cb);
 }
 
+
+void preset_name (gpointer callback, gpointer data) {
+    GtkDialogFlags flags = (GtkDialogFlags) (GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
+    GtkWidget * dialog = gtk_message_dialog_new (null,
+                                     (GtkDialogFlags)flags,
+                                     GTK_MESSAGE_INFO,
+                                     GTK_BUTTONS_OK_CANCEL,
+                                     "Add Preset",
+                                     null);
+    // Destroy the dialog when the user responds to it
+    // (e.g. clicks a button)
+
+    Alert_CB * cb = new Alert_CB () ;
+    cb -> data = data ;
+
+    GtkWidget * box = (GtkWidget *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 10) ;
+    gtk_box_append ((GtkBox *)gtk_dialog_get_content_area ((GtkDialog *)dialog), box);
+    
+    GtkWidget * label = gtk_label_new ("Enter preset name");
+    gtk_box_append ((GtkBox *)gtk_message_dialog_get_message_area ((GtkMessageDialog *)dialog), label);
+    
+    GtkWidget * entry = gtk_entry_new ();
+    gtk_box_append ((GtkBox *)box, entry);    
+
+    GtkWidget * desc = gtk_entry_new ();
+    gtk_box_append ((GtkBox *)box, gtk_label_new ("Enter Description"));    
+    gtk_box_append ((GtkBox *)box, desc);    
+
+    gtk_widget_set_margin_bottom ((GtkWidget *) box, 10);
+    gtk_widget_set_margin_start ((GtkWidget *) box, 10);
+    gtk_widget_set_margin_end ((GtkWidget *) box, 10);
+    gtk_widget_set_margin_top ((GtkWidget *) box, 10);
+
+    cb -> widget = entry ;
+    cb -> widget2 = desc ;
+    cb -> dialog = dialog ;
+    g_signal_connect (dialog, "response",
+                      G_CALLBACK (callback),
+                      cb);
+    
+    gtk_widget_set_size_request (dialog, 400, 350);
+    gtk_window_present ((GtkWindow *) dialog);
+}
+
 void save_preset_cb (void * w, void * d) {
     CB * cb = (CB *) d ;
-    alert ("Save Preset", "Enter preset name", ALERT_TEXT, (void *)add_cb, cb ->presets);
+    preset_name ((void *)add_cb, cb ->presets);
     //~ cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"), "description");
 }
 
