@@ -50,7 +50,15 @@ void delete_callback (void * b, void * d) {
     filename.append (name);
     LOGV (filename.c_str ());
     
-    alert_yesno (name, "Do you want to delete this preset?", null, null);
+    if (! std::filesystem::remove (filename)) {
+        LOGD ("[delete preset] failed: %s\n", filename.c_str ()) ;
+        return ;
+    }
+    
+    GtkWidget * box = gtk_widget_get_parent (gtk_widget_get_parent (button)) ;
+    gtk_box_remove ((GtkBox *)gtk_widget_get_parent (box), box);
+    
+    //~ alert_yesno (name, "Do you want to delete this preset?", null, null);
     OUT
 }
 
@@ -90,7 +98,9 @@ void Presets::add_preset (json j, int which) {
    
     Gtk::Button load = Gtk::Button ("Load");
     Gtk::Button del = Gtk::Button ("Delete");
-    del.set_name (j ["name"].dump().c_str ());
+    std::string _name = j ["name"].dump().c_str () ;
+    _name = _name.substr (1, _name.size () - 2);
+    del.set_name (_name);
     
     g_signal_connect (del.gobj (), "clicked", (GCallback)delete_callback, this);
     
