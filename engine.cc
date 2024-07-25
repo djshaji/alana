@@ -235,7 +235,7 @@ json Engine::getPreset () {
     if (activePlugins == nullptr || activePlugins->size () == 0) {
         LOGD ("no active plugins\n");
         OUT
-        return false;
+        return NULL;
     }
     
     json preset = {} ;
@@ -267,6 +267,8 @@ bool Engine::savePreset (std::string filename, std::string description) {
     IN
     LOGD ("[save preset] to file %s\n", filename.c_str ());
     json preset = getPreset () ;
+    if (preset == NULL)
+        return false ;
     preset ["desc"] = description ;
     preset ["name"] = std::string (filename).substr (filename.find_last_of ("/") + 1, filename.size ()) ;
     json_to_filename (preset, filename);
@@ -291,15 +293,21 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     if (sf == NULL) {
         LOGD ("file read failed!\n");
         return ;
+    } else {
+        LOGD ("read %d bytes\n", * sf -> len);
     }
     
-    LOGD ("file read ok! set plugin: %d\n", index);
+    LOGD ("file read ok! set plugin: %d [%d bytes]\n", index, * sf -> len);
     
-    activePlugins->at (index)->lv2Descriptor->connect_port(
-        activePlugins->at (index)->handle, 99, &sf->len);
-    activePlugins->at (index)->lv2Descriptor->connect_port(
-        activePlugins->at (index)->handle, 100, sf->data);
-    //~ delete (sf) ;
+    //~ for (int i = 0 ; i < * sf -> len; i ++)
+        //~ LOGD ("[frame: %f]\n", sf -> data [i]);
+    //~ activePlugins->at (index)->lv2Descriptor->connect_port(
+        //~ activePlugins->at (index)->handle, 99, sf->len);
+    //~ activePlugins->at (index)->lv2Descriptor->connect_port(
+        //~ activePlugins->at (index)->handle, 100, sf->data);
+    activePlugins->at (index)->setBuffer (sf ->data, * sf -> len);
+
+    delete (sf) ;
     OUT
 }
 

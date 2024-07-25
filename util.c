@@ -2,6 +2,10 @@
 
 json filename_to_json (std::string filename) {
     IN
+    if (! std::filesystem::exists (filename)) {
+        HERE LOGD ("file does not exist! %s\n", filename.c_str ()) ;
+        return NULL ;
+    }
     std::ifstream fJson(filename);
     std::stringstream buffer;
     buffer << fJson.rdbuf();

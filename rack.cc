@@ -288,6 +288,14 @@ GtkWidget * Rack::createPluginDialog () {
 }
 
 
+bool Rack::load_preset (std::string filename) {
+    json j = filename_to_json (filename) ;
+    if (j != NULL)
+        return load_preset (j);
+    else 
+        return false ;
+}
+
 bool Rack::load_preset (json j) {
     IN
     auto plugins = j ["controls"];

@@ -4,6 +4,7 @@
 #include <gtkmm.h>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 #include "json.hpp"
 #include "log.h"

@@ -8,16 +8,18 @@
 
 class SoundFile {
     public:
-    int len ;
     float * data ;
+    int * len ;
     
     SoundFile (int _len) {
-        len = _len ;
-        data = (float *) malloc (sizeof (float) * len + 1);
+        len = (int *) malloc (sizeof (int));
+        * len = _len ;
+        data = (float *) malloc (sizeof (float) * *len + 1);
     }
     
     ~SoundFile () {
         free (data) ;
+        free (len);
     }
 };
 

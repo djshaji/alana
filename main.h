@@ -95,6 +95,18 @@ public:
   MyWindow();
 };
 
+void onshow (void * w, void * d) {
+    MyWindow * window = (MyWindow *) d ;    
+    std::string default_preset = std::string (window ->presets -> dir) .append ("/default") ;
+    window -> rack -> load_preset (default_preset);
+}
+
+void quit (void * w, void * d) {
+    MyWindow * window = (MyWindow *) d ;
+    window -> rack -> engine -> savePreset (window -> presets -> dir .append ("/default").c_str (), "Last saved preset") ;
+    gtk_window_destroy ((GtkWindow *)w);
+}
+
 MyWindow::MyWindow()
 {
     set_title("Amp Rack 5 (Alpha)");
@@ -143,6 +155,9 @@ MyWindow::MyWindow()
     
     pane.set_start_child (presets->master);
     pane.set_end_child (rack->master);
+    g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
+    g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
+    
 }
 
 #endif

@@ -72,11 +72,11 @@ void on_response (GtkNativeDialog *native,
           ui -> engine ->set_plugin_file (ui -> index, filename);          
       }
       
-      //~ free (filename);
-      //~ g_object_unref (file);
+      free (filename);
+      g_object_unref (file);
     }
 
-  //~ g_object_unref (native);
+  g_object_unref (native);
 }
 
 void ui_file_chooser (void * b, void * d) {

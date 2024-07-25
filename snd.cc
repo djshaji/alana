@@ -14,7 +14,7 @@ SoundFile * snd_read (char * filename) {
     }
     
     SoundFile * soundFile = new SoundFile (info.frames);
-    int val = sf_read_float (sndfile, soundFile->data, info.frames);
+    int val = sf_readf_float (sndfile, soundFile->data, info.frames);
     if (val != info.frames) {
         LOGD ("file read mismatch! total: %d\tread: %d\n", val, info.frames);
     } else {

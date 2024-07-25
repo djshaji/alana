@@ -43,6 +43,7 @@ public:
     void add ();
     PluginUI * addPluginByName (char *);
     bool load_preset (json);
+    bool load_preset (std::string filename);
     
     GtkWidget * pluginDialog, * rack ;
     GtkWidget * createPluginDialog () ;
