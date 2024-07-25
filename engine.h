@@ -14,11 +14,11 @@
 using json = nlohmann::json;
 
 class Engine {
+public:
     int sampleRate ;
     AudioDriver * driver = nullptr;
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
-public:
     char * libraryPath = nullptr; //= std::string ("libs/linux/x86_64/");
     nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;

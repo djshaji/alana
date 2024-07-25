@@ -29,6 +29,8 @@ public:
     bool open ();
     void close ();
     int get_sample_rate () ;
+    bool activate () ;
+    bool deactivate () ;
 } ;
 
 #endif

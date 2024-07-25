@@ -305,7 +305,11 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
         //~ activePlugins->at (index)->handle, 99, sf->len);
     //~ activePlugins->at (index)->lv2Descriptor->connect_port(
         //~ activePlugins->at (index)->handle, 100, sf->data);
+    //~ *sf -> len = * sf -> len / 2 ;
+    
+    processor->bypass = true ;
     activePlugins->at (index)->setBuffer (sf ->data, * sf -> len);
+    processor->bypass = false ;
 
     delete (sf) ;
     OUT

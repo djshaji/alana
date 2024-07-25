@@ -24,8 +24,62 @@ jack_shutdown (void *arg)
 	exit (1);
 }
 
+bool AudioDriver::activate () {
+	if (jack_activate (client)) {
+		fprintf (stderr, "cannot activate client");
+		return false ;
+	}
+
+	/* Connect the ports.  You can't do this before the client is
+	 * activated, because we can't make connections to clients
+	 * that aren't running.  Note the confusing (but necessary)
+	 * orientation of the driver backend ports: playback ports are
+	 * "input" to the backend, and capture ports are "output" from
+	 * it.
+	 */
+
+	i_ports = jack_get_ports (client, NULL, NULL,
+				JackPortIsPhysical|JackPortIsOutput);
+	if (i_ports == NULL) {
+		fprintf(stderr, "no physical capture ports\n");
+		return false ;
+	}
+
+	if (jack_connect (client, i_ports[0], jack_port_name (input_port))) {
+		fprintf (stderr, "cannot connect input ports\n");
+	}
+
+	o_ports = jack_get_ports (client, NULL, NULL,
+				JackPortIsPhysical|JackPortIsInput);
+	if (o_ports == NULL) {
+		fprintf(stderr, "no physical playback ports\n");
+		return false ;
+	}
+
+	if (jack_connect (client, jack_port_name (output_port), o_ports[0])) {
+		fprintf (stderr, "cannot connect output ports\n");
+        return false ;
+	}
+
+    LOGD ("[audio engine ok]");
+    free (i_ports);
+	free (o_ports);
+    
+    return true ;
+}
+
+bool AudioDriver::deactivate () {
+    if (jack_deactivate (client)) {
+	    fprintf (stderr, "cannot deactivate client");
+	    return false ;
+    }
+    
+    return true ;
+
+}
+
 bool AudioDriver::open () {
-	client = jack_client_open (client_name, options, &status, server_name);
+    client = jack_client_open (client_name, options, &status, server_name);
     if (client == NULL) {
         fprintf (stderr, "jack_client_open() failed, "
              "status = 0x%2.0x\n", status);
@@ -70,47 +124,8 @@ bool AudioDriver::open () {
 	/* Tell the JACK server that we are ready to roll.  Our
 	 * process() callback will start running now. */
 
-	if (jack_activate (client)) {
-		fprintf (stderr, "cannot activate client");
-		return false ;
-	}
 
-	/* Connect the ports.  You can't do this before the client is
-	 * activated, because we can't make connections to clients
-	 * that aren't running.  Note the confusing (but necessary)
-	 * orientation of the driver backend ports: playback ports are
-	 * "input" to the backend, and capture ports are "output" from
-	 * it.
-	 */
-
-	i_ports = jack_get_ports (client, NULL, NULL,
-				JackPortIsPhysical|JackPortIsOutput);
-	if (i_ports == NULL) {
-		fprintf(stderr, "no physical capture ports\n");
-		return false ;
-	}
-
-	if (jack_connect (client, i_ports[0], jack_port_name (input_port))) {
-		fprintf (stderr, "cannot connect input ports\n");
-	}
-
-	o_ports = jack_get_ports (client, NULL, NULL,
-				JackPortIsPhysical|JackPortIsInput);
-	if (o_ports == NULL) {
-		fprintf(stderr, "no physical playback ports\n");
-		return false ;
-	}
-
-	if (jack_connect (client, jack_port_name (output_port), o_ports[0])) {
-		fprintf (stderr, "cannot connect output ports\n");
-        return false ;
-	}
-
-    LOGD ("[audio engine ok]");
-    free (i_ports);
-	free (o_ports);
-
-    return true ;
+    return activate () ;
 }
 
 void AudioDriver::close () {

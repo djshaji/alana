@@ -318,6 +318,15 @@ void Rack::clear () {
     }
 }
 
+void onoff_cb (void * s, bool state, void * d) {
+    Engine * e = (Engine *) d ;
+    if (!state) {
+        e -> driver -> deactivate () ;
+    } else {
+        e -> driver -> activate () ;
+    }
+}
+
 Rack::Rack () {
     engine = new Engine () ;
     blacklist = filename_to_json ("assets/blacklist.json");
@@ -351,6 +360,9 @@ Rack::Rack () {
     mixer_toggle.set_margin (5);
     record.set_margin (5);
     onoff.set_margin (5);
+
+    onoff.set_active (true);
+    g_signal_connect (onoff.gobj (), "state-set", (GCallback) onoff_cb, engine);
     
     master.set_orientation (Gtk::Orientation::VERTICAL);
     master.set_vexpand (true);
