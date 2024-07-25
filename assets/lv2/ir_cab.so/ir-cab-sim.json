@@ -1,6 +1,8 @@
 {
   "-1": {
     "Plugin": true,
+    "file":true,
+    "fileType": 0,
     "pluginName": "Simple IR Loader"
   },
   "1": {

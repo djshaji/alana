@@ -57,6 +57,8 @@ void change_sort_by (void * w, int event, void * d) {
 
 PluginUI * Rack::addPluginByName (char * requested) {
     bool res = false ;
+    bool has_file = false ;
+    PluginFileType file_type = FILE_AUDIO ;
     
     for (auto plugin : engine ->lv2Json) {
         std::string a = plugin ["name"].dump() ;
@@ -68,6 +70,10 @@ PluginUI * Rack::addPluginByName (char * requested) {
             lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
             LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
             res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LV2);
+            if (plugin.contains ("file") && plugin ["file"].get <bool>()) {
+                has_file = true ;                
+                file_type = (PluginFileType) plugin ["fileType"].get <int> ();
+            }
             break ;
         }
     }
@@ -83,6 +89,10 @@ PluginUI * Rack::addPluginByName (char * requested) {
                 int index = plugin ["plugin"].get <int> () ;
                 lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
                 res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LADSPA);
+                if (plugin.contains ("file") && plugin ["file"].get <bool>()) {
+                    has_file = true ;                
+                    file_type = (PluginFileType) plugin ["fileType"].get <int> ();
+                }
                 break ;
             }
         }
@@ -91,7 +101,9 @@ PluginUI * Rack::addPluginByName (char * requested) {
     //~ return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
-        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index);
+        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file);
+        ui -> pType = (PluginFileType *) malloc (sizeof (int)) ;
+        * ui->pType = file_type ;
         // ui.index = index ;
         list_box.set_orientation (Gtk::Orientation::VERTICAL);
         list_box.set_vexpand (true);
@@ -142,7 +154,7 @@ void Rack::add () {
     //~ engine -> addPlugin ("libs/dyson_compress_1403.so", 0, SharedLibrary::PluginType::LADSPA);
     engine -> addPlugin ((char *)std::string ("http://drobilla.net/plugins/mda/Delay").c_str (), 0, SharedLibrary::PluginType::LILV);
     int index = engine -> activePlugins->size () - 1;
-    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & list_box, std::string ("Dyson Compressor"), index);
+    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & list_box, std::string ("Dyson Compressor"), index, false);
     // ui.index = index ;
     list_box.set_orientation (Gtk::Orientation::VERTICAL);
     list_box.set_vexpand (true);

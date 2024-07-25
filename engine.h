@@ -9,6 +9,7 @@
 #include "jack.h"
 #include "process.h"
 #include "util.h"
+#include "snd.h"
 
 using json = nlohmann::json;
 
@@ -34,6 +35,8 @@ public:
     bool savePreset (std::string, std::string);
     bool load_preset (json );
     json getPreset ();
+    void set_plugin_audio_file (int index, char * filename);
+    void set_plugin_file (int index, char * filename) ;
 };
 
 #endif 

@@ -284,3 +284,33 @@ bool Engine::load_preset (json j) {
     OUT
     return true;
 }
+
+void Engine::set_plugin_audio_file (int index, char * filename) {
+    IN
+    SoundFile * sf = snd_read (filename) ;
+    if (sf == NULL) {
+        LOGD ("file read failed!\n");
+        return ;
+    }
+    
+    LOGD ("file read ok! set plugin: %d\n", index);
+    
+    activePlugins->at (index)->lv2Descriptor->connect_port(
+        activePlugins->at (index)->handle, 99, &sf->len);
+    activePlugins->at (index)->lv2Descriptor->connect_port(
+        activePlugins->at (index)->handle, 100, sf->data);
+    //~ delete (sf) ;
+    OUT
+}
+
+void Engine::set_plugin_file (int index, char * filename) {
+    std::ifstream fJson(filename);
+    std::stringstream buffer;
+    buffer << fJson.rdbuf();
+    int size = buffer.str ().size () ;
+    activePlugins->at (index)->lv2Descriptor->connect_port(
+        activePlugins->at (index)->handle, 99, & size);
+    activePlugins->at (index)->lv2Descriptor->connect_port(
+        activePlugins->at (index)->handle, 100, (void *)buffer.str().c_str ());
+    
+}

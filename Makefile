@@ -3,10 +3,11 @@ GTKMM=`pkg-config --cflags --libs gtkmm-4.0`
 GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
+SNDFILE=`pkg-config --libs sndfile --cflags`
 #OPTIMIZE=-Ofast 
 
-all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o
-	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE)
+all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o
+	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
@@ -20,8 +21,8 @@ presets.o: presets.cc presets.h
 SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h PluginControl.cpp PluginControl.h
 	g++ SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp -c $(LV2) $(OPTIMIZE)
 
-engine.o: engine.cc engine.h 
-	g++ engine.cc -c $(JACK) $(LV2) $(OPTIMIZE) $(GTKMM)
+engine.o: engine.cc engine.h snd.cc snd.h
+	g++ engine.cc -c $(JACK) $(LV2) $(OPTIMIZE) $(GTKMM) $(SNDFILE)
 
 clean:
 	rm -v *.o
@@ -40,3 +41,5 @@ process: process.cc process.h
 
 util.o: util.c util.h
 	c++ util.c -c $(GTKMM)
+snd.o: snd.cc snd.h
+	c++ snd.cc -c $(SNDFILE)

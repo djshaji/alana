@@ -53,3 +53,44 @@ void PluginUI::load_preset (std::string controls) {
     
     OUT
 }
+
+void on_response (GtkNativeDialog *native,
+             int              response, gpointer data)
+{
+  if (response == GTK_RESPONSE_ACCEPT)
+    {
+      GtkFileChooser *chooser = GTK_FILE_CHOOSER (native);
+      GFile *file = gtk_file_chooser_get_file (chooser);
+      PluginUI * ui = (PluginUI *) data;
+      char * filename = g_file_get_path (file);
+      LOGV (filename);
+      LOGD ("requested file type : %d\n", * ui -> pType) ;
+      if ( *ui -> pType == 0) {
+          LOGD ("[response] %d -> %s\n", * ui -> index_p, filename);
+          ui -> engine ->set_plugin_audio_file (* ui -> index_p, filename);
+      } else {
+          ui -> engine ->set_plugin_file (ui -> index, filename);          
+      }
+      
+      //~ free (filename);
+      //~ g_object_unref (file);
+    }
+
+  //~ g_object_unref (native);
+}
+
+void ui_file_chooser (void * b, void * d) {
+  GtkFileChooserNative *native;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+
+  native = gtk_file_chooser_native_new ("Open File",
+                                        NULL,
+                                        action,
+                                        "_Open",
+                                        "_Cancel");
+
+  g_signal_connect (native, "response", G_CALLBACK (on_response), d);
+  gtk_native_dialog_show (GTK_NATIVE_DIALOG (native));
+
+
+}

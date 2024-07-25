@@ -20,6 +20,12 @@ using json = nlohmann::json;
 void callback (void * p, void *c);
 void bypass (void * p, bool, void * c)  ;
 void control_changed (void * p, void * c);
+void ui_file_chooser (void * b, void * d)  ;
+
+typedef enum {
+    FILE_AUDIO,
+    FILE_JSON
+} PluginFileType ;
 
 class PluginUI {
 public:    
@@ -30,21 +36,30 @@ public:
     Plugin * plugin ;
     Gtk::Box  card ;
     Gtk::Box * parent ;
-    int index ;
+    int index, * index_p ;
+    PluginFileType * pType ;
     std::vector <GtkScale *> sliders ;
   
     void load_preset (std::string);
   
-    PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index) {
+    PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index, bool has_file_chooser) {
         engine = _engine ;
         plugin = _plugin ;
         index = _index ;
+        index_p = (int *) malloc (sizeof (int));
+        *index_p = index ;
         parent = _parent ;
 
         char * s = (char *) malloc (pluginName.size () + 3) ;
         sprintf (s, "%d %s", index, pluginName.c_str ());
+        printf ("[plugin ui] %d %s", index, pluginName.c_str ());
         // name =  Gtk::Label (s) ;
         name = Gtk::Label (pluginName);
+        Gtk::Box nb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+        nb.set_hexpand (true);
+        nb.append (name);
+        nb.set_halign (Gtk::Align::START);
+        
         auto n = std::string ("<big><b>").append (pluginName).append ("</b></big>");
         name.set_markup (n.c_str ());
         free (s);
@@ -53,9 +68,9 @@ public:
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
         card.append (header);
         header.set_hexpand (true);
-        name.set_hexpand (true);
+        //~ name.set_hexpand (true);
         name.set_justify (Gtk::Justification::LEFT);
-        header.append (name);
+        header.append (nb);
         header.set_margin (10);
         header.set_margin_start (0);
 
@@ -73,6 +88,14 @@ public:
         del.set_halign (Gtk::Align::END);
         del.set_valign (Gtk::Align::END);
         del.set_margin (10);
+
+        Gtk::Button load_file = Gtk::Button ("Load file") ;
+
+        load_file.set_halign (Gtk::Align::CENTER);
+        load_file.set_valign (Gtk::Align::CENTER);
+        load_file.set_margin (10);
+        
+        g_signal_connect (load_file.gobj (), "clicked", (GCallback) ui_file_chooser, this);
 
         // del.signal_clicked().connect(sigc::ptr_fun(&callback));
         CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
@@ -134,6 +157,7 @@ public:
         }
 
         card.append (del);
+        card.append (load_file);
     }
 
     void remove () ;
