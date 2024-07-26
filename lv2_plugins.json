@@ -1334,6 +1334,8 @@
   "32900": {
     "name": "Looper",
     "id": 8100,
+    "file": true,
+    "fileType": 0,
     "index": 0,
     "library": "looper.so"
   },
@@ -1341,6 +1343,8 @@
     "name": "Neural Amp Modeler",
     "id": 8101,
     "index": 0,
+    "file": true,
+    "fileType": 1,
     "library": "neural_amp_modeler.so"
   },
   "33100": {
@@ -1359,6 +1363,8 @@
     "name": "AIDA-X",
     "id": 8104,
     "index": 0,
+    "file": true,
+    "fileType": 1,
     "library": "rt-neural-generic.so"
   },
   "33400": {
@@ -1383,6 +1389,8 @@
     "id": 8108,
     "name": "Simple IR Loader",
     "index": 0,
+    "file": true,
+    "fileType": 0,
     "library": "ir_cab.so"
   }
 }

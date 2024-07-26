@@ -2,7 +2,8 @@
   "-1": {
     "http://aidadsp.cc/plugins/aidadsp-bundle/rt-neural-generic#json": "file:///home/djshaji/projects/aidadsp-lv2-amprack/rt-neural-generic/ttl/models/deer%20ink%20studios/tw40_california_clean_deerinkstudios.json",
     "pluginName": "AIDA-X",
-    "file": true
+    "file": true,
+    "fileType": 1
   },
   "0": {
     "AudioPort": true,

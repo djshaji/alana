@@ -70,9 +70,10 @@ PluginUI * Rack::addPluginByName (char * requested) {
             lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
             LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
             res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LV2);
-            if (plugin.contains ("file") && plugin ["file"].get <bool>()) {
+            if (plugin.contains ("file")) {
                 has_file = true ;                
                 file_type = (PluginFileType) plugin ["fileType"].get <int> ();
+                LOGD ("got file type: %d\n", file_type);
             }
             break ;
         }
