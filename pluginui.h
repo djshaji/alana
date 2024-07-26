@@ -167,7 +167,7 @@ public:
                 spin.set_visible (false);            
                 
                 g_signal_connect (dropdown, "notify::selected", (GCallback) dropdown_activated, adj);
-                gtk_widget_set_margin_left (dropdown, 10);
+                gtk_widget_set_margin_start (dropdown, 10);
             }
             
             CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));

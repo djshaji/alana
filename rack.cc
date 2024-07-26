@@ -394,8 +394,8 @@ Rack::Rack () {
     //~ button_box.set_halign (Gtk::Align::CENTER);
     //~ button_box.set_hexpand (true);
     
-    button_box.pack_start (logo);
-    button_box.pack_start (mixer_toggle);
+    //~ button_box.pack_start (logo);
+    //~ button_box.pack_start (mixer_toggle);
     logo.set_halign (Gtk::Align::START);
     
     Gtk::Box m = Gtk::Box () ;
@@ -423,8 +423,8 @@ Rack::Rack () {
     v.set_halign (Gtk::Align::END);
     v.set_hexpand (true);
     
-    button_box.pack_start (record);
-    button_box.pack_start (menu_button);
+    //~ button_box.pack_start (record);
+    //~ button_box.pack_start (menu_button);
     
     //~ button_box.set_margin (10);
     

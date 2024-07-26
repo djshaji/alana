@@ -3,6 +3,7 @@
 
 #include <lilv/lilv.h>
 #include <iostream>
+#include <filesystem>
 #include <gtkmm.h>
 #include "SharedLibrary.h"
 #include "Plugin.h"
@@ -20,6 +21,7 @@ public:
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
     char * libraryPath = nullptr; //= std::string ("libs/linux/x86_64/");
+    std::string assetPath = std::string ();
     nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
@@ -30,8 +32,6 @@ public:
     bool addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) ;
     bool openAudio ();
     bool addPluginByName (char *);
-    void initLilv () ;
-    std::vector <std::string> scanMissingLV2 ();
     bool savePreset (std::string, std::string);
     bool load_preset (json );
     json getPreset ();
