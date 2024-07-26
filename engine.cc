@@ -59,7 +59,8 @@ Engine::Engine () {
     
     ladspaPlugins  = new std::vector <std::string> ();
     lv2Plugins = new std::vector <std::string> ();
-    
+
+    amps = filename_to_json ("assets/amps.json");
     std::ifstream fJson("lv2_plugins.json");
     std::stringstream buffer;
     buffer << fJson.rdbuf();

@@ -21,6 +21,7 @@ void callback (void * p, void *c);
 void bypass (void * p, bool, void * c)  ;
 void control_changed (void * p, void * c);
 void ui_file_chooser (void * b, void * d)  ;
+void dropdown_activated (void * d, int, void * s)  ;
 
 typedef enum {
     FILE_AUDIO,
@@ -127,14 +128,47 @@ public:
             }
             
             Gtk::Box  box =  Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+                        
+            GtkWidget * dropdown = nullptr ;
+            LOGD ("searching for %s in amps\n", pluginName.c_str ());
+
+            if (engine -> amps.contains ("rkr Cabinet")) {
+                LOGD ("plugin found, looking for control: %d\n", i);
+                json mod = engine -> amps [pluginName] ;
+                if (mod.contains (std::to_string (i))) {
+                    auto c = mod [std::to_string (i)];
+                    std::cout << c << std::endl;
+                    char * options [1000] ;
+                    
+                    int x = 0 ;
+                    for (auto val: c) {
+                        std::cout << val << std::endl;
+                        options [x] = strdup ((char *)val.dump ().c_str ()) ;
+                        x ++ ;
+                    }
+                    
+                    options [x] = NULL ;
+                    dropdown = gtk_drop_down_new_from_strings (options) ;
+                }
+            }
             
             box.set_orientation (Gtk::Orientation::HORIZONTAL);
             box.append (label);
+            
             box.append (scale);
             box.append (spin);
 
             GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
             printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
+            
+            if (dropdown != nullptr) {
+                gtk_box_append (box.gobj (), dropdown);
+                scale.set_visible (false);
+                spin.set_visible (false);            
+                
+                g_signal_connect (dropdown, "notify::selected", (GCallback) dropdown_activated, adj);
+                gtk_widget_set_margin_left (dropdown, 10);
+            }
             
             CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
             cd->index = index ;
@@ -142,6 +176,7 @@ public:
             cd -> parent = parent ;
             cd->engine = engine;
             cd->control = i ;
+            cd -> dropdown = dropdown ;
             
             spin.set_digits (2);
             

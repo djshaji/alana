@@ -7,6 +7,7 @@
 typedef struct {
     Gtk::Widget * card ;
     Gtk::Box * parent ;
+    GtkWidget * dropdown ;
     int index ;
     int control ;
     Engine * engine ;

@@ -20,7 +20,7 @@ public:
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
     char * libraryPath = nullptr; //= std::string ("libs/linux/x86_64/");
-    nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map ;
+    nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
     

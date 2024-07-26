@@ -143,7 +143,7 @@ void Presets::add_preset (json j, int which) {
     
     load.set_halign (Gtk::Align::END);
     
-    v.append (h2);
+    //~ v.append (h2);
     h.append (del);
     del.set_halign (Gtk::Align::CENTER);
     OUT

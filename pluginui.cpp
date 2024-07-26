@@ -25,6 +25,10 @@ void control_changed ( void * p, void * c) {
     GtkAdjustment * adj = (GtkAdjustment *) gtk_range_get_adjustment ((GtkRange *)scale);
     CallbackData *cd = (CallbackData *) c ;
     
+    if (cd->dropdown != nullptr) {
+        gtk_drop_down_set_selected ((GtkDropDown *)cd -> dropdown, gtk_adjustment_get_value (adj));
+    }
+    
     *cd -> engine -> activePlugins -> at (cd -> index)
         -> pluginControls . at (cd -> control)->def = gtk_adjustment_get_value (adj);
     cd -> engine -> activePlugins -> at (cd -> index) -> print ();
@@ -93,4 +97,8 @@ void ui_file_chooser (void * b, void * d) {
   gtk_native_dialog_show (GTK_NATIVE_DIALOG (native));
 
 
+}
+
+void dropdown_activated (void * d, int event, void * s) {
+    gtk_adjustment_set_value ((GtkAdjustment *) s, gtk_drop_down_get_selected ((GtkDropDown * )d));
 }
