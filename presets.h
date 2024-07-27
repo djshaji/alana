@@ -18,6 +18,7 @@ class CB_Preset {
         Engine * engine ;
         json j ;
         Rack * rack ;
+        GtkWidget * fav ;
 };
 
 class Presets {

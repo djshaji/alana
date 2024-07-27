@@ -4,7 +4,7 @@ void show_only_categories (void * w, int event, void * d) {
     GtkWidget * dropdown = (GtkWidget * ) w ;
     Sorter * sorter = (Sorter *) d;
     
-    printf ("select %s\n", gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown)));    
+    //~ printf ("select %s\n", gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown)));    
     char * name = (char *) malloc (20);
     std::vector <int> ps ;
 
@@ -33,6 +33,7 @@ void show_only_categories (void * w, int event, void * d) {
             int plugin = ps.at (i);
             sprintf (name, "%d", plugin);
             if (strcmp (name, wname) == 0) {
+                //~ LOGD ("[sorter] matched %s to %s\n", name, wname);
                 gtk_widget_set_visible (gtk_widget_get_parent (w), true);
             }
         }
@@ -68,12 +69,12 @@ PluginUI * Rack::addPluginByName (char * requested) {
             int index = plugin ["index"].get <int> () ;
             std::string lib = plugin ["library"].dump () ;
             lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
-            LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
+            //~ LOGD ("found plugin %s: loading %s\n", requested, lib.c_str ());
             res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LV2);
             if (plugin.contains ("file")) {
                 has_file = true ;                
                 file_type = (PluginFileType) plugin ["fileType"].get <int> ();
-                LOGD ("got file type: %d\n", file_type);
+                //~ LOGD ("got file type: %d\n", file_type);
             }
             break ;
         }
@@ -86,7 +87,7 @@ PluginUI * Rack::addPluginByName (char * requested) {
             //~ LOGD ("[ladspa] %s | %s\n", requested, a.c_str());
             if (strcmp (a.c_str (), requested) == 0) {
                 std::string lib = plugin ["library"].dump () ;
-                LOGD ("[ladspa] found plugin %s: loading %s\n", requested, lib.c_str ());
+                //~ LOGD ("[ladspa] found plugin %s: loading %s\n", requested, lib.c_str ());
                 int index = plugin ["plugin"].get <int> () ;
                 lib = std::string (engine -> libraryPath) + lib.substr (1, lib.size () - 2);
                 res = engine ->addPlugin ((char *)lib.c_str (), index, SharedLibrary::PluginType::LADSPA);
@@ -130,6 +131,10 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * label = gtk_label_new (plug.c_str ());
         GtkWidget * fav = gtk_toggle_button_new ();
         gtk_button_set_label ((GtkButton *) fav, "♥");
+        gtk_widget_set_name (fav, plug.c_str ());
+        
+        hearts.push_back (fav);
+        
         GtkWidget * button = gtk_button_new () ;
         gtk_button_set_label ((GtkButton *) button, "+");
         
@@ -263,12 +268,14 @@ GtkWidget * Rack::createPluginDialog () {
         std::string a = plugin ["name"].dump() ;
         int id = plugin ["id"].get <int>() ;
         //~ printf ("plugin %d: %s\n", id, a.c_str());
-        GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
-        sprintf (name, "%d", id);
         if (blacklist.contains (name)) {
             //~ LOGD ("blacklisted plugin: %s\n", a.c_str ()) ;
             continue;
         }        
+
+        GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
+        sprintf (name, "%d", id);
+
         sorter -> boxes.push_back (w);
         gtk_widget_set_name (w, name);
     }
@@ -314,9 +321,16 @@ bool Rack::load_preset (json j) {
 }
 
 void Rack::clear () {
+    IN
     for (int i = 0 ; i < plugs.size () ; i ++) {
         gtk_box_remove (list_box.gobj (), (GtkWidget *)plugs.at (i));
     }
+    
+    if (engine != NULL && engine->activePlugins != NULL)
+        engine->activePlugins->clear ();
+    
+    plugs.clear () ;
+    OUT
 }
 
 void onoff_cb (void * s, bool state, void * d) {
@@ -382,14 +396,14 @@ Rack::Rack () {
     // list_box.append (sep);
     // sep.set_vexpand (true);
     master.append (add_effect);
-    add_effect.set_label ("+ Effect");
+    add_effect.set_label ("Clear");
     add_effect.set_valign (Gtk::Align::END);
     // list_box.set_valign (Gtk::Align::END);
     // sw.set_propagate_natural_height (true);
     add_effect.set_halign (Gtk::Align::CENTER);
     
     add_effect.signal_clicked().connect(sigc::mem_fun(*this,
-          &Rack::add));
+          &Rack::clear));
 
     //~ button_box.set_halign (Gtk::Align::CENTER);
     //~ button_box.set_hexpand (true);

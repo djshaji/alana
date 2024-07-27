@@ -133,18 +133,23 @@ void Presets::add_preset (json j, int which) {
     g_signal_connect (del.gobj (), "clicked", (GCallback)delete_callback, this);
     
     h.append (load);
+
+    Gtk::ToggleButton fav = Gtk::ToggleButton () ;
+    fav.set_label ("♥");
     
     CB_Preset * cb = new CB_Preset ();
     cb -> engine = engine ;
     cb -> rack = rack ;
     cb -> j = j ;
+    cb -> fav = fav.gobj () ;
     
     g_signal_connect (load.gobj (), "clicked", (GCallback) load_preset_cb, cb);
     
     load.set_halign (Gtk::Align::END);
     
     //~ v.append (h2);
-    h.append (del);
+    v.append (del);
+    h.append (fav);
     del.set_halign (Gtk::Align::CENTER);
     OUT
 }

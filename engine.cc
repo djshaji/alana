@@ -154,7 +154,8 @@ json Engine::getPreset () {
     if (activePlugins == nullptr || activePlugins->size () == 0) {
         LOGD ("no active plugins\n");
         OUT
-        return NULL;
+        return json {};
+
     }
     
     json preset = {} ;

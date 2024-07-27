@@ -6,6 +6,8 @@
 #include "rack.h"
 #include "presets.h"
 
+using json = nlohmann::json;
+
 class CB {
     public:
         Presets * presets ;
@@ -99,11 +101,31 @@ void onshow (void * w, void * d) {
     MyWindow * window = (MyWindow *) d ;    
     std::string default_preset = std::string (window ->presets -> dir) .append ("/default") ;
     window -> rack -> load_preset (default_preset);
+
+    json favs = filename_to_json (std::string (window -> presets -> dir).append ("/fav.json"));
+    for (int i = 0 ; i < window -> rack -> hearts.size (); i ++) {
+        GtkWidget * fav = (GtkWidget *) window -> rack -> hearts.at (i);
+        if (favs.contains (gtk_widget_get_name (fav))) {
+            gtk_toggle_button_set_active ((GtkToggleButton *) fav, true);
+        }
+    }
+    
 }
 
 void quit (void * w, void * d) {
     MyWindow * window = (MyWindow *) d ;
-    window -> rack -> engine -> savePreset (window -> presets -> dir .append ("/default").c_str (), "Last saved preset") ;
+    window -> rack -> engine -> savePreset (std::string (window -> presets -> dir) .append ("/default").c_str (), "Last saved preset") ;
+    
+    json favs = {} ;
+    
+    for (int i = 0 ; i < window -> rack -> hearts.size (); i ++) {
+        GtkWidget * fav = (GtkWidget *) window -> rack -> hearts.at (i);
+        if (gtk_toggle_button_get_active ((GtkToggleButton *)fav)) {
+            favs [gtk_widget_get_name (fav)] = true ;
+        }
+    }
+    
+    json_to_filename (favs, std::string (window -> presets -> dir).append ("/fav.json"));    
     gtk_window_destroy ((GtkWindow *)w);
 }
 

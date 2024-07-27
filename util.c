@@ -13,7 +13,7 @@ json filename_to_json (std::string filename) {
     std::ifstream fJson(filename);
     std::stringstream buffer;
     buffer << fJson.rdbuf();
-    LOGD ("reading file %s\n%s\n", filename.c_str (), buffer.str ());
+    //~ LOGD ("reading file %s\n%s\n", filename.c_str (), buffer.str ());
     auto j = json::parse(buffer.str ());
     OUT
     return j ;

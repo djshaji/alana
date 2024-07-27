@@ -53,7 +53,7 @@ public:
 
         char * s = (char *) malloc (pluginName.size () + 3) ;
         sprintf (s, "%d %s", index, pluginName.c_str ());
-        printf ("[plugin ui] %d %s", index, pluginName.c_str ());
+        //~ printf ("[plugin ui] %d %s", index, pluginName.c_str ());
         // name =  Gtk::Label (s) ;
         name = Gtk::Label (pluginName);
         Gtk::Box nb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
@@ -120,7 +120,7 @@ public:
             Gtk::SpinButton  spin =  Gtk::SpinButton ();
 
             Gtk::Label  label =  Gtk::Label ();
-            LOGD ("control name: %s\n", control->lv2_name.c_str());
+            //~ LOGD ("control name: %s\n", control->lv2_name.c_str());
             if (plugin->type == SharedLibrary::PluginType::LILV) {
                 label.set_label (control->lv2_name.c_str ());
             } else {
@@ -130,25 +130,28 @@ public:
             Gtk::Box  box =  Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
                         
             GtkWidget * dropdown = nullptr ;
-            LOGD ("searching for %s in amps\n", pluginName.c_str ());
+            //~ LOGD ("searching for %s in amps\n", pluginName.c_str ());
 
             if (engine -> amps.contains ("rkr Cabinet")) {
-                LOGD ("plugin found, looking for control: %d\n", i);
+                //~ LOGD ("plugin found, looking for control: %d\n", i);
                 json mod = engine -> amps [pluginName] ;
                 if (mod.contains (std::to_string (i))) {
                     auto c = mod [std::to_string (i)];
-                    std::cout << c << std::endl;
+                    //~ std::cout << c << std::endl;
                     char * options [1000] ;
                     
                     int x = 0 ;
                     for (auto val: c) {
-                        std::cout << val << std::endl;
+                        //~ std::cout << val << std::endl;
                         options [x] = strdup ((char *)val.dump ().c_str ()) ;
                         x ++ ;
                     }
                     
                     options [x] = NULL ;
                     dropdown = gtk_drop_down_new_from_strings (options) ;
+                    
+                    while (--x != 0)
+                        free (options [x]);
                 }
             }
             
@@ -159,7 +162,7 @@ public:
             box.append (spin);
 
             GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
-            printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
+            //~ printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
             
             if (dropdown != nullptr) {
                 gtk_box_append (box.gobj (), dropdown);
@@ -192,7 +195,8 @@ public:
         }
 
         card.append (del);
-        card.append (load_file);
+        if (has_file_chooser)
+            card.append (load_file);
     }
 
     void remove () ;

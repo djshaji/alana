@@ -40,6 +40,7 @@ public:
     Gtk::Switch onoff ;
     
     std::vector <PluginUI> plugins ;        
+    std::vector <GtkWidget *> hearts ;
     void add ();
     PluginUI * addPluginByName (char *);
     bool load_preset (json);

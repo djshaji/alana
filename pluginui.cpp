@@ -42,14 +42,14 @@ void PluginUI::remove ()  {
 
 void PluginUI::load_preset (std::string controls) {
     IN
-    LOGV (controls.c_str ());
+    //~ LOGV (controls.c_str ());
     int i = 0 ;
     std::string c ;
     std::istringstream str = std::istringstream(controls);
     
     while (std::getline(str, c, ';') && i < sliders.size ()) {
         float f = atof(c.c_str());
-        LOGD ("[%d] (%s) %f\n", i, c.c_str (), f);
+        //~ LOGD ("[%d] (%s) %f\n", i, c.c_str (), f);
         GtkScale * scale = (GtkScale *)sliders.at (i);
         gtk_range_set_value ((GtkRange *) scale, f);
         i ++;
