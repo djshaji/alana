@@ -18,12 +18,14 @@ class CB_Preset {
         Engine * engine ;
         json j ;
         Rack * rack ;
-        GtkWidget * fav ;
+        GtkWidget * fav, * fav_rack ;
+        void * p ;
+        std::string filename ;
 };
 
 class Presets {
 public:
-    Gtk::Box master, my_presets, quick, library, my_presets_rack ;
+    Gtk::Box master, my_presets, quick, library, my_presets_rack, favorites ;
     Gtk::Notebook notebook, presets ;
     Gtk::Button add ;
     void my () ;
@@ -32,11 +34,11 @@ public:
     Rack * rack ;
     
     void add_preset (json, int);
-    void load_user ();
+    void load_user (bool);
     void add_preset_multi (json, int) ;
     void add_preset_multi (std::string, int) ;
     
-    std::string dir, presets_dir ;
+    std::string dir, presets_dir, favs_dir ;
     
     Presets () {
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
@@ -55,6 +57,9 @@ public:
         if (g_mkdir_with_parents (presets_dir.c_str (), 0777)) {
             LOGD ("error creating dir: %s\n", strerror (errno)) ;
         }
+        
+        favs_dir = std::string (dir).append ("/favs") ;
+        g_mkdir_with_parents (favs_dir.c_str (), 0777);
         
         master = Gtk::Box () ;
         master.set_orientation (Gtk::Orientation::VERTICAL);

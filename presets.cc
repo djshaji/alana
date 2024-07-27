@@ -13,20 +13,25 @@ void Presets::my () {
     my_presets = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     quick = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     library = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
+    favorites = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     
     Gtk::Label l1 = Gtk::Label ("My Presets");
     Gtk::Label l2 = Gtk::Label ("Quick Presets");
     Gtk::Label l3 = Gtk::Label ("Library");
+    Gtk::Label lf = Gtk::Label ("Favorites");
     
     Gtk::ScrolledWindow sw_q = Gtk::ScrolledWindow (), 
-        sw_l = Gtk::ScrolledWindow () ;
+        sw_l = Gtk::ScrolledWindow (),
+        sw_f = Gtk::ScrolledWindow () ;
     
     gtk_scrolled_window_set_child (sw_q.gobj (), (GtkWidget *) quick.gobj ());
     gtk_scrolled_window_set_child (sw_l.gobj (), (GtkWidget *) library.gobj ());
+    gtk_scrolled_window_set_child (sw_f.gobj (), (GtkWidget *) favorites.gobj ());
     
     presets.append_page (sw_q, l2);
     presets.append_page (my_presets, l1);
     presets.append_page (sw_l, l3);
+    presets.append_page (sw_f, lf);
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     add = Gtk::Button ("Save");
@@ -48,7 +53,8 @@ void Presets::my () {
     
     my_presets_rack.set_vexpand (true);
     //~ add_preset (1) ;
-    load_user ();
+    load_user (false);
+    load_user (true);
     add_preset_multi (std::string ("quick.json"), 0);
 }
 
@@ -73,6 +79,21 @@ void delete_callback (void * b, void * d) {
     
     //~ alert_yesno (name, "Do you want to delete this preset?", null, null);
     OUT
+}
+
+void preset_fav_cb (void * b, void * c) {
+    CB_Preset * cb = (CB_Preset *) c ;
+    GtkToggleButton * t = (GtkToggleButton *) b ;
+    Presets * p = (Presets *) cb -> p ;
+    
+    if (gtk_toggle_button_get_active (t)) {
+        json_to_filename (cb -> j, cb->filename.c_str ());
+        p -> add_preset (cb ->j, 3);
+    } else {
+        GtkWidget * box = gtk_widget_get_parent (gtk_widget_get_parent ((GtkWidget *) t)) ;
+        gtk_box_remove ((GtkBox *)cb -> fav_rack, box);
+        remove (cb->filename.c_str ());
+    }
 }
 
 void Presets::add_preset (json j, int which) {
@@ -103,6 +124,9 @@ void Presets::add_preset (json j, int which) {
             break ;
         case 1:
             my_presets_rack.append (v);
+            break;
+        case 3:
+            favorites.append (v);
             break;
     }
     
@@ -139,28 +163,43 @@ void Presets::add_preset (json j, int which) {
     
     CB_Preset * cb = new CB_Preset ();
     cb -> engine = engine ;
+    cb->filename = std::string (dir).append ("/favs/").append (_name);
     cb -> rack = rack ;
     cb -> j = j ;
-    cb -> fav = fav.gobj () ;
+    cb -> fav = (GtkWidget *)fav.gobj () ;
+    cb -> fav_rack = (GtkWidget *) favorites.gobj ();
+    cb -> p = (void *) this ;
+    
+    if (g_file_test (cb->filename.c_str (), G_FILE_TEST_EXISTS))
+        fav.set_active (true);
     
     g_signal_connect (load.gobj (), "clicked", (GCallback) load_preset_cb, cb);
+    g_signal_connect (fav.gobj (), "toggled", (GCallback) preset_fav_cb, cb);
     
     load.set_halign (Gtk::Align::END);
     
     //~ v.append (h2);
-    v.append (del);
+    if (which == 1)
+        v.append (del);
     h.append (fav);
     del.set_halign (Gtk::Align::CENTER);
     OUT
 }
 
-void Presets::load_user () {
+void Presets::load_user (bool isFav) {
     IN
-    for (const auto & entry : std::filesystem::directory_iterator(presets_dir)) {
+    std::string where = presets_dir ;
+    if (isFav)
+        where = favs_dir ;
+        
+    for (const auto & entry : std::filesystem::directory_iterator(where)) {
         std::cout << entry.path() << std::endl;
     
         json j = filename_to_json (entry.path ());
-        add_preset (j, 1);
+        if (! isFav)
+            add_preset (j, 1);
+        else
+            add_preset (j, 3);
     } 
     OUT   
 }
