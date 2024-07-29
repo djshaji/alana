@@ -35,17 +35,31 @@ void Presets::my () {
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     add = Gtk::Button ("Save");
-    imp = Gtk::Button ("Import");
-    exp = Gtk::Button ("Export");
+    
+    GMenu * menu = g_menu_new ();
+    GMenuItem * import_from_file = g_menu_item_new ("Import from file", "load_preset_cb");
+    GMenuItem * export_to_file = g_menu_item_new ("Export to file", NULL);
+    
+    g_menu_append_item (menu, import_from_file);
+    g_menu_append_item (menu, export_to_file);
+    
+    Gtk::MenuButton menu_button = Gtk::MenuButton () ;
+    
     //~ bbox.set_valign (Gtk::Align::END);
     //~ bbox.set_hexpand (true);
-    imp.set_halign (Gtk::Align::CENTER);
-    exp.set_halign (Gtk::Align::CENTER);
     add.set_halign (Gtk::Align::CENTER);
     add.set_vexpand (false);
-    exp.set_vexpand (false);
-    imp.set_vexpand (false);
+    
+    Gtk::Box hbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+    
+    hbox.set_halign (Gtk::Align::CENTER);
+    hbox.set_vexpand (false);
+
+    menu_button.set_halign (Gtk::Align::CENTER);
+    menu_button.set_vexpand (false);
     //~ bbox.append (add);
+    
+    gtk_menu_button_set_menu_model (menu_button.gobj (), (GMenuModel *) menu);
     
     my_presets_rack = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
     Gtk::ScrolledWindow sw = Gtk::ScrolledWindow () ;
@@ -54,10 +68,12 @@ void Presets::my () {
     gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)my_presets_rack.gobj ());
     my_presets.append (sw);
     
-    my_presets.append (add);
-    my_presets.append (imp);
-    my_presets.append (exp);
-    add.set_margin (10);
+    my_presets.append (hbox);
+    hbox.append (add);
+    hbox.append (menu_button);
+    hbox.set_margin (10);
+    //~ add.set_margin (10);
+    //~ menu_button.set_margin (10);
     
     my_presets_rack.set_vexpand (true);
     //~ add_preset (1) ;
