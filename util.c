@@ -1,7 +1,7 @@
 #include "util.h"
 
 json filename_to_json (std::string filename) {
-    IN
+    //~ IN
     if (! std::filesystem::exists (filename)) {
         filename = std::string ("/usr/share/amprack/").append (filename);
         if (! std::filesystem::exists (filename)) {
@@ -15,7 +15,7 @@ json filename_to_json (std::string filename) {
     buffer << fJson.rdbuf();
     //~ LOGD ("reading file %s\n%s\n", filename.c_str (), buffer.str ());
     auto j = json::parse(buffer.str ());
-    OUT
+    //~ OUT
     return j ;
 }
 

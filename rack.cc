@@ -1,5 +1,20 @@
 #include "rack.h"
 
+void show_only_fav_plugins (void * w, void * d) {
+    IN
+    Sorter * sorter = (Sorter *) d ;
+    Rack * rack = (Rack *) sorter -> rack ;
+    GtkToggleButton * tb = (GtkToggleButton *) w ;
+    
+    bool show = !gtk_toggle_button_get_active (tb) ;
+    for (int i = 0 ; i < rack -> hearts.size () ; i ++) {
+        auto fav = rack -> hearts.at (i);
+        gtk_widget_set_visible (gtk_widget_get_parent (sorter -> boxes.at (i)), show || gtk_toggle_button_get_active ((GtkToggleButton *)fav));
+    }
+    
+    OUT
+}
+
 void show_only_categories (void * w, int event, void * d) {
     GtkWidget * dropdown = (GtkWidget * ) w ;
     Sorter * sorter = (Sorter *) d;
@@ -212,15 +227,28 @@ GtkWidget * Rack::createPluginDialog () {
     GtkWidget * creators_w = gtk_drop_down_new_from_strings (creators);
     gtk_widget_set_name (creators_w, "creators");
     
+    GtkWidget * show_only_favorites = (GtkWidget *) gtk_toggle_button_new_with_label ("♥");
+    gtk_widget_set_hexpand (show_only_favorites, false);
+    gtk_box_set_homogeneous ((GtkBox *) chooser, false);
+    
+    GtkWidget * hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_append ((GtkBox *)hbox, show_only_favorites);
+
+    gtk_widget_set_hexpand (hbox, false);
+    gtk_widget_set_halign (show_only_favorites, GTK_ALIGN_END);
+    gtk_widget_set_halign (hbox, GTK_ALIGN_END);
+        
     Sorter * sorter = (Sorter *) malloc (sizeof (Sorter));
     sorter->categories = categories;
     sorter->creators = creators_w ;
     sorter -> engine = engine ;
     sorter -> listBox = listBox ;
+    sorter -> rack = (void *) this ;
     
     gtk_box_append ((GtkBox *)chooser, sortBy);
     gtk_box_append ((GtkBox *)chooser, categories);
     gtk_box_append ((GtkBox *)chooser, creators_w);
+    gtk_box_append ((GtkBox *)chooser, hbox);
     
     gtk_box_set_homogeneous ((GtkBox *) chooser, true);
     
@@ -229,6 +257,7 @@ GtkWidget * Rack::createPluginDialog () {
     g_signal_connect (sortBy, "notify::selected", (GCallback)change_sort_by, sorter);
     g_signal_connect (categories, "notify::selected", (GCallback)show_only_categories, sorter);
     g_signal_connect (creators_w, "notify::selected", (GCallback)show_only_categories, sorter);
+    g_signal_connect (show_only_favorites, "toggled", (GCallback)show_only_fav_plugins, sorter);
     
     gtk_widget_set_hexpand (sortBy, true);
     gtk_widget_set_hexpand (categories, true);

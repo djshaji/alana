@@ -20,6 +20,7 @@ typedef struct _Sorter {
     GtkWidget * creators, * categories, * listBox;
     Engine * engine ;
     std::vector <GtkWidget *> boxes;
+    void * rack ;
 } Sorter;
 
 class Rack {
