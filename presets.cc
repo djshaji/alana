@@ -35,10 +35,16 @@ void Presets::my () {
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     add = Gtk::Button ("Save");
+    imp = Gtk::Button ("Import");
+    exp = Gtk::Button ("Export");
     //~ bbox.set_valign (Gtk::Align::END);
     //~ bbox.set_hexpand (true);
+    imp.set_halign (Gtk::Align::CENTER);
+    exp.set_halign (Gtk::Align::CENTER);
     add.set_halign (Gtk::Align::CENTER);
     add.set_vexpand (false);
+    exp.set_vexpand (false);
+    imp.set_vexpand (false);
     //~ bbox.append (add);
     
     my_presets_rack = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
@@ -49,6 +55,8 @@ void Presets::my () {
     my_presets.append (sw);
     
     my_presets.append (add);
+    my_presets.append (imp);
+    my_presets.append (exp);
     add.set_margin (10);
     
     my_presets_rack.set_vexpand (true);

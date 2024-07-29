@@ -27,7 +27,7 @@ class Presets {
 public:
     Gtk::Box master, my_presets, quick, library, my_presets_rack, favorites ;
     Gtk::Notebook notebook, presets ;
-    Gtk::Button add ;
+    Gtk::Button add, imp, exp ;
     void my () ;
     void * _this ;
     Engine * engine ;
