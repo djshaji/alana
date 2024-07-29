@@ -6,11 +6,13 @@ void do_search (void * w, void *d) {
     GtkEntry * tb = (GtkEntry *) w ;
     const char * text = gtk_entry_buffer_get_text (gtk_entry_get_buffer (tb));
     std::string str = std::string (text);
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     bool all = str.size () == 0;
     
     for (int i = 0 ; i < rack -> hearts.size (); i ++) {
         GtkWidget * w = (GtkWidget * )rack -> hearts.at (i);
         char * wname = (char *)gtk_widget_get_name (w);
+        w = gtk_widget_get_parent (w);
         
         if (all) {           
             gtk_widget_set_visible (gtk_widget_get_parent (w), true);
@@ -18,7 +20,10 @@ void do_search (void * w, void *d) {
         }
         
         LOGD ("[match] %s -> %s\n", wname, text) ;
-        if (std::string (wname).find (str) != -1) 
+        std::string haystack = std::string (wname) ;
+        std::transform(haystack.begin(), haystack.end(), haystack.begin(), ::tolower);
+
+        if (haystack.find (str) != -1) 
             gtk_widget_set_visible (gtk_widget_get_parent (w), true);
         else
             gtk_widget_set_visible (gtk_widget_get_parent (w), false);
