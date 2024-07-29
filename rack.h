@@ -19,7 +19,7 @@
 typedef struct _Sorter {
     GtkWidget * creators, * categories, * listBox;
     Engine * engine ;
-    std::vector <GtkWidget *> boxes;
+    std::vector <GtkWidget *> * boxes;
     void * rack ;
 } Sorter;
 
@@ -52,6 +52,7 @@ public:
     GtkWidget * addPluginEntry (std::string plug) ;
     
     json blacklist ;
+    GtkWidget * search ;
     
     void clear () ;
     Rack () ;

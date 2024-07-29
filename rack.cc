@@ -1,5 +1,32 @@
 #include "rack.h"
 
+void do_search (void * w, void *d) {
+    Sorter * sorter = (Sorter *) d ;
+    Rack * rack = (Rack *) sorter -> rack ;
+    GtkEntry * tb = (GtkEntry *) w ;
+    const char * text = gtk_entry_buffer_get_text (gtk_entry_get_buffer (tb));
+    std::string str = std::string (text);
+    bool all = str.size () == 0;
+    
+    for (int i = 0 ; i < rack -> hearts.size (); i ++) {
+        GtkWidget * w = (GtkWidget * )rack -> hearts.at (i);
+        char * wname = (char *)gtk_widget_get_name (w);
+        
+        if (all) {           
+            gtk_widget_set_visible (gtk_widget_get_parent (w), true);
+            continue ;
+        }
+        
+        LOGD ("[match] %s -> %s\n", wname, text) ;
+        if (std::string (wname).find (str) != -1) 
+            gtk_widget_set_visible (gtk_widget_get_parent (w), true);
+        else
+            gtk_widget_set_visible (gtk_widget_get_parent (w), false);
+        
+    }
+    
+}
+
 void show_only_fav_plugins (void * w, void * d) {
     IN
     Sorter * sorter = (Sorter *) d ;
@@ -9,7 +36,7 @@ void show_only_fav_plugins (void * w, void * d) {
     bool show = !gtk_toggle_button_get_active (tb) ;
     for (int i = 0 ; i < rack -> hearts.size () ; i ++) {
         auto fav = rack -> hearts.at (i);
-        gtk_widget_set_visible (gtk_widget_get_parent (sorter -> boxes.at (i)), show || gtk_toggle_button_get_active ((GtkToggleButton *)fav));
+        gtk_widget_set_visible (gtk_widget_get_parent (sorter -> boxes->at (i)), show || gtk_toggle_button_get_active ((GtkToggleButton *)fav));
     }
     
     OUT
@@ -34,8 +61,8 @@ void show_only_categories (void * w, int event, void * d) {
     else
         ps = sorter -> engine ->creators [gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)dropdown))].get <std::vector<int>>() ;
     
-    for (int i = 0 ; i < sorter -> boxes.size (); i ++) {
-        GtkWidget * w = (GtkWidget * )sorter->boxes.at (i);
+    for (int i = 0 ; i < sorter -> boxes->size (); i ++) {
+        GtkWidget * w = (GtkWidget * )sorter->boxes->at (i);
         char * wname = (char *)gtk_widget_get_name (w);
         
         if (all) {           
@@ -231,7 +258,11 @@ GtkWidget * Rack::createPluginDialog () {
     gtk_widget_set_hexpand (show_only_favorites, false);
     gtk_box_set_homogeneous ((GtkBox *) chooser, false);
     
+    search = gtk_entry_new ();
+    gtk_entry_set_placeholder_text ((GtkEntry * ) search, "Search");
+    
     GtkWidget * hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_append ((GtkBox *)hbox, search);
     gtk_box_append ((GtkBox *)hbox, show_only_favorites);
 
     gtk_widget_set_hexpand (hbox, false);
@@ -239,6 +270,7 @@ GtkWidget * Rack::createPluginDialog () {
     gtk_widget_set_halign (hbox, GTK_ALIGN_END);
         
     Sorter * sorter = (Sorter *) malloc (sizeof (Sorter));
+    sorter -> boxes = new std::vector <GtkWidget *>();
     sorter->categories = categories;
     sorter->creators = creators_w ;
     sorter -> engine = engine ;
@@ -258,6 +290,7 @@ GtkWidget * Rack::createPluginDialog () {
     g_signal_connect (categories, "notify::selected", (GCallback)show_only_categories, sorter);
     g_signal_connect (creators_w, "notify::selected", (GCallback)show_only_categories, sorter);
     g_signal_connect (show_only_favorites, "toggled", (GCallback)show_only_fav_plugins, sorter);
+    g_signal_connect (search, "activate", (GCallback)do_search, sorter);
     
     gtk_widget_set_hexpand (sortBy, true);
     gtk_widget_set_hexpand (categories, true);
@@ -288,7 +321,7 @@ GtkWidget * Rack::createPluginDialog () {
         int id = plugin ["id"].get <int>() ;
         //~ printf ("plugin %d: %s\n", id, a.c_str());
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
-        sorter -> boxes.push_back (w);
+        sorter -> boxes->push_back (w);
         sprintf (name, "%d", id);
         gtk_widget_set_name (w, name);
     }
@@ -305,7 +338,7 @@ GtkWidget * Rack::createPluginDialog () {
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
         sprintf (name, "%d", id);
 
-        sorter -> boxes.push_back (w);
+        sorter -> boxes->push_back (w);
         gtk_widget_set_name (w, name);
     }
     
