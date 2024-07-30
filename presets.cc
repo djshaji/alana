@@ -7,10 +7,14 @@ void load_preset_cb (void * c, void * d) {
 }
 
 void download_cb (void * w, void * d) {
+    ///>    TODO: 
+    //      clear box before refresh
     Presets * presets = (Presets *) d ;
     gtk_spinner_start (presets->library_spinner);
-    download_file ("https://amprack.in/presets.json", std::string (presets->dir).append ("/").append ("library.json").c_str ());
+    std::string lJson = std::string (presets->dir).append ("/").append ("library.json") ;
+    download_file ("https://amprack.in/presets.json", lJson.c_str ());
     gtk_spinner_stop (presets->library_spinner);
+    presets->add_preset_multi (lJson, 2);
 }
 
 void presets_on_response (GtkNativeDialog *native,
@@ -177,13 +181,27 @@ void Presets::my () {
     
     refresh.set_halign (Gtk::Align::CENTER);
     refresh.set_vexpand (false);
+    sw_l.set_vexpand (true);
 
     my_presets.append (hbox);
-    lbox.append (refresh);
+    //~ lbox.append (refresh);
+    
+    Gtk::Box lvBox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
+    lvBox.set_margin (10);
+    
+    lvBox.set_halign (Gtk::Align::CENTER);
+    lvBox.set_vexpand (false);
+
     library_spinner = (GtkSpinner *)gtk_spinner_new ();
-    gtk_box_append (lbox.gobj (), (GtkWidget *)library_spinner);
+    gtk_widget_show ((GtkWidget *)library_spinner);
+    //~ gtk_spinner_set_spinning ((GtkSpinner *) library_spinner, true);
+    //~ gtk_spinner_start ((GtkSpinner *) library_spinner);
+    
+    lvBox.append (refresh);
+    gtk_box_append (lvBox.gobj (), (GtkWidget *)library_spinner);
     
     lbox.append (sw_l);
+    lbox.append (lvBox);  
     
     hbox.append (add);
     hbox.append (load_f);
@@ -198,6 +216,7 @@ void Presets::my () {
     load_user (false);
     load_user (true);
     add_preset_multi (std::string ("quick.json"), 0);
+    add_preset_multi (std::string (dir).append("/library.json"), 2);
 }
 
 
@@ -239,8 +258,8 @@ void preset_fav_cb (void * b, void * c) {
 }
 
 void Presets::add_preset (json j, int which) {
-    IN
-    std::cout << j << std::endl;
+    //~ IN
+    //~ std::cout << j << std::endl;
     Gtk::Box h = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box h2 = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     Gtk::Box v = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
@@ -325,7 +344,7 @@ void Presets::add_preset (json j, int which) {
         v.append (del);
     h.append (fav);
     del.set_halign (Gtk::Align::CENTER);
-    OUT
+    //~ OUT
 }
 
 void Presets::load_user (bool isFav) {
