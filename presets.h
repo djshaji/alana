@@ -32,6 +32,7 @@ public:
     void * _this ;
     Engine * engine ;
     Rack * rack ;
+    GtkApplication * app ;
     
     void add_preset (json, int);
     void load_user (bool);

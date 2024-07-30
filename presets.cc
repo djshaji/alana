@@ -6,6 +6,10 @@ void load_preset_cb (void * c, void * d) {
     
 }
 
+void menu_clicked (void * action, void * data) {
+    LOGD ("menu clicked: %s!\n", g_action_get_name ( G_ACTION ((GSimpleAction *) action ) ));
+}
+
 void Presets::my () {
     presets = Gtk::Notebook () ;
     notebook.append_page (presets, "Presets");
@@ -37,12 +41,22 @@ void Presets::my () {
     add = Gtk::Button ("Save");
     
     GMenu * menu = g_menu_new ();
-    GMenuItem * import_from_file = g_menu_item_new ("Import from file", "load_preset_cb");
-    GMenuItem * export_to_file = g_menu_item_new ("Export to file", NULL);
+
+    GSimpleAction * import_action = g_simple_action_new ("import", null);
+    GSimpleAction * export_action = g_simple_action_new ("export", null);
+
+    g_action_map_add_action ( G_ACTION_MAP ( app ), G_ACTION ( import_action ) );
+    g_action_map_add_action ( G_ACTION_MAP ( app ), G_ACTION ( export_action ) );
+
+    g_signal_connect (import_action,    "activate", G_CALLBACK (menu_clicked), NULL);
+    g_signal_connect (export_action, "activate", G_CALLBACK (menu_clicked), NULL);
+
+    GMenuItem * import_from_file = g_menu_item_new ("Import from file", "app.import");
+    GMenuItem * export_to_file = g_menu_item_new ("Export to file", "app.export");
     
     g_menu_append_item (menu, import_from_file);
     g_menu_append_item (menu, export_to_file);
-    
+
     Gtk::MenuButton menu_button = Gtk::MenuButton () ;
     
     //~ bbox.set_valign (Gtk::Align::END);

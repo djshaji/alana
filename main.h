@@ -92,9 +92,10 @@ public:
     Gtk::Stack  stack ;
     Gtk::StackSwitcher  switcher ;
     Gtk::Box box, stack_box ;
+    GtkApplication * app ;
     Rack * rack ;
     Presets * presets ; 
-  MyWindow();
+  MyWindow(GtkApplication *);
 };
 
 void onshow (void * w, void * d) {
@@ -129,8 +130,9 @@ void quit (void * w, void * d) {
     gtk_window_destroy ((GtkWindow *)w);
 }
 
-MyWindow::MyWindow()
+MyWindow::MyWindow(GtkApplication * _app)
 {
+    app = _app ;
     set_title("Amp Rack 5 (Alpha)");
     set_default_size(1200, 800);
 
@@ -164,6 +166,7 @@ MyWindow::MyWindow()
     presets->_this = (void *) presets ;
     presets->engine = rack -> engine ;
     presets->rack = rack ;
+    presets->app = app ;
     
     gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
     
