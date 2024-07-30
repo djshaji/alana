@@ -6,6 +6,12 @@ void load_preset_cb (void * c, void * d) {
     
 }
 
+void download_cb (void * w, void * d) {
+    Presets * presets = (Presets *) d ;
+    gtk_spinner_start (presets->library_spinner);
+    download_file ("https://amprack.in/presets.json", std::string (presets->dir).append ("/").append ("library.json").c_str ());
+    gtk_spinner_stop (presets->library_spinner);
+}
 
 void presets_on_response (GtkNativeDialog *native,
              int              response, gpointer data)
@@ -108,9 +114,11 @@ void Presets::my () {
     gtk_scrolled_window_set_child (sw_l.gobj (), (GtkWidget *) library.gobj ());
     gtk_scrolled_window_set_child (sw_f.gobj (), (GtkWidget *) favorites.gobj ());
     
+    Gtk::Box lbox = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
+    
     presets.append_page (sw_q, l2);
     presets.append_page (my_presets, l1);
-    presets.append_page (sw_l, l3);
+    presets.append_page (lbox, l3);
     presets.append_page (sw_f, lf);
     
     //~ Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
@@ -164,7 +172,19 @@ void Presets::my () {
     Gtk::Button save_f = Gtk::Button ("Export") ;
     g_signal_connect (save_f.gobj (), "clicked",(GCallback) save_to_file, this);
     
+    Gtk::Button refresh = Gtk::Button ("Refresh") ;
+    g_signal_connect (refresh.gobj (), "clicked",(GCallback) download_cb, this);
+    
+    refresh.set_halign (Gtk::Align::CENTER);
+    refresh.set_vexpand (false);
+
     my_presets.append (hbox);
+    lbox.append (refresh);
+    library_spinner = (GtkSpinner *)gtk_spinner_new ();
+    gtk_box_append (lbox.gobj (), (GtkWidget *)library_spinner);
+    
+    lbox.append (sw_l);
+    
     hbox.append (add);
     hbox.append (load_f);
     hbox.append (save_f);

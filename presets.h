@@ -29,6 +29,7 @@ public:
     Gtk::Notebook notebook, presets ;
     Gtk::Button add, imp, exp ;
     void my () ;
+    GtkSpinner * library_spinner ;
     void * _this ;
     Engine * engine ;
     Rack * rack ;

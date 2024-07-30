@@ -29,4 +29,5 @@ bool json_to_filename (json j, std::string filename) ;
 void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gpointer data) ;
 void alert (char * title, char * msg, AlertType type, gpointer callback, gpointer data) ;
 void msg (std::string message) ;
+bool download_file (char *name, const char * filename) ;
 #endif

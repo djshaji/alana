@@ -85,3 +85,57 @@ void msg (std::string message) {
     gtk_alert_dialog_show (dialog, null);
 }
 
+bool download_file (char *name, const char * filename) {
+    GFile *f = g_file_new_for_uri(name);
+    GFileInputStream *fis = NULL;
+    GDataInputStream* dis = NULL;
+    GError *err = NULL;
+    //char buffer[2048];
+    char *buffer;
+    size_t length;
+    bool ret = false;
+
+    GFileInfo *info;
+
+    int total_size = -1;
+
+    /* get input stream */
+    fis = g_file_read(f, NULL, &err);
+
+    if (err != NULL) {
+        fprintf(stderr, "ERROR: opening %s\n", name);
+        g_object_unref(f);
+        return false;
+    }
+
+    info = g_file_input_stream_query_info (G_FILE_INPUT_STREAM (fis),G_FILE_ATTRIBUTE_STANDARD_SIZE,NULL, &err);
+    if (info)
+    {
+        if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
+            total_size = g_file_info_get_size (info);
+            printf( "total_size = %d\n", total_size);
+            g_object_unref (info);
+    }
+
+    // fill buffer
+    if(total_size > 0){
+        FILE * fd = fopen (filename, "w");
+        buffer = (char *) malloc(sizeof(char) * total_size);
+        memset(buffer, 0, total_size);
+        int i = 0 ;
+        while  ((length = g_input_stream_read (G_INPUT_STREAM(fis),
+                    buffer, total_size, NULL, &err)) != -1 && i < total_size) {
+                //~ printf( "%s\n", buffer);
+            fwrite (buffer, length, 1, fd);
+            //~ printf ("%d/%d\n", i, total_size);
+            i += length ;
+        }
+        
+        fclose (fd);
+        ret = true;
+    }
+    // close streams
+    g_object_unref(fis);
+    g_object_unref(f);   
+    return ret;
+}
