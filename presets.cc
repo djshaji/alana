@@ -44,6 +44,44 @@ void load_from_file (void * b, void * d) {
 
 }
 
+
+void presets_off_response (GtkNativeDialog *native,
+             int              response, gpointer data)
+{
+    if (response == GTK_RESPONSE_ACCEPT)
+    {
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER (native);
+        GFile *file = gtk_file_chooser_get_file (chooser);
+        Presets * presets = (Presets *) data;
+        char * filename = g_file_get_path (file);
+        
+        LOGV (filename);
+        //~ LOGV (presets->_pdir);
+        presets-> save_presets_to_json (std::string (filename)) ;
+
+        free (filename);
+        g_object_unref (file);
+    }
+
+  g_object_unref (native);
+}
+
+void save_to_file (void * b, void * d) {
+  GtkFileChooserNative *native;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+
+  native = gtk_file_chooser_native_new ("Save File",
+                                        NULL,
+                                        action,
+                                        "_Open",
+                                        "_Cancel");
+
+  g_signal_connect (native, "response", G_CALLBACK (presets_off_response), d);
+  gtk_native_dialog_show (GTK_NATIVE_DIALOG (native));
+
+
+}
+
 void menu_clicked (void * action, void * data) {
     
 }
@@ -123,10 +161,14 @@ void Presets::my () {
     Gtk::Button load_f = Gtk::Button ("Import") ;
     g_signal_connect (load_f.gobj (), "clicked",(GCallback) load_from_file, this);
     
+    Gtk::Button save_f = Gtk::Button ("Export") ;
+    g_signal_connect (save_f.gobj (), "clicked",(GCallback) save_to_file, this);
+    
     my_presets.append (hbox);
     hbox.append (add);
     hbox.append (load_f);
-    hbox.append (menu_button);
+    hbox.append (save_f);
+    //~ hbox.append (menu_button);
     hbox.set_margin (10);
     //~ add.set_margin (10);
     //~ menu_button.set_margin (10);
@@ -314,4 +356,19 @@ void Presets::import_presets_from_json (json j) {
     }
     
     msg (std::string ("Imported ").append (std::to_string (how_many)).append (" presets successfully."));
+}
+
+void Presets::save_presets_to_json (std::string filename) {
+    json ex = json {};
+    int i = 0 ;
+    for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
+        std::cout << entry.path() << std::endl;
+        json j = filename_to_json (entry.path ());
+        ex [std::to_string (i++)] = j ;
+    } 
+    
+    if (json_to_filename (ex, filename))
+        msg ("Exported presets successfully");
+    else 
+        msg ("Error exporting presets");
 }

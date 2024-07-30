@@ -1,0 +1,927 @@
+{
+    "0": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.72",
+                "name": "GxKnightFuzz"
+            }
+        },
+        "desc": "Distorted Tone ",
+        "likes": 13,
+        "name": "Fuzz 2",
+        "path": "presets/9rCfZ8ucVk2VfY1raLt1",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "1": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.48;0.45;0.83;0.5",
+                "name": "Gx_voxbass_"
+            }
+        },
+        "desc": "Nice Crisp Clean Tone",
+        "likes": 8,
+        "name": "Clean 4",
+        "path": "presets/LZIhfNMwoE64t0qAvii4",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "10": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.78;1.6",
+                "name": "Gx_liquiddrive_"
+            }
+        },
+        "desc": "Distorted Power Tone",
+        "likes": 10,
+        "name": "Stadium Rock",
+        "path": "presets/Opyda8PGCrMJYW4cLdeg",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "11": {
+        "controls": {
+            "0": {
+                "controls": "1.0;1.0;0.71;4.56;2.0;5.0;1.0;0.7",
+                "name": "Gx_quack_"
+            }
+        },
+        "desc": "Nice tone with a little wah",
+        "likes": 9,
+        "name": "Auto wah",
+        "path": "presets/Bh4UD1clOPWh7So7qnQG",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "12": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.88;1.11;793.0",
+                "name": "GxSD2Lead"
+            }
+        },
+        "desc": "Sharp lead guitar",
+        "likes": 9,
+        "name": "Lead 2",
+        "path": "presets/kimCiM1MaO8rGkrCiEFx",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "13": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.9;0.85;0.59",
+                "name": "GxBottleRocket"
+            }
+        },
+        "desc": "Classic Tube Amp",
+        "likes": 9,
+        "name": "Vintage Rock 1",
+        "path": "presets/kgi3UyKkJMzQ3BrowgpV",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "14": {
+        "controls": {
+            "0": {
+                "controls": "0.0;9.65;9.0",
+                "name": "rkr Cabinet"
+            }
+        },
+        "desc": "Bright People Tone",
+        "likes": 11,
+        "name": "Clean Metal ",
+        "path": "presets/QF1iX3U6643xsyYfXYGg",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "15": {
+        "controls": {
+            "0": {
+                "controls": "0.0;22.3;5.0",
+                "name": "rkr Cabinet"
+            }
+        },
+        "desc": "Nice Warm Tone ",
+        "likes": 8,
+        "name": "Fat Blues",
+        "path": "presets/KtkyW4Uh7ZYRuIlkFSd1",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "16": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.85;0.78;0.35",
+                "name": "GxBlueAmp"
+            }
+        },
+        "desc": "Dry Distorted Tone ",
+        "likes": 6,
+        "name": "Fat Fuzz ",
+        "path": "presets/Q5Kf1u5wPa0ydgmQYDTu",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "17": {
+        "controls": {
+            "0": {
+                "controls": "0.87;0.59",
+                "name": "GxHyperion"
+            }
+        },
+        "desc": "Dry Distortion",
+        "likes": 14,
+        "name": "Fuzzy Feeling",
+        "path": "presets/5kavWzekrDaHZhzCrQhR",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "18": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.98;0.85;0.25;0.84",
+                "name": "GxTimRay"
+            }
+        },
+        "desc": "Warm Strong Tone",
+        "likes": 10,
+        "name": "Overdrive 8",
+        "path": "presets/DXehJ26iXXCJOK0H2Eiv",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "19": {
+        "controls": {
+            "0": {
+                "controls": "0.93;1.0;0.98;0.18",
+                "name": "Gx_sfp_"
+            }
+        },
+        "desc": "Harsh Driven Distortion",
+        "likes": 20,
+        "name": "Metal Cabinet 5",
+        "path": "presets/AAPD6NKjjY2XlUsc8wim",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "2": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.75;0.65;0.31",
+                "name": "Gx_CreamMachine_"
+            },
+            "1": {
+                "controls": "4.25;10.0",
+                "name": "TAP TubeWarmth"
+            }
+        },
+        "desc": "Warm Overdriven Tube Stack ",
+        "likes": 20,
+        "name": "Tube Overdrive",
+        "path": "presets/X3w4Gn7Mp0Yo3gB3a7cI",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "20": {
+        "controls": {
+            "0": {
+                "controls": "0.71;0.82;0.79;0.39",
+                "name": "Gx_voodoo_"
+            }
+        },
+        "desc": "Rock Lead Tone",
+        "likes": 12,
+        "name": "Lead Guitar 8",
+        "path": "presets/I1O7ZMAfWuMoPhxbePCS",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "21": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.53;0.9",
+                "name": "GxHeathkit"
+            }
+        },
+        "desc": "Clean slightly distorted tone ",
+        "likes": 3,
+        "name": "Overdrive 5",
+        "path": "presets/8bhddmFUVslrw2HquktY",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "22": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.84;0.71;0.72;0.63",
+                "name": "GxEpic"
+            },
+            "1": {
+                "controls": "1.8;0.27;0.26;36.0",
+                "name": ":: Invada :: Tube - Mono"
+            }
+        },
+        "desc": "Can never die",
+        "likes": 10,
+        "name": "Rock and Roll",
+        "path": "presets/XyEl2Y5caItuHsFdZLkt",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "23": {
+        "controls": {
+            "0": {
+                "controls": "0.59;0.69;0.7;0.45;0.76",
+                "name": "GxGuvnor"
+            },
+            "1": {
+                "controls": "5.4;76.0;0.0",
+                "name": "TAP Tremolo"
+            }
+        },
+        "desc": "Nice tremolo at 120 BPM",
+        "likes": 16,
+        "name": "Tremolo Rhythm",
+        "path": "presets/ghfc36EvQG1y399KhLWO",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "24": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.96;0.81;1.0;0.52",
+                "name": "Gx_supersonic_"
+            }
+        },
+        "desc": "Harsh Overdrive",
+        "likes": 14,
+        "name": "Supersonic",
+        "path": "presets/9Wj0hlVNga0XDiM1ycmg",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "25": {
+        "controls": {
+            "0": {
+                "controls": "0.59;0.69;0.7;0.45;0.76",
+                "name": "GxGuvnor"
+            }
+        },
+        "desc": "Rock on",
+        "likes": 7,
+        "name": "Punk Overdrive",
+        "path": "presets/OpE6S1OXPdyFxF0jYDHM",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "26": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.26;0.48;0.89;0.83",
+                "name": "GxFz1s"
+            }
+        },
+        "desc": "Overdriven yet Clean",
+        "likes": 4,
+        "name": "Overdrive 4",
+        "path": "presets/aqxr7rKtS0HOynKsjILL",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "27": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.78;0.84;0.84",
+                "name": "Gx_shakatube_"
+            }
+        },
+        "desc": "Old School Tube Amp",
+        "likes": 9,
+        "name": "Tube Amplifier 4",
+        "path": "presets/oQwFjb9eJyuoyuzKMJ3D",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "28": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.89;0.7;0.62;1.0",
+                "name": "GxEpic"
+            }
+        },
+        "desc": "Excitable Overdriven Guitar",
+        "likes": 13,
+        "name": "Epic Overdrive",
+        "path": "presets/2l4pmyCPQniKdCjnWtaY",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "29": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.71;0.77;0.83",
+                "name": "GxLuna"
+            }
+        },
+        "desc": "Happy go lucky tone",
+        "likes": 9,
+        "name": "Bright Crunch ",
+        "path": "presets/U5GJzhC1fOhPrbDuOiId",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "3": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.19;0.96;0.55",
+                "name": "Gx_bajatubedriver_"
+            },
+            "1": {
+                "controls": "3.24;0.0;0.0;75.0",
+                "name": ":: Invada :: Tube - Mono"
+            },
+            "2": {
+                "controls": "0.65;2.8;0.32",
+                "name": "C* JVRev - Stanford-style reverb from STK"
+            }
+        },
+        "desc": "Ringing Tube Distortion with a bit of Reverb",
+        "likes": 7,
+        "name": "Grunge Tube ",
+        "path": "presets/WEgcix3UJUH4b9IsCEnp",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "30": {
+        "controls": {
+            "0": {
+                "controls": "1.0",
+                "name": "Gx_denoiser2_"
+            },
+            "1": {
+                "controls": "1.0;6.0",
+                "name": "Gx_cabsim_"
+            },
+            "2": {
+                "controls": "37.0;0.2;0.62;0.19;0.48",
+                "name": "GxReverb-Stereo"
+            },
+            "3": {
+                "controls": "77.4;0.0;127.0;0.0;0.0;31.7;0.0;565.0;0.0;30.0",
+                "name": "rkr Echo"
+            }
+        },
+        "desc": "Change Amp Models and toggle Echo / Reverb ",
+        "likes": 13,
+        "name": "Clean Tone ",
+        "path": "presets/JpMcB2hRUsPIGtAOEr9Z",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "31": {
+        "controls": {
+            "0": {
+                "controls": "6.5;0.0;0.52;0.0;0.8;593.0;6850.0;0.45;4150.0;136.0;0.16;0.35;0.01",
+                "name": "distdsp"
+            },
+            "1": {
+                "controls": "21.0;4.31",
+                "name": "C* CabinetIV - Idealised loudspeaker cabinet"
+            }
+        },
+        "desc": "Distortion with Loudspeaker Cabinet",
+        "likes": 21,
+        "name": "Rock Rhythm",
+        "path": "presets/PqRSl4caC2n9YzqLMfUO",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "32": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.78;0.96;0.85;0.79",
+                "name": "Gx_boobtube_"
+            }
+        },
+        "desc": "Heavy Distorted Tone ",
+        "likes": 9,
+        "name": "Hard Rock ",
+        "path": "presets/XzaPuwRTINqRZfcpISIG",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "33": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.87;0.78;0.79",
+                "name": "Gx_CreamMachine_"
+            }
+        },
+        "desc": "Vintage Tube ",
+        "likes": 8,
+        "name": "Classic Crunch 2",
+        "path": "presets/luMFhoEXXy8rtc0RgRdk",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "34": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.71;1.0;0.55",
+                "name": "Gx_bajatubedriver_"
+            }
+        },
+        "desc": "Ringing Tube Distortion",
+        "likes": 11,
+        "name": "Tube Amplifier B",
+        "path": "presets/LvoqjDdhjCVorWhhKyz0",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "35": {
+        "controls": {
+            "0": {
+                "controls": "0.0;-0.5;3.0",
+                "name": "rkr Cabinet"
+            },
+            "1": {
+                "controls": "1.0;0.28;0.85;0.5;1.0",
+                "name": "Gx_valvecaster_"
+            },
+            "2": {
+                "controls": "4.255;0.25;0.31",
+                "name": "Plate reverb"
+            }
+        },
+        "desc": "A little reverb, a little cab, and a little bit of magic",
+        "likes": 8,
+        "name": "Smooth Jazz ",
+        "path": "presets/pJkxJZgX6qZ20sZXvC8n",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "36": {
+        "controls": {
+            "0": {
+                "controls": "6.5;0.0;0.52;0.0;0.8;593.0;6850.0;0.45;4150.0;136.0;0.16;0.35;0.01",
+                "name": "distdsp"
+            },
+            "1": {
+                "controls": "9.0;0.0;0.0",
+                "name": "C* CabinetIII - Simplistic loudspeaker cabinet emulation"
+            }
+        },
+        "desc": "Change Amp Models on the Cabinet plugin to explore tones ",
+        "likes": 15,
+        "name": "Cabinet Emulation",
+        "path": "presets/7i0e2cUekoajNSSydQym",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "37": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.54;0.75;0.82;7.87;0.25;0.75;0.91;0.25;0.75;0.75",
+                "name": "C* AmpVTS - Idealised guitar amplification"
+            },
+            "1": {
+                "controls": "0.36;0.63;0.82;0.65;0.75;0.5;11.7",
+                "name": "C* Compress - Compressor and saturating limiter"
+            },
+            "2": {
+                "controls": "0.25;0.25;0.88;0.62;1.0",
+                "name": "Auto phaser"
+            },
+            "3": {
+                "controls": "0.25;0.0;-0.0",
+                "name": "crydsp"
+            }
+        },
+        "desc": "Auto triggered clean wah sound ",
+        "likes": 32,
+        "name": "Auto Wah ",
+        "path": "presets/3bIKiuOM9A64YvcN92Ji",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "38": {
+        "controls": {
+            "0": {
+                "controls": "6.5;0.0;0.52;0.0;-5.5;593.0;6850.0;0.45;4150.0;136.0;0.16;0.35;0.01",
+                "name": "distdsp"
+            },
+            "1": {
+                "controls": "0.0;27.4;6.0",
+                "name": "rkr Cabinet"
+            }
+        },
+        "desc": "Classy Lead Guitar that shines through Power Chords ",
+        "likes": 12,
+        "name": "Eminent Lead",
+        "path": "presets/J0aeiJV3PLwa2pY6weCC",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "39": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.9;0.84;1.0",
+                "name": "Gx_AxisFace_"
+            }
+        },
+        "desc": "Nice dry distortion",
+        "likes": 12,
+        "name": "Power Chord",
+        "path": "presets/thHgfXyjYCnrdV2sxnQm",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "4": {
+        "controls": {
+            "0": {
+                "controls": "0.89;1.0;0.71;0.62;0.5;0.9;0.71;1.1;1.0",
+                "name": "Gx_ampegsvt_"
+            }
+        },
+        "desc": "Clean Warm Tone",
+        "likes": 8,
+        "name": "Jazz Hands ",
+        "path": "presets/CT6mDqHzfu4gWveNro5I",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "40": {
+        "controls": {
+            "0": {
+                "controls": "0.0;16.0;4.0",
+                "name": "rkr Cabinet"
+            },
+            "1": {
+                "controls": "2500.0;0.4;-6.7;0.51;1.0;1.0;1.0;17.0",
+                "name": "TAP Reverberator"
+            }
+        },
+        "desc": "Dreamy Lead Tone ",
+        "likes": 15,
+        "name": "Wet Lead",
+        "path": "presets/YLUchqX1zGlUgWO61CMg",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "41": {
+        "controls": {
+            "0": {
+                "controls": "0.5;0.5;0.71;0.5;0.65;0.7;0.25",
+                "name": "GxUVox720k"
+            },
+            "1": {
+                "controls": "0.5;0.81;0.5;0.39",
+                "name": "C* Plate - Versatile plate reverb"
+            }
+        },
+        "desc": "Blues and Jazz and More",
+        "likes": 13,
+        "name": "Clean Lead ",
+        "path": "presets/f30vWZf57fpm0AAUP4Ac",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "42": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.89;0.7;0.62;1.0",
+                "name": "GxEpic"
+            }
+        },
+        "desc": "For those about to Rock",
+        "likes": 28,
+        "name": "Hard Rock",
+        "path": "presets/7Qa1JO25DiQm78kdTnFP",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "43": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.78;0.71;0.53;0.63;0.5;0.72",
+                "name": "Gx_plexi_"
+            }
+        },
+        "desc": "Ringing Distorted Tone",
+        "likes": 8,
+        "name": "Grunge 2",
+        "path": "presets/kMo9dKx59KTsULaaG8aK",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "44": {
+        "controls": {
+            "0": {
+                "controls": "0.0;16.0;8.0",
+                "name": "rkr Cabinet"
+            },
+            "1": {
+                "controls": "16.0;80.0;85.0;58.4;118.0;0.0;0.38;0.0;85.0;0.0;120.0;17.7;0.0",
+                "name": "rkr Flanger/Chorus"
+            }
+        },
+        "desc": "Jab it up",
+        "likes": 4,
+        "name": "Jazz 5",
+        "path": "presets/EKg322IoBPnDHi1OF95T",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "45": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.88;0.65;0.96;0.96",
+                "name": "GxHotBox"
+            }
+        },
+        "desc": "Ringing Heavy Tone",
+        "likes": 11,
+        "name": "Grunge Distortion ",
+        "path": "presets/Lm1yqad37fvgEIhEBAt0",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "46": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.87;0.5;0.87",
+                "name": "GxSloopyBlue"
+            },
+            "1": {
+                "controls": "3129.0;0.71;0.0;17.7;4120.0;43.0;3987.0;48.5",
+                "name": "rkr Coil Crafter"
+            },
+            "2": {
+                "controls": "4.0;0.5;0.53;0.66",
+                "name": "C* ToneStack - Classic amplifier tone stack emulation"
+            }
+        },
+        "desc": "Nice Crunchy Tube ",
+        "likes": 15,
+        "name": "Rock Cabinet",
+        "path": "presets/Z1juLoUD90g4XAkUOv1y",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "47": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.5;0.29;0.5;0.5",
+                "name": "GxBottleRocket"
+            }
+        },
+        "desc": "Signature crunch sound",
+        "likes": 13,
+        "name": "90s Grunge",
+        "path": "presets/dX4g6bbL263NekbPhNy0",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "48": {
+        "controls": {
+            "0": {
+                "controls": "0.0;31.2;3.0",
+                "name": "rkr Cabinet"
+            },
+            "1": {
+                "controls": "4002.0;27.0;83.0;1.0;89.2;0.0;80.0;0.0;63.0;24.0;30.4",
+                "name": "rkr Reverb"
+            }
+        },
+        "desc": "Lead Guitar with Reverb Trail",
+        "likes": 13,
+        "name": "Among the Stars",
+        "path": "presets/aH3xVsn1ojBYm7da0NbJ",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "49": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.59;1.0;0.72",
+                "name": "GxEternity"
+            }
+        },
+        "desc": "Overdriven Cabinet ",
+        "likes": 8,
+        "name": "Overdrive 2",
+        "path": "presets/HimioeA3YPxlODLY2kWw",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "5": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.87;0.5;0.87",
+                "name": "GxSloopyBlue"
+            },
+            "1": {
+                "controls": "3129.0;0.71;0.0;17.7;4120.0;43.0;3493.0;45.2",
+                "name": "rkr Coil Crafter"
+            }
+        },
+        "desc": "Heavy Tube Emulation ",
+        "likes": 15,
+        "name": "Harsh Rock ",
+        "path": "presets/54XE6HoD1yy7Vsb8UgfJ",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "50": {
+        "controls": {
+            "0": {
+                "controls": "0.91;0.85;0.84",
+                "name": "Gx_vstb_"
+            }
+        },
+        "desc": "Nice Fuzz Overdrive",
+        "likes": 12,
+        "name": "Sharp Fuzz ",
+        "path": "presets/JwvRgmq67SoIcX6rfw3U",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "51": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.89;0.85;0.88",
+                "name": "GxSunFace"
+            }
+        },
+        "desc": "Bright as the sun ",
+        "likes": 16,
+        "name": "Bright Metal",
+        "path": "presets/bbOhvGD2c3HGTVt4m3uQ",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "52": {
+        "controls": {
+            "0": {
+                "controls": "0.93;1.0;0.98;0.18",
+                "name": "Gx_sfp_"
+            },
+            "1": {
+                "controls": "1.0;0.71;0.78;0.84;1.0;0.45;0.75;0.53;0.25;0.75;0.83",
+                "name": "C* AmpVTS - Idealised guitar amplification"
+            }
+        },
+        "desc": "Hard Driven Distortion ",
+        "likes": 17,
+        "name": "Metal Cabinet 4",
+        "path": "presets/9aWMo3qr0etZljN66ccx",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "53": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.9;0.87;0.61;1.0",
+                "name": "Gx_valvecaster_"
+            }
+        },
+        "desc": "Heavy as Funk ",
+        "likes": 18,
+        "name": "Overdrive 10",
+        "path": "presets/oOPxkRpyaZVGVImNfJfk",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "54": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.76;1.35;577.0",
+                "name": "Gx_sd1sim_"
+            },
+            "1": {
+                "controls": "0.69;2.57;0.45",
+                "name": "C* JVRev - Stanford-style reverb from STK"
+            }
+        },
+        "desc": "Rock lead guitar",
+        "likes": 9,
+        "name": "Lead 1",
+        "path": "presets/l5NbsCxn0igdbwwBJm45",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "6": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.87;0.75;0.87",
+                "name": "GxSloopyBlue"
+            }
+        },
+        "desc": "Nice Crunchy Tube Emulation",
+        "likes": 16,
+        "name": "Tube Amplifier 5",
+        "path": "presets/e59F103ouDgtPeS1uSUP",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "7": {
+        "controls": {
+            "0": {
+                "controls": "0.59;0.84;0.5;0.88;1.0;0.77;0.71;0.17;0.5;0.89",
+                "name": "Gx_vmk2d_"
+            }
+        },
+        "desc": "Clean Tone ",
+        "likes": 12,
+        "name": "Clean Lead 6",
+        "path": "presets/nLOjDUINeNyOFyOD0ekf",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "8": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.93;0.94;0.77",
+                "name": "Gx_shakatube_"
+            }
+        },
+        "desc": "Crunch Rock Distortion",
+        "likes": 12,
+        "name": "Vintage Cabinet 2",
+        "path": "presets/WHi4q9467w6I8PSb6nXn",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    },
+    "9": {
+        "controls": {
+            "0": {
+                "controls": "1.0;0.79;0.74",
+                "name": "GxFz1b"
+            }
+        },
+        "desc": "Strong Overdriven Tube ",
+        "likes": 6,
+        "name": "Overdrive 3",
+        "path": "presets/nIipfQaahKUbu4BdjK4w",
+        "public": true,
+        "timestamp": null,
+        "uid": "lWDjT6ENhgV9Hs6JHIjFAcacpAo1"
+    }
+}

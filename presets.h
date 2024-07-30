@@ -39,7 +39,7 @@ public:
     void add_preset_multi (json, int) ;
     void add_preset_multi (std::string, int) ;
     void import_presets_from_json (json);
-    
+    void save_presets_to_json (std::string);
     std::string dir, * presets_dir, favs_dir ;
     char * _pdir ;
     
