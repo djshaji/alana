@@ -6,8 +6,46 @@ void load_preset_cb (void * c, void * d) {
     
 }
 
+
+void presets_on_response (GtkNativeDialog *native,
+             int              response, gpointer data)
+{
+    if (response == GTK_RESPONSE_ACCEPT)
+    {
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER (native);
+        GFile *file = gtk_file_chooser_get_file (chooser);
+        Presets * presets = (Presets *) data;
+        char * filename = g_file_get_path (file);
+        
+        LOGV (filename);
+        //~ LOGV (presets->_pdir);
+        presets-> import_presets_from_json (filename_to_json (std::string (filename))) ;
+
+        free (filename);
+        g_object_unref (file);
+    }
+
+  g_object_unref (native);
+}
+
+void load_from_file (void * b, void * d) {
+  GtkFileChooserNative *native;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+
+  native = gtk_file_chooser_native_new ("Open File",
+                                        NULL,
+                                        action,
+                                        "_Open",
+                                        "_Cancel");
+
+  g_signal_connect (native, "response", G_CALLBACK (presets_on_response), d);
+  gtk_native_dialog_show (GTK_NATIVE_DIALOG (native));
+
+
+}
+
 void menu_clicked (void * action, void * data) {
-    LOGD ("menu clicked: %s!\n", g_action_get_name ( G_ACTION ((GSimpleAction *) action ) ));
+    
 }
 
 void Presets::my () {
@@ -48,7 +86,7 @@ void Presets::my () {
     g_action_map_add_action ( G_ACTION_MAP ( app ), G_ACTION ( import_action ) );
     g_action_map_add_action ( G_ACTION_MAP ( app ), G_ACTION ( export_action ) );
 
-    g_signal_connect (import_action,    "activate", G_CALLBACK (menu_clicked), NULL);
+    g_signal_connect (import_action,    "activate", G_CALLBACK (load_from_file), this);
     g_signal_connect (export_action, "activate", G_CALLBACK (menu_clicked), NULL);
 
     GMenuItem * import_from_file = g_menu_item_new ("Import from file", "app.import");
@@ -81,9 +119,13 @@ void Presets::my () {
     //~ sw.append (my_presets_rack);
     gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)my_presets_rack.gobj ());
     my_presets.append (sw);
+
+    Gtk::Button load_f = Gtk::Button ("Import") ;
+    g_signal_connect (load_f.gobj (), "clicked",(GCallback) load_from_file, this);
     
     my_presets.append (hbox);
     hbox.append (add);
+    hbox.append (load_f);
     hbox.append (menu_button);
     hbox.set_margin (10);
     //~ add.set_margin (10);
@@ -103,7 +145,7 @@ void delete_callback (void * b, void * d) {
     Presets * presets = (Presets *) d ;
     std::string name = std::string (gtk_widget_get_name (button));
     LOGV (name.c_str ());
-    std::string filename = std::string (presets->presets_dir);
+    std::string filename = std::string (presets->presets_dir->c_str());
     filename.append (name);
     LOGV (filename.c_str ());
     
@@ -226,7 +268,7 @@ void Presets::add_preset (json j, int which) {
 
 void Presets::load_user (bool isFav) {
     IN
-    std::string where = presets_dir ;
+    std::string where = std::string (presets_dir->c_str ()) ;
     if (isFav)
         where = favs_dir ;
         
@@ -255,4 +297,21 @@ void Presets::add_preset_multi (json j, int which) {
     }
     
     OUT
+}
+
+void Presets::import_presets_from_json (json j) {
+    IN
+    int how_many = 0 ;
+    LOGV (presets_dir->c_str());
+    for (auto preset: j) {
+        how_many ++ ;
+        std::string basename = preset ["name"].dump () ;
+        basename = basename.substr (1, basename.size () - 2);
+        std::string filename = std::string (presets_dir->c_str ()) .append (basename) ;
+        wtf ("writing file: %s\n", filename.c_str ());
+        json_to_filename (preset, filename) ;
+        add_preset (preset, 1);
+    }
+    
+    msg (std::string ("Imported ").append (std::to_string (how_many)).append (" presets successfully."));
 }

@@ -26,7 +26,7 @@ void add_cb (GtkDialog* self, gint response_id, gpointer user_data) {
     
     LOGD ("[cb] id: %d\n", response_id);
     Presets * presets = (Presets *) cb -> data;
-    std::string f = std::string (presets -> presets_dir).append (filename) ;
+    std::string f = std::string (presets -> presets_dir->c_str ()).append (filename) ;
     presets -> engine -> savePreset (f, std::string (desc));    
     json j = filename_to_json (f);
     presets->add_preset (j, 1);

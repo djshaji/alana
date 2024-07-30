@@ -38,15 +38,18 @@ public:
     void load_user (bool);
     void add_preset_multi (json, int) ;
     void add_preset_multi (std::string, int) ;
+    void import_presets_from_json (json);
     
-    std::string dir, presets_dir, favs_dir ;
+    std::string dir, * presets_dir, favs_dir ;
+    char * _pdir ;
     
     Presets () {
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
         LOGD ("[presets] dir: %s\n", dir.c_str ());
         
-        presets_dir = std::string (dir);
-        presets_dir.append ("/presets/");
+        presets_dir = new std::string (dir);
+        presets_dir->append ("/presets/");
+        _pdir = strdup (presets_dir->c_str ());
         
         if (! g_file_test (dir.c_str (), G_FILE_TEST_IS_DIR)) {
             LOGD ("[presets] creating %s\n", dir.c_str ());
@@ -55,7 +58,7 @@ public:
             }        
         }
         
-        if (g_mkdir_with_parents (presets_dir.c_str (), 0777)) {
+        if (g_mkdir_with_parents (presets_dir->c_str (), 0777)) {
             LOGD ("error creating dir: %s\n", strerror (errno)) ;
         }
         

@@ -79,3 +79,9 @@ void alert (char * title, char * msg, AlertType type, gpointer callback, gpointe
     gtk_widget_set_size_request (dialog, 400, 300);
     gtk_window_present ((GtkWindow *) dialog);
 }
+
+void msg (std::string message) {
+    GtkAlertDialog * dialog = gtk_alert_dialog_new (message.c_str());
+    gtk_alert_dialog_show (dialog, null);
+}
+
