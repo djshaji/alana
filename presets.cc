@@ -1,4 +1,15 @@
 #include "presets.h"
+
+void
+change_value (
+  GtkSpinButton* self,
+  gpointer user_data
+) {
+    Presets * p = (Presets *) user_data ;
+    p->page = gtk_adjustment_get_value (p -> adj);
+    p->library_load () ;
+}
+
 void load_preset_cb (void * c, void * d) {
     CB_Preset * cb = (CB_Preset *) d ;
     //~ cb -> engine -> load_preset (cb -> j) ;    
@@ -14,7 +25,9 @@ void download_cb (void * w, void * d) {
     std::string lJson = std::string (presets->dir).append ("/").append ("library.json") ;
     download_file ("https://amprack.in/presets.json", lJson.c_str ());
     gtk_spinner_stop (presets->library_spinner);
-    presets->add_preset_multi (lJson, 2);
+    //~ presets->add_preset_multi (lJson, 2);
+    presets->page = 0 ;
+    presets->library_load ();
 }
 
 void presets_on_response (GtkNativeDialog *native,
@@ -94,6 +107,23 @@ void save_to_file (void * b, void * d) {
 
 void menu_clicked (void * action, void * data) {
     
+}
+
+void presets_next (void * a, void * d) {
+    Presets * p = (Presets *) d ;
+    p -> page ++ ;
+    gtk_adjustment_set_value (p -> adj, p -> page);
+    //~ p -> library_load ();
+}
+
+void presets_prev (void * a, void * d) {
+    Presets * p = (Presets *) d ;
+    p -> page -- ;
+    
+    if (p -> page < 0)
+        p -> page = 0 ;
+    
+    gtk_adjustment_set_value (p -> adj, p -> page);
 }
 
 void Presets::my () {
@@ -179,6 +209,22 @@ void Presets::my () {
     Gtk::Button refresh = Gtk::Button ("Refresh") ;
     g_signal_connect (refresh.gobj (), "clicked",(GCallback) download_cb, this);
     
+    Gtk::Button next = Gtk::Button ("Next") ;
+    g_signal_connect (next.gobj (), "clicked",(GCallback) presets_next, this);
+    
+    Gtk::SpinButton pno = Gtk::SpinButton () ;
+    library_json = filename_to_json (std::string (dir).append("/library.json"));
+
+    adj = gtk_adjustment_new (1,1,library_json.size() / page_size,1,1,1);
+    gtk_spin_button_set_adjustment (pno.gobj (), adj);
+
+    g_signal_connect ((GtkWidget *)pno.gobj (), "value-changed", (GCallback) change_value, this);
+    
+    page_no = (GtkWidget *)pno.gobj () ;
+    
+    Gtk::Button prev = Gtk::Button ("Back") ;
+    g_signal_connect (prev.gobj (), "clicked",(GCallback) presets_prev, this);
+    
     refresh.set_halign (Gtk::Align::CENTER);
     refresh.set_vexpand (false);
     sw_l.set_vexpand (true);
@@ -197,8 +243,11 @@ void Presets::my () {
     //~ gtk_spinner_set_spinning ((GtkSpinner *) library_spinner, true);
     //~ gtk_spinner_start ((GtkSpinner *) library_spinner);
     
+    lvBox.append (prev);
     lvBox.append (refresh);
+    lvBox.append (next);
     gtk_box_append (lvBox.gobj (), (GtkWidget *)library_spinner);
+    lvBox.append (pno);
     
     lbox.append (sw_l);
     lbox.append (lvBox);  
@@ -216,9 +265,45 @@ void Presets::my () {
     load_user (false);
     load_user (true);
     add_preset_multi (std::string ("quick.json"), 0);
-    add_preset_multi (std::string (dir).append("/library.json"), 2);
+    //~ add_preset_multi (std::string (dir).append("/library.json"), 2);
+    library_load ();
 }
 
+
+void Presets::library_load () {
+    //~ IN
+    int x = 0 ;
+    GtkWidget *iter = gtk_widget_get_first_child ((GtkWidget *)library.gobj ());
+    while (iter != NULL) {
+      GtkWidget *next = gtk_widget_get_next_sibling ((GtkWidget *)iter);
+      gtk_box_remove ((GtkBox *)library.gobj (), iter);
+      iter = next;
+      x ++ ;
+    }
+    
+    //~ LOGD ("removed %d boxes\n", x);
+    
+    library_boxes.clear () ;
+    
+    int i = 0, e = 0 ; 
+    int skip = page * page_size ;
+    for (json p: library_json) {
+        if (i < skip) {
+            i++ ;
+            continue ;
+        }
+        
+        //~ LOGD ("[%d: %d] %d: %s\n", page, skip, e, p ["name"].dump ().c_str ());
+        e ++ ;
+        if (e > page_size)
+            break ;
+        
+        add_preset (p, 2);
+    }
+    
+    //~ gtk_adjustment_set_value ((GtkAdjustment *)adj, page + 1);
+    //~ OUT
+}
 
 void delete_callback (void * b, void * d) {
     IN
@@ -282,6 +367,7 @@ void Presets::add_preset (json j, int which) {
             break ;
         case 2:
             library.append (v);
+            library_boxes.push_back ((GtkWidget *)v.gobj ());
             break ;
         case 1:
             my_presets_rack.append (v);

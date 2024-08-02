@@ -34,6 +34,10 @@ public:
     Engine * engine ;
     Rack * rack ;
     GtkApplication * app ;
+    std::vector <GtkWidget *> library_boxes ;
+    int page = 0;
+    json library_json ;
+    
     
     void add_preset (json, int);
     void load_user (bool);
@@ -43,6 +47,10 @@ public:
     void save_presets_to_json (std::string);
     std::string dir, * presets_dir, favs_dir ;
     char * _pdir ;
+    void library_load () ;
+    const int page_size = 50 ;
+    GtkWidget * page_no ;
+    GtkAdjustment * adj ;
     
     Presets () {
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
