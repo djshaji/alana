@@ -22,6 +22,8 @@ void bypass (void * p, bool, void * c)  ;
 void control_changed (void * p, void * c);
 void ui_file_chooser (void * b, void * d)  ;
 void dropdown_activated (void * d, int, void * s)  ;
+void pu_move_up (void * b, void * d)  ;
+void pu_move_down (void * b, void * d) ;
 
 typedef enum {
     FILE_AUDIO,
@@ -34,6 +36,7 @@ public:
     Gtk::Switch  onoff ;
     Gtk::Button  del,  up,  down ;
     Engine * engine ;
+    void * rack ;
     Plugin * plugin ;
     Gtk::Box  card ;
     Gtk::Box * parent ;
@@ -83,12 +86,22 @@ public:
 
         card.set_margin (10);
         card.set_margin_bottom (0);
+
+        Gtk::Button up = Gtk::Button ("↑");
+        Gtk::Button down = Gtk::Button ("↓");
         
         del = Gtk::Button ("Delete") ;
 
         del.set_halign (Gtk::Align::END);
         del.set_valign (Gtk::Align::END);
         del.set_margin (10);
+
+        up.set_halign (Gtk::Align::START);
+        up.set_valign (Gtk::Align::START);
+        up.set_margin (5);
+        down.set_halign (Gtk::Align::START);
+        down.set_valign (Gtk::Align::START);
+        down.set_margin (5);
 
         Gtk::Button load_file = Gtk::Button ("Load file") ;
 
@@ -108,6 +121,8 @@ public:
         card.set_name ("hello");
 
         g_signal_connect (del.gobj (), "clicked", (GCallback) callback, cd);
+        g_signal_connect (up.gobj (), "clicked", (GCallback) pu_move_up, this);
+        g_signal_connect (down.gobj (), "clicked", (GCallback) pu_move_down, this);
 
         for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
             PluginControl * control = plugin->pluginControls.at (i) ;
@@ -194,7 +209,13 @@ public:
             card.append (box);
         }
 
+        Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 0);
+        bbox.set_halign (Gtk::Align::START);
+        
         card.append (del);
+        card.append (bbox);
+        bbox.append (up);
+        bbox.append (down);
         if (has_file_chooser)
             card.append (load_file);
     }
@@ -202,4 +223,5 @@ public:
     void remove () ;
 } ;
 
+#include "rack.h"
 #endif

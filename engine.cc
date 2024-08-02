@@ -251,3 +251,32 @@ void Engine::set_plugin_file (int index, char * filename) {
     printf ("%s\n", buffer.str().c_str ());
     OUT
 }
+
+int Engine :: moveActivePluginDown (int _p) {
+    IN
+    if (_p == activePlugins->size()) {
+        OUT
+        return _p ;
+    }
+
+    auto it = activePlugins->begin() + _p;
+    std::rotate(it, it + 1, activePlugins->end());
+    buildPluginChain();
+    OUT
+    return _p + 1 ;
+}
+
+int Engine :: moveActivePluginUp (int _p) {
+    IN
+    if (_p == 0) {
+        OUT
+        return _p ;
+    }
+
+    auto it = activePlugins->begin() + _p;
+    std::rotate(it - 1,  it, activePlugins->end());
+    buildPluginChain();
+    OUT
+    return _p - 1 ;
+}
+

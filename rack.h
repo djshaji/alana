@@ -34,6 +34,9 @@ public:
     Gtk::Button add_effect ;
     Gtk::ScrolledWindow sw ;
     std::vector <GtkWidget *> plugs;
+    
+    void move_up (int);
+    void move_down (int);
 
     Gtk::Button logo, menu_button ;
     Gtk::ToggleButton mixer_toggle, record ;

@@ -10,6 +10,24 @@ void callback (void * p, void *c) {
   // printf ("%s\n", cd -> card -> get_name  ());
 }
 
+void pu_move_up (void * b, void * d) {
+    PluginUI * ui = (PluginUI *) d ;
+    Rack * rack = (Rack *) ui -> rack ;
+    LOGD ("up: %d\n", ui -> index);
+    rack -> move_up (ui -> index);
+    if (ui -> index > 0)
+        ui -> index -- ;
+}
+
+void pu_move_down (void * b, void * d) {
+    PluginUI * ui = (PluginUI *) d ;
+    Rack * rack = (Rack *) ui -> rack ;
+    rack -> move_down (* ui -> index_p);
+    
+    if (* ui -> index_p < rack -> plugs.size () - 1)
+        * ui -> index_p ++ ;
+}
+
 void bypass (void * p, bool value, void * c) {
     IN
     GtkToggleButton * t = (GtkToggleButton * ) p;

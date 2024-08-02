@@ -103,6 +103,36 @@ void change_sort_by (void * w, int event, void * d) {
     }    
 }
 
+void Rack::move_up (int index) {
+    IN
+    if (index == 0)
+        return ;
+    
+    GtkWidget * upper = plugs.at (index - 1);
+    GtkWidget * lower = plugs.at (index);
+    
+    auto it = plugs.begin() + index;
+    std::rotate(it, it - 1, plugs.end());
+    
+    gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
+    engine -> moveActivePluginUp (index);
+    OUT
+}
+
+void Rack::move_down (int index) {
+    if (index >= engine ->activePlugins->size ())
+        return ;
+    
+    GtkWidget * upper = plugs.at (index);
+    GtkWidget * lower = plugs.at (index + 1);
+    
+    auto it = plugs.begin() + index;
+    std::rotate(it, it + 1, plugs.end());
+    
+    gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
+    engine -> moveActivePluginDown (index);
+}
+
 PluginUI * Rack::addPluginByName (char * requested) {
     bool res = false ;
     bool has_file = false ;
@@ -153,6 +183,7 @@ PluginUI * Rack::addPluginByName (char * requested) {
         PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file);
         ui -> pType = (PluginFileType *) malloc (sizeof (int)) ;
         * ui->pType = file_type ;
+        ui -> rack = (void * )this ;
         // ui.index = index ;
         list_box.set_orientation (Gtk::Orientation::VERTICAL);
         list_box.set_vexpand (true);
