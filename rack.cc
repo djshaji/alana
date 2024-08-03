@@ -108,7 +108,7 @@ void Rack::move_down (PluginUI * ui) {
     int index = ui -> get_index () ;
     if (index >= engine -> activePlugins->size ())
         return ;
-    
+        
     GtkWidget * lower = (GtkWidget *) ui -> card.gobj () ;
     GtkWidget * upper = gtk_widget_get_next_sibling (lower);
     
@@ -116,9 +116,12 @@ void Rack::move_down (PluginUI * ui) {
     //~ std::rotate(it, it - 1, plugs.end());
     
     gtk_box_reorder_child_after (list_box.gobj (), lower, upper);
-    engine -> moveActivePluginUp (index);
+    engine -> moveActivePluginDown (index);
     
     build () ;
+    
+    LOGD ("[rack] moved %d -> %d \n", ui -> index, ui -> get_index ());
+
     ui -> index = ui -> get_index () ;
     OUT
 }
@@ -572,14 +575,21 @@ void Rack::build () {
     char name [3] ;
     while (widget != NULL) {
         const char * _name = gtk_widget_get_name (widget) ;
-        if (_name == NULL)
+        if (_name == NULL || ! GTK_IS_BOX ( widget))
             continue ;
         
         name [0] = pos++ + 48 ; // funking brilliant
         name [1] = 0 ;
-        printf ("[rack] set name: %s [%d] -> %s\n", _name, pos, name);
+        
+        const char * pname = "No plugin" ;
+        if (pos < engine -> activePlugins->size ())
+            pname = engine -> activePlugins->at (pos)->lv2_name.c_str () ;
+        
+        printf ("[rack] %s: %s [%d] -> %s\n", pname, _name, pos, name);
         gtk_widget_set_name (widget, name);
         widget = (GtkWidget *) gtk_widget_get_next_sibling (widget) ;
     }
+    
+    engine -> print ();
     OUT
 }

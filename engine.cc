@@ -288,3 +288,11 @@ int Engine :: moveActivePluginUp (int _p) {
     return _p - 1 ;
 }
 
+void Engine::print () {
+    LOGD ("-------| rack |---------\n");
+    for (int i = 0 ; i < activePlugins->size(); i ++) {
+        LOGD ("[%d] %s\n", i, activePlugins->at (i)->lv2_name.c_str ());
+    }
+    
+    LOGD ("------------------------\n");
+}

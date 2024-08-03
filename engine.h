@@ -40,6 +40,7 @@ public:
     json getPreset ();
     void set_plugin_audio_file (int index, char * filename);
     void set_plugin_file (int index, char * filename) ;
+    void print ();
 };
 
 #endif 
