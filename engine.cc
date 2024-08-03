@@ -273,9 +273,17 @@ int Engine :: moveActivePluginUp (int _p) {
         return _p ;
     }
 
+
+    processor->bypass = true ;
+    
+    LOGD ("[engine] move %d up\n", _p) ;
+
     auto it = activePlugins->begin() + _p;
     std::rotate(it - 1,  it, activePlugins->end());
     buildPluginChain();
+    
+    processor->bypass = false ;
+    
     OUT
     return _p - 1 ;
 }

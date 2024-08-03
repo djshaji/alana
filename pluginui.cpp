@@ -14,18 +14,13 @@ void pu_move_up (void * b, void * d) {
     PluginUI * ui = (PluginUI *) d ;
     Rack * rack = (Rack *) ui -> rack ;
     LOGD ("up: %d\n", ui -> index);
-    rack -> move_up (ui -> index);
-    if (ui -> index > 0)
-        ui -> index -- ;
+    rack -> move_up (ui);
 }
 
 void pu_move_down (void * b, void * d) {
     PluginUI * ui = (PluginUI *) d ;
     Rack * rack = (Rack *) ui -> rack ;
-    rack -> move_down (* ui -> index_p);
-    
-    if (* ui -> index_p < rack -> plugs.size () - 1)
-        * ui -> index_p ++ ;
+    rack -> move_down (ui);    
 }
 
 void bypass (void * p, bool value, void * c) {
@@ -119,4 +114,8 @@ void ui_file_chooser (void * b, void * d) {
 
 void dropdown_activated (void * d, int event, void * s) {
     gtk_adjustment_set_value ((GtkAdjustment *) s, gtk_drop_down_get_selected ((GtkDropDown * )d));
+}
+
+int PluginUI::get_index () {
+    return gtk_widget_get_name ((GtkWidget *) card.gobj ()) [0] - 48 ;
 }

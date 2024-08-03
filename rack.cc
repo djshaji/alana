@@ -103,34 +103,44 @@ void change_sort_by (void * w, int event, void * d) {
     }    
 }
 
-void Rack::move_up (int index) {
+void Rack::move_down (PluginUI * ui) {
     IN
-    if (index == 0)
+    int index = ui -> get_index () ;
+    if (index >= engine -> activePlugins->size ())
         return ;
     
-    GtkWidget * upper = plugs.at (index - 1);
-    GtkWidget * lower = plugs.at (index);
+    GtkWidget * lower = (GtkWidget *) ui -> card.gobj () ;
+    GtkWidget * upper = gtk_widget_get_next_sibling (lower);
     
-    auto it = plugs.begin() + index;
-    std::rotate(it, it - 1, plugs.end());
+    //~ auto it = plugs.begin() + ui -> index;
+    //~ std::rotate(it, it - 1, plugs.end());
     
-    gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
+    gtk_box_reorder_child_after (list_box.gobj (), lower, upper);
     engine -> moveActivePluginUp (index);
+    
+    build () ;
+    ui -> index = ui -> get_index () ;
     OUT
 }
 
-void Rack::move_down (int index) {
-    if (index >= engine ->activePlugins->size ())
+void Rack::move_up (PluginUI * ui) {
+    IN
+    int index = ui -> get_index () ;
+    if (index == 0)
         return ;
     
-    GtkWidget * upper = plugs.at (index);
-    GtkWidget * lower = plugs.at (index + 1);
+    GtkWidget * lower = (GtkWidget *) ui -> card.gobj () ;
+    GtkWidget * upper = gtk_widget_get_prev_sibling (lower);
     
-    auto it = plugs.begin() + index;
-    std::rotate(it, it + 1, plugs.end());
+    //~ auto it = plugs.begin() + ui -> index;
+    //~ std::rotate(it, it - 1, plugs.end());
     
     gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
-    engine -> moveActivePluginDown (index);
+    engine -> moveActivePluginUp (index);
+    
+    build () ;
+    ui -> index = ui -> get_index () ;
+    OUT
 }
 
 PluginUI * Rack::addPluginByName (char * requested) {
@@ -414,6 +424,8 @@ bool Rack::load_preset (json j) {
         controls = controls.substr (1, controls.size () - 2);
         ui -> load_preset (controls) ;
     }
+    
+    build () ;
     OUT
     return true;
 }
@@ -550,4 +562,24 @@ Rack::Rack () {
     //~ add_effect.set_label ("+ Effect");
 
     rack = createPluginDialog () ;
+}
+
+void Rack::build () {
+    IN
+    int pos = 0 ;
+    
+    GtkWidget * widget = (GtkWidget *) gtk_widget_get_first_child ((GtkWidget *)list_box.gobj ());
+    char name [3] ;
+    while (widget != NULL) {
+        const char * _name = gtk_widget_get_name (widget) ;
+        if (_name == NULL)
+            continue ;
+        
+        name [0] = pos++ + 48 ; // funking brilliant
+        name [1] = 0 ;
+        printf ("[rack] set name: %s [%d] -> %s\n", _name, pos, name);
+        gtk_widget_set_name (widget, name);
+        widget = (GtkWidget *) gtk_widget_get_next_sibling (widget) ;
+    }
+    OUT
 }

@@ -45,6 +45,8 @@ public:
     std::vector <GtkScale *> sliders ;
   
     void load_preset (std::string);
+    int get_index ();
+    Gtk::SpinButton id ;
   
     PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index, bool has_file_chooser) {
         engine = _engine ;
@@ -69,6 +71,7 @@ public:
         free (s);
         card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
         card.set_orientation (Gtk::Orientation::VERTICAL);
+
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
         card.append (header);
         header.set_hexpand (true);
@@ -89,6 +92,7 @@ public:
 
         Gtk::Button up = Gtk::Button ("↑");
         Gtk::Button down = Gtk::Button ("↓");
+        
         
         del = Gtk::Button ("Delete") ;
 
@@ -118,7 +122,11 @@ public:
         cd -> parent = parent ;
         cd->engine = engine;
 
-        card.set_name ("hello");
+        char name [3];
+        name [0] = index + 48 ;
+        name [1] = 0 ;
+        
+        card.set_name (name);
 
         g_signal_connect (del.gobj (), "clicked", (GCallback) callback, cd);
         g_signal_connect (up.gobj (), "clicked", (GCallback) pu_move_up, this);
