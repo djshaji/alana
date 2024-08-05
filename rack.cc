@@ -407,10 +407,10 @@ GtkWidget * Rack::createPluginDialog () {
    
     for (auto plugin : engine ->ladspaJson) {
         std::string a = plugin ["name"].dump() ;
-        int id = plugin ["id"].get <int>() ;
-        //~ printf ("plugin %d: %s\n", id, a.c_str());
-        if (blacklist.contains (name)) {
-            //~ LOGD ("blacklisted plugin: %s\n", a.c_str ()) ;
+        std::string id = plugin ["id"].dump () ;
+        printf ("[ladspa] plugin %s: %s\n", id.c_str (), a.c_str());
+        if (blacklist.contains (id)) {
+            LOGD ("blacklisted plugin [%s]: %s\n", id.c_str (), a.c_str ()) ;
             continue;
         }        
 
