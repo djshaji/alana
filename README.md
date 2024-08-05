@@ -2,6 +2,24 @@
 * Port / Clone Amp Rack for PC (Linux, Windows)
 * Custom Amp Rack Pedal Board 
 
+## Install
+Download the latest release and extract somewhere, then run `./amprack`
+
+## Building from source
+Simply run `make`
+
+## Dependencies
+```
+gtkmm-4.0
+jack-devel
+libsamplerate
+libsndfile
+fftw3 (needed by some plugins)
+fftw3f (needed by some plugins)
+zita-resampler (needed by some plugins)
+zita-convolver (needed by some plugins)
+```
+
 ## PC Clone
 Since the Audio Engine is written in C++, it is already cross platform. [How can it not be cross platform? All platforms are written in it.](https://www.youtube.com/watch?v=s7wLYzRJt3s)
 
