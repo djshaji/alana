@@ -7,9 +7,9 @@ bool Engine::addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType
     processor->bypass = true ;
     SharedLibrary * sharedLibrary = new SharedLibrary (library, _type);
 
-    sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
+    sharedLibrary ->setLibraryPath(std::string (libraryPath));
     //~ sharedLibrary ->setLibraryPath(std::string ("libs/linux/x86_64"));
-    sharedLibrary ->lv2_config_path = std::string ("assets/lv2");
+    sharedLibrary ->lv2_config_path = std::string (assetPath).append ("/lv2");
     sharedLibrary->load();
 
     if (sharedLibrary->descriptors.size() == 0) {
@@ -56,14 +56,26 @@ Engine::Engine () {
     if (! std::filesystem::exists (libraryPath)) {
         free(libraryPath);
         
-        libraryPath = strdup ("/usr/share/amprack/libs/linux/x86_64") ;        
+        libraryPath = strdup ("/usr/share/amprack/libs/linux/x86_64/") ;        
     }
-
+    
+    if (std::filesystem::exists ("assets"))
+        assetPath = std::string ("assets");
+    else if (std::filesystem::exists ("/usr/share/amprack/assets"))
+        assetPath = std::string ("/usr/share/amprack/assets");
+    else  {
+        LOGD ("CANNOT FIND ASSETS!\n");
+        abort ();
+    }
+    
     if (! std::filesystem::exists (libraryPath)) {
         free(libraryPath);
         printf ("CANNOT FIND LIBRARIES!\n");
         abort () ;        
     }
+
+    LOGD ("[engine] library path: %s\n", libraryPath);
+    LOGD ("[engine] assets path: %s\n", assetPath.c_str ());
 
     processor = new Processor () ;
     openAudio () ;
@@ -71,11 +83,11 @@ Engine::Engine () {
     ladspaPlugins  = new std::vector <std::string> ();
     lv2Plugins = new std::vector <std::string> ();
 
-    amps = filename_to_json (std::string ("assets/amps.json"));
-    lv2Json = filename_to_json (std::string ("lv2_plugins.json"));
-    ladspaJson = filename_to_json (std::string ("all_plugins.json"));
-    categories = filename_to_json (std::string ("assets/plugins.json"));
-    creators = filename_to_json (std::string ("assets/creator.json"));
+    amps = filename_to_json (std::string (assetPath).append ("/amps.json"));
+    lv2Json = filename_to_json (std::string (assetPath).append ("/lv2_plugins.json"));
+    ladspaJson = filename_to_json (std::string (assetPath).append ("/all_plugins.json"));
+    categories = filename_to_json (std::string (assetPath).append ("/plugins.json"));
+    creators = filename_to_json (std::string (assetPath).append ("/creator.json"));
 
     //~ initLilv ();
 }
