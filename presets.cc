@@ -27,6 +27,8 @@ void download_cb (void * w, void * d) {
     gtk_spinner_stop (presets->library_spinner);
     //~ presets->add_preset_multi (lJson, 2);
     presets->page = 0 ;
+    presets->library_json = filename_to_json (std::string (presets->dir).append("/library.json"));
+    gtk_adjustment_set_upper (presets->adj, presets->library_json.size() / presets->page_size);
     presets->library_load ();
 }
 
@@ -127,6 +129,7 @@ void presets_prev (void * a, void * d) {
 }
 
 void Presets::my () {
+    IN
     presets = Gtk::Notebook () ;
     notebook.append_page (presets, "Presets");
     
@@ -267,11 +270,12 @@ void Presets::my () {
     add_preset_multi (std::string ("quick.json"), 0);
     //~ add_preset_multi (std::string (dir).append("/library.json"), 2);
     library_load ();
+    OUT
 }
 
 
 void Presets::library_load () {
-    //~ IN
+    IN
     int x = 0 ;
     GtkWidget *iter = gtk_widget_get_first_child ((GtkWidget *)library.gobj ());
     while (iter != NULL) {
@@ -287,6 +291,7 @@ void Presets::library_load () {
     
     int i = 0, e = 0 ; 
     int skip = page * page_size ;
+    //~ LOGD ("library: %s\n", library_json.dump ().c_str ());
     for (json p: library_json) {
         if (i < skip) {
             i++ ;
@@ -302,7 +307,7 @@ void Presets::library_load () {
     }
     
     //~ gtk_adjustment_set_value ((GtkAdjustment *)adj, page + 1);
-    //~ OUT
+    OUT
 }
 
 void delete_callback (void * b, void * d) {
@@ -440,7 +445,7 @@ void Presets::load_user (bool isFav) {
         where = favs_dir ;
         
     for (const auto & entry : std::filesystem::directory_iterator(where)) {
-        std::cout << entry.path() << std::endl;
+        //~ std::cout << entry.path() << std::endl;
     
         json j = filename_to_json (entry.path ());
         if (! isFav)
@@ -487,7 +492,7 @@ void Presets::save_presets_to_json (std::string filename) {
     json ex = json {};
     int i = 0 ;
     for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
-        std::cout << entry.path() << std::endl;
+        //~ std::cout << entry.path() << std::endl;
         json j = filename_to_json (entry.path ());
         ex [std::to_string (i++)] = j ;
     } 

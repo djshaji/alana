@@ -6,7 +6,8 @@ json filename_to_json (std::string filename) {
         filename = std::string ("/usr/share/amprack/").append (filename);
         if (! std::filesystem::exists (filename)) {
             HERE LOGD ("file does not exist! %s\n", filename.c_str ()) ;
-            return NULL ;
+            // instead of null, empty json is better
+            return json {} ;
         }
     }
     
