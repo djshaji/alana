@@ -21,6 +21,9 @@ zita-convolver (needed by some plugins)
 ```
 > For now, some files are symlinked from the [Amp Rack](https://github.com/djshaji/amp-rack/) source
 
+![Screenshot_2024-08-05_15-44-15](https://github.com/user-attachments/assets/39b7e54a-e0c5-46f7-b843-52a44f1f63c3)
+![Screenshot from 2024-08-05 15-44-35](https://github.com/user-attachments/assets/4cc98b17-c577-4ec5-a45f-5d2cbdd81b00)
+
 ## PC Clone
 Since the Audio Engine is written in C++, it is already cross platform. [How can it not be cross platform? All platforms are written in it.](https://www.youtube.com/watch?v=s7wLYzRJt3s)
 
