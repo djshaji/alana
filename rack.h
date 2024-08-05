@@ -34,6 +34,7 @@ public:
     Gtk::Button add_effect ;
     Gtk::ScrolledWindow sw ;
     std::vector <GtkWidget *> plugs;
+    std::vector <PluginUI *> uiv ;
     
     void move_up (PluginUI *);
     void move_down (PluginUI *);

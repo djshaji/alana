@@ -11,6 +11,7 @@ typedef struct {
     int index ;
     int control ;
     Engine * engine ;
+    void * ui ;
 } CallbackData ;
 
 #endif

@@ -39,6 +39,7 @@ public:
     void * rack ;
     Plugin * plugin ;
     Gtk::Box  card ;
+    GtkWidget * card_ ;
     Gtk::Box * parent ;
     int index, * index_p ;
     PluginFileType * pType ;
@@ -70,6 +71,8 @@ public:
         name.set_markup (n.c_str ());
         free (s);
         card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
+        card_ = (GtkWidget *)card.gobj () ;
+        
         card.set_orientation (Gtk::Orientation::VERTICAL);
 
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
@@ -121,6 +124,7 @@ public:
         cd -> card = & card ;
         cd -> parent = parent ;
         cd->engine = engine;
+        cd -> ui = (void*)this ;
 
         char name [3];
         name [0] = index + 48 ;
@@ -203,6 +207,7 @@ public:
             cd->engine = engine;
             cd->control = i ;
             cd -> dropdown = dropdown ;
+            cd -> ui = (void *) this ;
             
             spin.set_digits (2);
             

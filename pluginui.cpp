@@ -37,14 +37,17 @@ void control_changed ( void * p, void * c) {
     GtkScale * scale = (GtkScale *) p ;
     GtkAdjustment * adj = (GtkAdjustment *) gtk_range_get_adjustment ((GtkRange *)scale);
     CallbackData *cd = (CallbackData *) c ;
+    PluginUI * ui = (PluginUI *) cd -> ui;
     
+    float val = gtk_adjustment_get_value (adj) ;
+    wtf ("[%s] %d : %d-> %f\n", ui -> name.get_text ().c_str (), ui -> get_index (), cd -> control, val);
     if (cd->dropdown != nullptr) {
-        gtk_drop_down_set_selected ((GtkDropDown *)cd -> dropdown, gtk_adjustment_get_value (adj));
+        gtk_drop_down_set_selected ((GtkDropDown *)cd -> dropdown, val);
     }
     
-    *cd -> engine -> activePlugins -> at (cd -> index)
-        -> pluginControls . at (cd -> control)->def = gtk_adjustment_get_value (adj);
-    cd -> engine -> activePlugins -> at (cd -> index) -> print ();
+    *cd -> engine -> activePlugins -> at ( ui -> get_index ())
+        -> pluginControls . at (cd -> control)->def = val;
+    //~ cd -> engine -> activePlugins -> at (cd -> index) -> print ();
     OUT
 }
 
@@ -117,5 +120,9 @@ void dropdown_activated (void * d, int event, void * s) {
 }
 
 int PluginUI::get_index () {
+    //~ return index ;
+    if (! gtk_widget_get_realized (card_))
+        return index ;
     return gtk_widget_get_name ((GtkWidget *) card.gobj ()) [0] - 48 ;
 }
+

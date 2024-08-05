@@ -1,5 +1,17 @@
 #include "rack.h"
 
+int get_index (GtkWidget * w) {
+    return gtk_widget_get_name ((GtkWidget *) w) [0] - 48 ;    
+}
+
+void set_index (GtkWidget * w, int index) {
+    char name [3];
+    name [0] = index + 48 ;
+    name [1] = 0 ;
+        
+    gtk_widget_set_name (w, name);
+}
+
 void do_search (void * w, void *d) {
     Sorter * sorter = (Sorter *) d ;
     Rack * rack = (Rack *) sorter -> rack ;
@@ -105,7 +117,7 @@ void change_sort_by (void * w, int event, void * d) {
 
 void Rack::move_down (PluginUI * ui) {
     IN
-    int index = ui -> get_index () ;
+    int index = ui -> index ;
     if (index >= engine -> activePlugins->size ())
         return ;
         
@@ -116,19 +128,26 @@ void Rack::move_down (PluginUI * ui) {
     //~ std::rotate(it, it - 1, plugs.end());
     
     gtk_box_reorder_child_after (list_box.gobj (), lower, upper);
+    LOGD ("before sort ...\n");
+    engine -> print ();
     engine -> moveActivePluginDown (index);
     
-    build () ;
-    
-    LOGD ("[rack] moved %d -> %d \n", ui -> index, ui -> get_index ());
+    //~ build () ;
 
-    ui -> index = ui -> get_index () ;
+    set_index (lower, index + 1);
+    set_index (upper, index);
+
+    uiv.at (index + 1)-> index -- ;
+    ui -> index ++ ;
+    LOGD ("[rack] moved %d -> %d \n", index, ui -> index);
+    
+    engine -> print () ;
     OUT
 }
 
 void Rack::move_up (PluginUI * ui) {
     IN
-    int index = ui -> get_index () ;
+    int index = ui -> index ;
     if (index == 0)
         return ;
     
@@ -139,10 +158,21 @@ void Rack::move_up (PluginUI * ui) {
     //~ std::rotate(it, it - 1, plugs.end());
     
     gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
+    
+    LOGD ("before sort ...\n");
+    engine -> print () ;
     engine -> moveActivePluginUp (index);
     
-    build () ;
-    ui -> index = ui -> get_index () ;
+    //~ build () ;
+    //~ ui -> index = ui -> get_index () ;
+
+    set_index (lower, index - 1);
+    set_index (upper, index);
+
+    uiv.at (index + 1)-> index ++ ;
+    ui -> index -- ;
+    LOGD ("[rack] moved %d -> %d \n", index, ui -> index);
+    engine -> print () ;
     OUT
 }
 
@@ -202,7 +232,7 @@ PluginUI * Rack::addPluginByName (char * requested) {
         list_box.set_vexpand (true);
         list_box.append (ui->card);
         plugs.push_back ((GtkWidget * ) ui->card.gobj ());
-        
+        uiv.push_back (ui);
         return ui ;
     } else {
         LOGD ("ERROR: failed to load plugin: %s\n", requested);
@@ -428,7 +458,7 @@ bool Rack::load_preset (json j) {
         ui -> load_preset (controls) ;
     }
     
-    build () ;
+    //~ build () ;
     OUT
     return true;
 }
