@@ -267,7 +267,7 @@ void Presets::my () {
     //~ add_preset (1) ;
     load_user (false);
     load_user (true);
-    add_preset_multi (std::string ("quick.json"), 0);
+    add_preset_multi (std::string ("assets/quick.json"), 0);
     //~ add_preset_multi (std::string (dir).append("/library.json"), 2);
     library_load ();
     OUT
