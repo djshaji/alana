@@ -2,7 +2,7 @@ Name:       amprack
 Version:    4
 Release:    90
 Summary:    Amp Rack Guitar Effects Processor Pedal
-License:    FIXME
+License:    Apache License 2.0
 
 %description
 Amp Rack is a Guitar / Voice Audio Effects Processor, Tuner and MP3 Recorder for Android.
