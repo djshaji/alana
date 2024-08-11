@@ -6,13 +6,13 @@ JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 #OPTIMIZE=-Ofast 
 
-all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o
+all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
-rack.o: rack.cc rack.h pluginui.cpp pluginui.h 
+rack.o: rack.cc rack.h pluginui.cpp pluginui.h knobs.o
 	g++ rack.cc pluginui.cpp -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
 presets.o: presets.cc presets.h
@@ -43,3 +43,6 @@ util.o: util.c util.h
 	c++ util.c -c $(GTKMM)
 snd.o: snd.cc snd.h
 	c++ snd.cc -c $(SNDFILE)
+
+knobs.o:
+	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp

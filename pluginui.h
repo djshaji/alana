@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "GxKnob.h"
+
 #include "json.hpp"
 #include "log.h"
 #include "defs.h"
@@ -56,7 +58,7 @@ public:
         index_p = (int *) malloc (sizeof (int));
         *index_p = index ;
         parent = _parent ;
-
+        
         char * s = (char *) malloc (pluginName.size () + 3) ;
         sprintf (s, "%d %s", index, pluginName.c_str ());
         //~ printf ("[plugin ui] %d %s", index, pluginName.c_str ());
@@ -74,6 +76,9 @@ public:
         card_ = (GtkWidget *)card.gobj () ;
         
         card.set_orientation (Gtk::Orientation::VERTICAL);
+
+        GxKnob * knob = (GxKnob *) g_object_new (GX_TYPE_KNOB, NULL);
+        gtk_box_append (card.gobj (), (GtkWidget *) knob);
 
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
         card.append (header);
