@@ -126,3 +126,22 @@ int PluginUI::get_index () {
     return gtk_widget_get_name ((GtkWidget *) card.gobj ()) [0] - 48 ;
 }
 
+float
+control_port_get_snapped_val (Port * self)
+{
+   return 0 ;
+}
+
+void
+control_port_set_real_val (Port * self, float val)
+{
+  
+}
+
+void knob_set (GtkSpinButton * w, float val) {
+    gtk_spin_button_set_value (w, val);
+}
+
+float knob_get (GtkSpinButton * s) {
+    return gtk_spin_button_get_value (s);
+}

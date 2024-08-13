@@ -7,9 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "GxKnob.h"
-#include "GxBigKnob.h"
-
+#include "knob.h"
 #include "json.hpp"
 #include "log.h"
 #include "defs.h"
@@ -28,6 +26,14 @@ void dropdown_activated (void * d, int, void * s)  ;
 void pu_move_up (void * b, void * d)  ;
 void pu_move_down (void * b, void * d) ;
 
+void
+control_port_set_real_val (Port * self, float val) ;
+
+float
+control_port_get_snapped_val (Port * self) ;
+
+void knob_set (GtkSpinButton * w, float val) ;
+float knob_get (GtkSpinButton * s) ;
 typedef enum {
     FILE_AUDIO,
     FILE_JSON
@@ -77,10 +83,6 @@ public:
         card_ = (GtkWidget *)card.gobj () ;
         
         card.set_orientation (Gtk::Orientation::VERTICAL);
-
-        GxBigKnob * knob = (GxBigKnob *) g_object_new (GX_TYPE_BIG_KNOB, NULL);
-        gtk_box_append (card.gobj (), (GtkWidget *) knob);
-        gtk_widget_show ((GtkWidget *)knob);
 
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
         card.append (header);
@@ -194,6 +196,11 @@ public:
             
             box.append (scale);
             box.append (spin);
+
+            KnobWidget * knob = knob_widget_new_simple (
+                knob_get, knob_get, knob_set, spin.gobj (), control->min, control->max, 128, 100);
+            gtk_box_append (card.gobj (), (GtkWidget *) knob);
+            gtk_widget_show ((GtkWidget *)knob);
 
             GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
             //~ printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
