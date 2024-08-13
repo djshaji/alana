@@ -95,7 +95,9 @@ public:
 
         onoff = Gtk::Switch () ;
         onoff.set_active (true);
-        header.append (onoff) ;
+        Gtk::Box o_o = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
+        o_o.append (onoff);
+        header.append (o_o) ;
         onoff.set_halign (Gtk::Align::END);
         name.set_halign (Gtk::Align::START);
 
