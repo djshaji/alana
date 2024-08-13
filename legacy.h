@@ -4,6 +4,29 @@
 #include <gtk/gtk.h>
 #define GdkWindow GdkSurface
 
+struct GdkEventExpose {
+  GdkEventType type;
+  GdkWindow* window;
+  gint8 send_event;
+  GdkRectangle area;
+  cairo_region_t* region;
+  gint count;
+};
+
+struct GdkEventKey {
+  GdkEventType type;
+  GdkWindow* window;
+  gint8 send_event;
+  guint32 time;
+  GdkModifierType* state;
+  guint keyval;
+  gint length;
+  gchar* string;
+  guint16 hardware_keycode;
+  guint8 group;
+  guint is_modifier : 1;
+};
+
 struct GdkEventButton {
   GdkEventType type;
   GdkWindow* window;

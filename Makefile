@@ -45,4 +45,4 @@ snd.o: snd.cc snd.h
 	c++ snd.cc -c $(SNDFILE)
 
 knobs.o:
-	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp
+	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp GxBigKnob.cpp

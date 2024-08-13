@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "GxKnob.h"
+#include "GxBigKnob.h"
 
 #include "json.hpp"
 #include "log.h"
@@ -77,8 +78,9 @@ public:
         
         card.set_orientation (Gtk::Orientation::VERTICAL);
 
-        GxKnob * knob = (GxKnob *) g_object_new (GX_TYPE_KNOB, NULL);
+        GxBigKnob * knob = (GxBigKnob *) g_object_new (GX_TYPE_BIG_KNOB, NULL);
         gtk_box_append (card.gobj (), (GtkWidget *) knob);
+        gtk_widget_show ((GtkWidget *)knob);
 
         Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
         card.append (header);
