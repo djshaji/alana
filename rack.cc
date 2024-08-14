@@ -223,7 +223,7 @@ PluginUI * Rack::addPluginByName (char * requested) {
     //~ return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
-        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file);
+        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file, this);
         ui -> pType = (PluginFileType *) malloc (sizeof (int)) ;
         * ui->pType = file_type ;
         ui -> rack = (void * )this ;
@@ -281,7 +281,7 @@ void Rack::add () {
     //~ engine -> addPlugin ("libs/dyson_compress_1403.so", 0, SharedLibrary::PluginType::LADSPA);
     engine -> addPlugin ((char *)std::string ("http://drobilla.net/plugins/mda/Delay").c_str (), 0, SharedLibrary::PluginType::LILV);
     int index = engine -> activePlugins->size () - 1;
-    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & list_box, std::string ("Dyson Compressor"), index, false);
+    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & list_box, std::string ("Dyson Compressor"), index, false, this);
     // ui.index = index ;
     list_box.set_orientation (Gtk::Orientation::VERTICAL);
     list_box.set_vexpand (true);

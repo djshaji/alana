@@ -22,7 +22,7 @@ public:
     Processor * processor = nullptr ;
     char * libraryPath = nullptr; //= std::string ("libs/linux/x86_64/");
     std::string assetPath = std::string ();
-    nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps ;
+    nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps, knobs ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
     

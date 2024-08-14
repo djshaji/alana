@@ -45,6 +45,8 @@ public:
     GtkWidget * listBox ;
     Gtk::Switch onoff ;
     
+    bool bnobs = true ;
+    
     std::vector <PluginUI> plugins ;        
     std::vector <GtkWidget *> hearts ;
     void add ();

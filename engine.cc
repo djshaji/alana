@@ -88,6 +88,7 @@ Engine::Engine () {
     ladspaJson = filename_to_json (std::string (assetPath).append ("/all_plugins.json"));
     categories = filename_to_json (std::string (assetPath).append ("/plugins.json"));
     creators = filename_to_json (std::string (assetPath).append ("/creator.json"));
+    knobs = filename_to_json (std::string (assetPath).append ("/knobs.json"));
 
     //~ initLilv ();
 }
