@@ -94,7 +94,7 @@ void show_only_categories (void * w, int event, void * d) {
             if (strcmp (name, wname) == 0) {
                 //~ LOGD ("[sorter] matched %s to %s\n", name, wname);
                 gtk_widget_set_visible (gtk_widget_get_parent (w), true);
-            }
+            } 
         }
     }
 
@@ -425,10 +425,10 @@ GtkWidget * Rack::createPluginDialog () {
         }        
 
         GtkWidget * w = (GtkWidget *) addPluginEntry (a.substr (1, a.size () - 2));
-        sprintf (name, "%d", id);
+        //~ sprintf (name, "%d", id);
 
         sorter -> boxes->push_back (w);
-        gtk_widget_set_name (w, name);
+        gtk_widget_set_name (w, id.c_str ());
     }
     
     free (name);
