@@ -137,6 +137,11 @@ void Presets::my () {
     quick = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     library = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     favorites = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
+
+    my_presets.set_name ("rack");
+    quick.set_name ("rack");
+    library.set_name ("rack");
+    favorites.set_name ("rack");
     
     Gtk::Label l1 = Gtk::Label ("My Presets");
     Gtk::Label l2 = Gtk::Label ("Quick Presets");
@@ -260,6 +265,8 @@ void Presets::my () {
     hbox.append (save_f);
     //~ hbox.append (menu_button);
     hbox.set_margin (10);
+    hbox.set_name ("header");
+    lbox.set_name ("header");
     //~ add.set_margin (10);
     //~ menu_button.set_margin (10);
     
@@ -365,6 +372,8 @@ void Presets::add_preset (json j, int which) {
     //~ h.append (sep);
     v.append (h);
     v.append (h2);
+    
+    v.set_name ("plugin");
        
     switch (which) {
         case 0:
@@ -383,8 +392,10 @@ void Presets::add_preset (json j, int which) {
     }
     
     Gtk::Label title = Gtk::Label () ;
+    title.set_wrap (true);
     title.set_markup (std::string ("<big><b>").append (j ["name"]).append ( "</b></big>").c_str ());
     Gtk::Label desc = Gtk::Label (j ["desc"].dump ().c_str ());
+    desc.set_wrap (true);
     
     //~ title.set_hexpand (true);
     h.set_hexpand (true);

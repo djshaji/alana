@@ -175,8 +175,13 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     card.set_orientation (Gtk::Orientation::VERTICAL);
     //~ gtk_widget_add_css_class ((GtkWidget *) card.gobj (), "xwindow");
 
+    Gtk::Box container = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
+    
+    card.append (container);
+    container.set_name ("plugin");
+
     Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
-    card.append (header);
+    container.append (header);
     header.set_hexpand (true);
     //~ name.set_hexpand (true);
     name.set_justify (Gtk::Justification::LEFT);
@@ -192,7 +197,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     onoff.set_halign (Gtk::Align::END);
     name.set_halign (Gtk::Align::START);
 
-    card.set_margin (10);
+    card.set_margin (20);
     card.set_margin_bottom (0);
 
     Gtk::Button up = Gtk::Button ("↑");
@@ -200,6 +205,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     
     
     del = Gtk::Button ("Delete") ;
+    del.set_name ("delete");
 
     del.set_halign (Gtk::Align::END);
     del.set_valign (Gtk::Align::END);
@@ -298,6 +304,8 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             knob_get, knob_get, knob_set, spin.gobj (), control->min, control->max, kSize, 100);
 
         gtk_widget_show ((GtkWidget *)knob);
+        gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
+        knob->arc = false;
 
         if (! niceRack -> bnobs || dropdown != nullptr) {
             box.append (label);
@@ -334,7 +342,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             gtk_box_append (rowBox, (GtkWidget *)label.gobj ());
             
             scale.hide ();
-            spin.set_width_chars (0);
+            spin.set_width_chars (3);
         }
         
         //~ wtf ("[layout] %d: %d\n", col, layout.size ());
@@ -379,16 +387,16 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
         g_signal_connect (onoff.gobj (), "state-set", (GCallback) bypass, cd) ;
 
-        card.append (box);
+        container.append (box);
     }
 
     Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 0);
     bbox.set_halign (Gtk::Align::START);
     
-    card.append (del);
-    card.append (bbox);
+    container.append (del);
+    container.append (bbox);
     bbox.append (up);
     bbox.append (down);
     if (has_file_chooser)
-        card.append (load_file);
+        container.append (load_file);
 }

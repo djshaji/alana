@@ -135,6 +135,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     app = _app ;
     set_title("Amp Rack 5 (Alpha)");
     set_default_size(1200, 800);
+    maximize ();
 
     box = Gtk::Box () ;
     set_child (box);
@@ -148,7 +149,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     box.append (stack_box);
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
-    pane.set_position (600);
+    pane.set_position (900);
 
     stack = Gtk::Stack () ;
     stack_box.append (stack);

@@ -249,6 +249,8 @@ void addPluginCallback (void * b, void * c) {
 
 GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+        gtk_widget_set_margin_start (box, 10);
+        gtk_widget_set_margin_end (box, 10);
         GtkWidget * label = gtk_label_new (plug.c_str ());
         GtkWidget * fav = gtk_toggle_button_new ();
         gtk_button_set_label ((GtkButton *) fav, "♥");
@@ -264,12 +266,16 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         g_signal_connect (button, "clicked", GCallback (addPluginCallback), this);
         
         gtk_widget_set_hexpand (box, true);
-        gtk_widget_set_hexpand (label, true);
+        GtkBox * B = (GtkBox *)gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+        gtk_widget_set_name ((GtkWidget *)B, "plugin");
+        gtk_box_append (B, label);
+        gtk_widget_set_hexpand (label, false);
+        gtk_widget_set_hexpand ((GtkWidget *) B, true);
         //~ gtk_widget_set_halign (label, GTK_ALIGN);
         //~ gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
         gtk_label_set_wrap ((GtkLabel *) label, true);
         
-        gtk_box_append ((GtkBox *)box, label);
+        gtk_box_append ((GtkBox *)box, (GtkWidget *)B);
         gtk_box_append ((GtkBox *)box, button);
         gtk_box_append ((GtkBox *)box, fav);
         
@@ -293,10 +299,12 @@ GtkWidget * Rack::createPluginDialog () {
     pluginDialog = gtk_window_new ();
     gtk_window_set_default_size ((GtkWindow *)pluginDialog, 400, 800);
     GtkWidget * master = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+    gtk_widget_set_name (master, "rack");
     //~ gtk_window_set_child ((GtkWindow *)pluginDialog, master);
     
     GtkWidget * chooser = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
     gtk_box_append ((GtkBox *)master, chooser);
+    gtk_widget_set_name (chooser, "rack");
     
     char * category [50] ;
     char * creators [60] ;
@@ -382,6 +390,8 @@ GtkWidget * Rack::createPluginDialog () {
     
     gtk_box_append ((GtkBox *) master, sw);
     
+    gtk_widget_set_name ((GtkWidget *)listBox, "rack");
+
     gtk_widget_set_vexpand (listBox, true);
     gtk_widget_set_hexpand (listBox, true);
     
@@ -540,6 +550,7 @@ Rack::Rack () {
     // sep.set_vexpand (true);
     master.append (add_effect);
     add_effect.set_label ("Clear");
+    add_effect.set_name ("delete");
     add_effect.set_valign (Gtk::Align::END);
     // list_box.set_valign (Gtk::Align::END);
     // sw.set_propagate_natural_height (true);

@@ -1,5 +1,56 @@
-window {
-    font: large "Montserrat";
+window, #rack {
+    font: xx-large "Gruppo";
+    font-weight: bold;
     background: #000000;
     color: #ffffff;
+}
+notebook > header > tabs > tab, #header {
+    background: #414141;
+    color: #ffffff;
+}
+
+
+#plugin, headerbar, notebook > header   {
+    font: xx-large "Gruppo";
+    opacity: 1;
+    font-weight: bold;
+    background: #414141;
+    color: #ffffff;    
+    margin: 0px;
+    padding: 10px;
+}
+
+#delete {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+spinbutton > text, spinbutton > button {
+    background: #ededed;
+}
+
+#plugin {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/card/bg.png");    
+}
+
+#knob3 {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/knobs/5.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#knob2 {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/knobs/4.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#knob1 {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/knobs/3.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#knob0 {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/knobs/2.png");    
+    background-position: center;
+    background-repeat: no-repeat;
 }

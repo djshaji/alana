@@ -117,7 +117,7 @@ knob_snapshot (GtkWidget * widget, GtkSnapshot * snapshot)
 
   const float scale = (float) MIN (width, height);
   /* if the knob is 80 pixels wide, we want a 3px line on it */
-  const float pointer_thickness = 3.f * (scale / 80.f);
+  const float pointer_thickness = 4.f * (scale / 80.f);
 
   const float start_angle = ((180.f - ARC_CUT_ANGLE) * (float) G_PI) / 180.f;
   const float end_angle = ((360.f + ARC_CUT_ANGLE) * (float) G_PI) / 180.f;
@@ -277,16 +277,21 @@ knob_snapshot (GtkWidget * widget, GtkSnapshot * snapshot)
   else
     {
       /* color inner circle */
+      
+      /*    shaji uncomment below to draw knob
       cairo_set_source_rgba (cr, 70, 70, 70, 0.2);
       cairo_arc (cr, 0, 0, center_radius, 0, 2.0 * G_PI);
       cairo_fill (cr);
+      */
     }
 
   // black knob border
+  /*    shaji uncomment below to draw knob
   cairo_set_line_width (cr, border_width);
   cairo_set_source_rgba (cr, 0, 0, 0, 1);
   cairo_arc (cr, 0, 0, center_radius, 0, 2.0 * G_PI);
   cairo_stroke (cr);
+  */
 
   // line shadow
   if (!self->flat)
@@ -305,10 +310,10 @@ knob_snapshot (GtkWidget * widget, GtkSnapshot * snapshot)
     }
 
   // line
-  cairo_set_source_rgba (cr, 0, 0, 0, .4);
+  cairo_set_source_rgba (cr, .4, .4, .4, 1);
   cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_width (cr, pointer_thickness);
-  cairo_move_to (cr, (center_radius * value_x), (center_radius * value_y));
+  cairo_move_to (cr, (center_radius * value_x), (center_radius * value_y)); // edit here
   cairo_line_to (
     cr, ((center_radius * 0.4f) * value_x), ((center_radius * 0.4f) * value_y));
   cairo_stroke (cr);

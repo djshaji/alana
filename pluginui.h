@@ -42,7 +42,7 @@ typedef enum {
 
 class PluginUI {
 public:    
-    int knob_sizes [4] = {48, 64, 96, 128};
+    int knob_sizes [4] = {32, 64, 72, 96};
     Gtk::Label name ;
     Gtk::Switch  onoff ;
     Gtk::Button  del,  up,  down ;
