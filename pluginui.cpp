@@ -173,6 +173,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     card_ = (GtkWidget *)card.gobj () ;
     
     card.set_orientation (Gtk::Orientation::VERTICAL);
+    //~ gtk_widget_add_css_class ((GtkWidget *) card.gobj (), "xwindow");
 
     Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     card.append (header);
@@ -321,6 +322,9 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             GtkBox * rowBox = (GtkBox *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
             gtk_widget_set_halign ((GtkWidget *)rowBox, GTK_ALIGN_FILL);
             gtk_widget_set_hexpand ((GtkWidget *) rowBox, true);
+
+            spin.set_hexpand (false);
+            spin.set_halign (Gtk::Align::CENTER);
             
             gtk_box_append (currentBox, (GtkWidget *)rowBox);
             gtk_box_append (rowBox, (GtkWidget *)scale.gobj ());

@@ -3,13 +3,14 @@
 
 int main(int argc, char* argv[])
 {
+    auto app = Gtk::Application::create("org.acoustixaudio.amprack");
+
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    auto app = Gtk::Application::create("org.acoustixaudio.amprack");
-
     MyWindow window = MyWindow (app->gobj ());
+    gtk_widget_add_css_class ((GtkWidget *) window.gobj (), "xwindow");
 
     //~ window.set_title("Gtk4 Demo");
     //~ window.set_default_size(300 , 400);
