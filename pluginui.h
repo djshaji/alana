@@ -43,6 +43,18 @@ typedef enum {
 class PluginUI {
 public:    
     int knob_sizes [4] = {32, 64, 72, 96};
+    const char * bypassContains [10] = {
+            "Pull the",
+            "witch",
+            "oggle",
+            "prefilter",
+            "bypass",
+            "stick it!",
+            "vibe",
+            "hold",
+            nullptr
+    } ;
+
     Gtk::Label name ;
     Gtk::Switch  onoff ;
     Gtk::Button  del,  up,  down ;

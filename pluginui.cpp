@@ -1,6 +1,14 @@
 #include "pluginui.h"
 #include "rack.h"
 
+void bypass_cb (void *toggle, void * spin) {
+    if (gtk_toggle_button_get_active ((GtkToggleButton *) toggle)) {
+        gtk_spin_button_set_value ((GtkSpinButton *) spin, 1) ;
+    } else {
+        gtk_spin_button_set_value ((GtkSpinButton *) spin, 0) ;
+    }
+}
+
 void callback (void * p, void *c) {
   GtkButton * b = (GtkButton *) p ;
   CallbackData *cd = (CallbackData *) c ;
@@ -296,6 +304,17 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             }
         }
         
+        GtkToggleButton * bypass = nullptr;
+        int y = 0 ;
+        while (bypassContains [y] != nullptr) {
+            //~ wtf ("%s > %s = %d\n", bypassContains [y], control -> name, strcasestr (bypassContains [y], control -> name));
+            if (strcasestr (control -> name, bypassContains [y]) != NULL) {
+                bypass = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Bypass");
+            }
+            
+            y ++ ;
+        }
+        
         auto kInfo = engine -> knobs [std::to_string (plugin->pluginControls.size ())];
         auto layout = kInfo [std::to_string (row)];
         
@@ -307,7 +326,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
         knob->arc = false;
 
-        if (! niceRack -> bnobs || dropdown != nullptr) {
+        if (! niceRack -> bnobs || dropdown != nullptr || bypass != nullptr) {
             box.append (label);
             box.append (scale);
             spin.set_hexpand (false);
@@ -318,6 +337,17 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             tmp.set_halign (Gtk::Align::CENTER);
             tmp.append (spin);
             box.append (tmp);
+            
+            if (bypass != nullptr) {
+                tmp.set_hexpand (true);
+                gtk_box_append (tmp.gobj (), (GtkWidget *) bypass);
+                spin.set_visible (false);
+                scale.set_visible (false);
+                label.set_visible (false);
+                gtk_widget_set_name ((GtkWidget *)bypass, "bypass");
+                g_signal_connect (bypass, "toggled", (GCallback )bypass_cb, spin.gobj ());
+                gtk_widget_set_halign ((GtkWidget *) bypass, GTK_ALIGN_CENTER);
+            }
         } else {
             if (currentBox == nullptr) {
                 currentBox = (GtkBox *)gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
