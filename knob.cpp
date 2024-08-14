@@ -310,7 +310,7 @@ knob_snapshot (GtkWidget * widget, GtkSnapshot * snapshot)
     }
 
   // line
-  cairo_set_source_rgba (cr, .4, .4, .4, 1);
+  cairo_set_source_rgba (cr, .3, .3, .3, 1);
   cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_width (cr, pointer_thickness);
   cairo_move_to (cr, (center_radius * value_x), (center_radius * value_y)); // edit here
