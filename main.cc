@@ -84,7 +84,8 @@ MyWindow::MyWindow(GtkApplication * _app)
     g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
     g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
  
- 
+    presets -> notebook.set_current_page (1); 
+    
     GtkEventController *   event_controller = gtk_event_controller_key_new ();
     g_signal_connect_swapped (event_controller, "key-pressed",
                            G_CALLBACK (hotkeys),
