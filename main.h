@@ -142,7 +142,7 @@ hotkeys (MyWindow             *window,
                       GdkModifierType        state,
                       GtkEventControllerKey *event_controller)
 {
-    //~ printf ("[keypress] %d\n", keyval);
+    printf ("[keypress] %d\n", keyval);
     switch (keyval) {
         case 65365:
             window -> rack -> next_preset ();
@@ -153,6 +153,26 @@ hotkeys (MyWindow             *window,
         case 65307:
             window->destroy ();
             break;
+        case 49:
+            window -> presets -> notebook.set_current_page (1);
+            window -> presets -> presets.set_current_page (0);
+            break ;
+        case 50:
+            window -> presets -> notebook.set_current_page (1);
+            window -> presets -> presets.set_current_page (1);
+            break ;
+        case 51:
+            window -> presets -> notebook.set_current_page (1);
+            window -> presets -> presets.set_current_page (2);
+            break ;
+        case 52:
+            window -> presets -> notebook.set_current_page (1);
+            window -> presets -> presets.set_current_page (3);
+            break ;
+        case 96:
+            window -> presets -> notebook.set_current_page (0);
+            window -> presets -> presets.set_current_page (0);
+            break ;
     }
     
     return true;
