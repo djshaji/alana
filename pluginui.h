@@ -42,7 +42,7 @@ typedef enum {
 
 class PluginUI {
 public:    
-    int knob_sizes [4] = {32, 64, 72, 96};
+    int knob_sizes [4] = {48, 68, 80, 100};
     const char * bypassContains [10] = {
             "Pull the",
             "witch",

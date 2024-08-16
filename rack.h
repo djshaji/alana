@@ -66,6 +66,9 @@ public:
     
     void clear () ;
     Rack () ;
+    
+    void next_preset ();
+    void prev_preset ();
 };
 
 #endif // RACK_H

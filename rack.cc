@@ -3,39 +3,12 @@
 
 void preset_next (void * b, void * d) {
     Rack * rack = (Rack *) d ;
-    Presets * presets = (Presets *) rack -> presets ;
-    int which = presets -> presets.get_current_page ();
-    
-    if (presets -> list_of_presets [which]->size () == 0) {
-        wtf ("[patch] no patches in %d\n", which);
-        return ;
-    }
-    
-    rack -> patch ++ ;
-    if (rack -> patch > presets -> list_of_presets [which]->size ())
-        rack -> patch = 0 ;
-    
-    wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
-
-    rack -> load_preset (presets -> list_of_presets [which]-> at (rack -> patch));
-    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    rack -> next_preset () ;
 }
 
 void preset_prev (void * b, void * d) {
     Rack * rack = (Rack *) d ;
-    Presets * presets = (Presets *) rack -> presets ;
-    int which =  presets -> presets.get_current_page ();
-    if (presets -> list_of_presets [which]->size () == 0) {
-        wtf ("[patch] no patches in %d\n", which);
-        return ;
-    }
-    
-    rack -> patch -- ;
-    if (rack -> patch < 0)
-        rack -> patch =  presets -> list_of_presets [which]->size ();
-    
-    rack -> load_preset ( presets -> list_of_presets [which]-> at (rack -> patch));
-    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    rack -> prev_preset ();
 }
 
 int get_index (GtkWidget * w) {
@@ -683,4 +656,44 @@ void Rack::build () {
     
     engine -> print ();
     OUT
+}
+
+void Rack:: next_preset () {
+    Rack * rack = this ;
+    Presets * presets = (Presets *) rack -> presets ;
+    int which = presets -> presets.get_current_page ();
+    
+    if (presets -> list_of_presets [which]->size () == 0) {
+        wtf ("[patch] no patches in %d\n", which);
+        return ;
+    }
+    
+    rack -> patch ++ ;
+    if (rack -> patch > presets -> list_of_presets [which]->size () - 1)
+        rack -> patch = 0 ;
+    
+    wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
+
+    rack -> load_preset (presets -> list_of_presets [which]-> at (rack -> patch));
+    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    
+}
+
+void Rack::prev_preset () {
+    Rack * rack = this ;
+    Presets * presets = (Presets *) rack -> presets ;
+    int which =  presets -> presets.get_current_page ();
+    if (presets -> list_of_presets [which]->size () == 0) {
+        wtf ("[patch] no patches in %d\n", which);
+        return ;
+    }
+    
+    rack -> patch -- ;
+    if (rack -> patch < 0)
+        rack -> patch =  presets -> list_of_presets [which]->size () - 1;
+    
+    wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
+    rack -> load_preset ( presets -> list_of_presets [which]-> at (rack -> patch));
+    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    
 }

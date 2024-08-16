@@ -266,6 +266,8 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         Gtk::SpinButton  spin =  Gtk::SpinButton ();
 
         Gtk::Label  label =  Gtk::Label ();
+        label.set_wrap (true);
+        label.set_justify (Gtk::Justification::CENTER);
         //~ LOGD ("control name: %s\n", control->lv2_name.c_str());
         if (plugin->type == SharedLibrary::PluginType::LILV) {
             label.set_label (control->lv2_name.c_str ());
