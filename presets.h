@@ -46,6 +46,7 @@ public:
     void import_presets_from_json (json);
     void save_presets_to_json (std::string);
     std::string dir, * presets_dir, favs_dir ;
+    std::vector <json> * list_of_presets [4] ;
     char * _pdir ;
     void library_load () ;
     const int page_size = 50 ;

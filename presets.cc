@@ -130,6 +130,9 @@ void presets_prev (void * a, void * d) {
 
 void Presets::my () {
     IN
+    for (int i = 0 ; i < 4 ; i ++)
+        list_of_presets [i] = new std::vector <json>();
+    
     presets = Gtk::Notebook () ;
     notebook.append_page (presets, "Presets");
     
@@ -355,6 +358,7 @@ void preset_fav_cb (void * b, void * c) {
 }
 
 void Presets::add_preset (json j, int which) {
+    list_of_presets [which]->push_back (j);
     //~ IN
     //~ std::cout << j << std::endl;
     Gtk::Box h = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;

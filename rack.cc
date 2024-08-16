@@ -1,4 +1,42 @@
 #include "rack.h"
+#include "presets.h"
+
+void preset_next (void * b, void * d) {
+    Rack * rack = (Rack *) d ;
+    Presets * presets = (Presets *) rack -> presets ;
+    int which = presets -> presets.get_current_page ();
+    
+    if (presets -> list_of_presets [which]->size () == 0) {
+        wtf ("[patch] no patches in %d\n", which);
+        return ;
+    }
+    
+    rack -> patch ++ ;
+    if (rack -> patch > presets -> list_of_presets [which]->size ())
+        rack -> patch = 0 ;
+    
+    wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
+
+    rack -> load_preset (presets -> list_of_presets [which]-> at (rack -> patch));
+    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+}
+
+void preset_prev (void * b, void * d) {
+    Rack * rack = (Rack *) d ;
+    Presets * presets = (Presets *) rack -> presets ;
+    int which =  presets -> presets.get_current_page ();
+    if (presets -> list_of_presets [which]->size () == 0) {
+        wtf ("[patch] no patches in %d\n", which);
+        return ;
+    }
+    
+    rack -> patch -- ;
+    if (rack -> patch < 0)
+        rack -> patch =  presets -> list_of_presets [which]->size ();
+    
+    rack -> load_preset ( presets -> list_of_presets [which]-> at (rack -> patch));
+    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+}
 
 int get_index (GtkWidget * w) {
     return gtk_widget_get_name ((GtkWidget *) w) [0] - 48 ;    
@@ -523,7 +561,15 @@ Rack::Rack () {
     record = Gtk::ToggleButton ();
     record.set_label ("Rec");
     
+    patch_up = Gtk::Button ("↑");
+    patch_down = Gtk::Button ("↓");
     menu_button.set_margin (5);
+
+    g_signal_connect (patch_up.gobj (), "clicked", (GCallback) preset_next, this);
+    g_signal_connect (patch_down.gobj (), "clicked", (GCallback) preset_prev, this);
+    
+    current_patch = Gtk::Label ("Patch");
+    
     logo.set_margin (5);
     mixer_toggle.set_margin (5);
     record.set_margin (5);
@@ -581,6 +627,10 @@ Rack::Rack () {
     button_box.set_title_widget (v);
     Gtk::Label title = Gtk::Label ("Amp Rack 5 alpha") ;
     title.set_markup ("<big><b>Amp Rack 5 alpha</b></big>");
+
+    v.append (patch_up);
+    v.append (current_patch);
+    v.append (patch_down);
 
     v.append (title);
     v.append (m) ;

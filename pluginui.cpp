@@ -304,12 +304,12 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             }
         }
         
-        GtkToggleButton * bypass = nullptr;
+        GtkToggleButton * bypassBtn = nullptr;
         int y = 0 ;
         while (bypassContains [y] != nullptr) {
             //~ wtf ("%s > %s = %d\n", bypassContains [y], control -> name, strcasestr (bypassContains [y], control -> name));
             if (strcasestr (control -> name, bypassContains [y]) != NULL) {
-                bypass = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Bypass");
+                bypassBtn = (GtkToggleButton *) gtk_toggle_button_new_with_label (control->name);
             }
             
             y ++ ;
@@ -326,7 +326,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
         knob->arc = false;
 
-        if (! niceRack -> bnobs || dropdown != nullptr || bypass != nullptr) {
+        if (! niceRack -> bnobs || dropdown != nullptr || bypassBtn != nullptr) {
             box.append (label);
             box.append (scale);
             spin.set_hexpand (false);
@@ -338,15 +338,15 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             tmp.append (spin);
             box.append (tmp);
             
-            if (bypass != nullptr) {
+            if (bypassBtn != nullptr) {
                 tmp.set_hexpand (true);
-                gtk_box_append (tmp.gobj (), (GtkWidget *) bypass);
+                gtk_box_append (tmp.gobj (), (GtkWidget *) bypassBtn);
                 spin.set_visible (false);
                 scale.set_visible (false);
                 label.set_visible (false);
-                gtk_widget_set_name ((GtkWidget *)bypass, "bypass");
-                g_signal_connect (bypass, "toggled", (GCallback )bypass_cb, spin.gobj ());
-                gtk_widget_set_halign ((GtkWidget *) bypass, GTK_ALIGN_CENTER);
+                gtk_widget_set_name ((GtkWidget *)bypassBtn, "bypass");
+                g_signal_connect (bypassBtn, "toggled", (GCallback )bypass_cb, spin.gobj ());
+                gtk_widget_set_halign ((GtkWidget *) bypassBtn, GTK_ALIGN_CENTER);
             }
         } else {
             if (currentBox == nullptr) {

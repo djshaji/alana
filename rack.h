@@ -26,6 +26,7 @@ typedef struct _Sorter {
 class Rack {
 public:
     Engine * engine ;
+    void * presets ;
     std::map <int, GtkWidget*> pMap ;
     Gtk::Box master, mixer;
     Gtk::HeaderBar button_box ;
@@ -40,12 +41,14 @@ public:
     void move_down (PluginUI *);
     void build ();
 
-    Gtk::Button logo, menu_button ;
+    Gtk::Button logo, menu_button, patch_up, patch_down ;
+    Gtk::Label current_patch ;
     Gtk::ToggleButton mixer_toggle, record ;
     GtkWidget * listBox ;
     Gtk::Switch onoff ;
     
     bool bnobs = true ;
+    int patch = 0;
     
     std::vector <PluginUI> plugins ;        
     std::vector <GtkWidget *> hearts ;

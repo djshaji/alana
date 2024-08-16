@@ -58,3 +58,17 @@ spinbutton > text, spinbutton > button {
     background-position: center;
     background-repeat: no-repeat;
 }
+
+/*
+#bypass > active {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/on.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#bypass {
+    background-image:url("file:///usr/share/amprack/assets/themes/TubeAmp/off.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+*/

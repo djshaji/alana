@@ -169,6 +169,8 @@ MyWindow::MyWindow(GtkApplication * _app)
     presets->rack = rack ;
     presets->app = app ;
     
+    rack -> presets = (void *) presets;
+    
     gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
     
     presets->my () ;
