@@ -17,14 +17,13 @@
 #ifndef __SAMPLE_ANDROID_DEBUG_H__
 #define __SAMPLE_ANDROID_DEBUG_H__
 #undef __ANDROID__
-//#ifdef __ANDROID__Q
-//#include <android/log.h>
+#ifdef __ANDROID__Q
+#include <android/log.h>
 
 #ifndef MODULE_NAME
 #define MODULE_NAME  __FILE_NAME__
 #endif
 
-/*
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, MODULE_NAME, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, MODULE_NAME, __VA_ARGS__)
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, MODULE_NAME, __VA_ARGS__)
@@ -37,7 +36,7 @@
 #define PASS {int _hwye_ = 0 ;}
 #define ASSERT(cond, ...) if (!(cond)) {__android_log_assert(#cond, MODULE_NAME, __VA_ARGS__);}
 #else
-*/
+
 #define LOGI printf
 #define LOGD printf
 #define LOGW printf
@@ -49,6 +48,6 @@
 #define IN printf(">> %s\n", __PRETTY_FUNCTION__);
 #define OUT printf("<< %s \n", __PRETTY_FUNCTION__);
 
-//#endif
+#endif
 
 #endif // __SAMPLE_ANDROID_DEBUG_H__
