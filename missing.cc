@@ -38,7 +38,7 @@ void list_lilv () {
 }
 
 int main (int argc, char ** argv ) {
-    std::string path = "libs";
+    std::string path = "libs/linux/aarch64/";
         
     std::ifstream fJson(argv [1]);
     std::stringstream buffer;
@@ -50,7 +50,7 @@ int main (int argc, char ** argv ) {
     for (auto plugin : json) {
         path = plugin ["library"].dump () ;
         path = path.substr (1, path.size () - 2);
-        std::string fpath = std::string ("libs/") + path ;
+        std::string fpath = std::string ("libs/linux/aarch64/") + path ;
         if (! std::filesystem::exists(fpath))
             printf ("[missing] %s\n", fpath.c_str ());
     }

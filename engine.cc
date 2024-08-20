@@ -52,11 +52,11 @@ bool Engine::openAudio () {
 }
 
 Engine::Engine () {
-    libraryPath = strdup ("libs/linux/x86_64/");
+    libraryPath = strdup ("libs/linux/aarch64/");
     if (! std::filesystem::exists (libraryPath)) {
         free(libraryPath);
         
-        libraryPath = strdup ("/usr/share/amprack/libs/linux/x86_64/") ;        
+        libraryPath = strdup ("/usr/share/amprack/libs/linux/aarch64/") ;        
     }
     
     if (std::filesystem::exists ("assets"))
