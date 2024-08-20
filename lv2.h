@@ -1,1 +1,1 @@
-/usr/include/lv2.h
+/home/amprack/amp-rack/app/src/main/cpp/lv2.h

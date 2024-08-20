@@ -7,7 +7,7 @@ SNDFILE=`pkg-config --libs sndfile --cflags`
 #OPTIMIZE=-Ofast 
 
 all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
-	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
+	c++  *.o -o amprack  -std=c++17 -pedantic  $(GTKMM) $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)

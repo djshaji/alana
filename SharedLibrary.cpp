@@ -1,1 +1,1 @@
-/home/djshaji/projects/amp-rack/app/src/main/cpp/SharedLibrary.cpp
+/home/amprack/amp-rack/app/src/main/cpp/SharedLibrary.cpp

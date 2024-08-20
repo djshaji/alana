@@ -1,0 +1,1 @@
+/home/amprack/amp-rack/app/src/main/cpp/android_main.cpp

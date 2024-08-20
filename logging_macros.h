@@ -1,1 +1,1 @@
-log.h
+/home/amprack/amp-rack/app/src/main/cpp/logging_macros.h

@@ -17,7 +17,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
-#include <magic_enum_all.hpp>
+#include "magic_enum/magic_enum_all.hpp"
 #pragma GCC diagnostic pop
 
 using namespace magic_enum::bitwise_operators;

@@ -1,1 +1,1 @@
-/home/djshaji/projects/amp-rack/app/src/main/cpp/Plugin.cpp
+/home/amprack/amp-rack/app/src/main/cpp/Plugin.cpp
