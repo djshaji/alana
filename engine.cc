@@ -255,12 +255,22 @@ void Engine::set_plugin_file (int index, char * filename) {
     buffer << fJson.rdbuf();
     int size = buffer.str ().size () ;
     processor->bypass = true ;
-    //~ activePlugins->at (index)->setBuffer ((float *) buffer.str ().c_str (), size);
-    activePlugins->at (index)->lv2Descriptor->connect_port(
-        activePlugins->at (index)->handle, 99, & size);
-    activePlugins->at (index)->lv2Descriptor->connect_port(
-        activePlugins->at (index)->handle, 100, (void *)buffer.str().c_str ());
-    processor->bypass = false ;
+    if (activePlugins->at (index)->lv2Descriptor != nullptr) {
+        wtf ("lv2 plugin ...\n");
+        //~ activePlugins->at (index)->setBuffer ((float *) buffer.str ().c_str (), size);
+        activePlugins->at (index)->lv2Descriptor->connect_port(
+            activePlugins->at (index)->handle, 99, & size);
+        activePlugins->at (index)->lv2Descriptor->connect_port(
+            activePlugins->at (index)->handle, 100, (void *)buffer.str().c_str ());
+        processor->bypass = false ;
+    } else {
+        wtf ("ladspa plugin ...\n");
+        activePlugins->at (index)->descriptor->connect_port(
+            activePlugins->at (index)->handle, 99, (float *)& size);
+        activePlugins->at (index)->descriptor->connect_port(
+            activePlugins->at (index)->handle, 100, (float *)buffer.str().c_str ());
+        processor->bypass = false ;        
+    }
     printf ("%s\n", buffer.str().c_str ());
     OUT
 }

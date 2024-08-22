@@ -356,6 +356,8 @@
   "5500": {
     "name": "SWH Impulse convolver",
     "id": 1885,
+    "file": true,
+    "fileType": 0,
     "plugin": 0,
     "library": "impulse_1885.so"
   },

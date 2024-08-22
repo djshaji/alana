@@ -324,7 +324,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             auto layout = kInfo [std::to_string (row)];
             layout_size = layout.size ();
             
-            wtf ("[layout] %d x %d\n", col, row);
+            //~ wtf ("[layout] %d x %d\n", col, row);
             
             int kSize = knob_sizes [layout [col].get <int>()];
             knob = knob_widget_new_simple (
@@ -334,7 +334,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
             knob->arc = false;
         } else {
-            wtf ("[layout] too many controls!\n");
+            //~ wtf ("[layout] too many controls!\n");
         }
         
         if (! niceRack -> bnobs || dropdown != nullptr || bypassBtn != nullptr || knob == nullptr) {

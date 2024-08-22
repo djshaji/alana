@@ -37,11 +37,26 @@ void test_plugins (void * d) {
             continue;
         }
       
-        wtf ("\n\n------------| test %s |-----------------\n", a.c_str ());
+        wtf ("\n\n------------| lv2 test %s |-----------------\n", a.c_str ());
         rack -> addPluginByName ((char *) a.c_str ()) ;
         rack -> clear () ;
     }    
-    
+
+    for (auto plugin : rack -> engine ->ladspaJson) {
+        std::string a = plugin ["name"].dump() ;
+        a = a.substr (1, a.size () - 2);
+        std::string id = plugin ["id"].dump () ;
+        
+        if (rack -> blacklist.contains (id)) {
+            //~ LOGD ("blacklisted plugin [%s]: %s\n", id.c_str (), a.c_str ()) ;
+            continue;
+        }        
+
+        wtf ("\n\n------------| ladspa test %s |-----------------\n", a.c_str ());
+        rack -> addPluginByName ((char *) a.c_str ()) ;
+        rack -> clear () ;
+    }
+
     OUT ;
 }
 
