@@ -23,10 +23,13 @@ typedef struct _Sorter {
     void * rack ;
 } Sorter;
 
+typedef void (*HashCommand)(void *);
+
 class Rack {
 public:
     Engine * engine ;
     void * presets ;
+    std::map <std::string, HashCommand> hashCommands ;
     std::map <int, GtkWidget*> pMap ;
     Gtk::Box master, mixer;
     Gtk::HeaderBar button_box ;

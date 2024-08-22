@@ -23,11 +23,44 @@ void set_index (GtkWidget * w, int index) {
     gtk_widget_set_name (w, name);
 }
 
+void test_plugins (void * d) {
+    IN
+    Rack * rack = (Rack *) d;
+    for (auto it=rack -> engine->lv2Json.begin () ; it != rack -> engine -> lv2Json.end () ; it ++) {
+    //~ for (auto plugin : engine ->lv2Json) {
+        auto plugin = it .value ();
+        std::string a = plugin ["name"].dump() ;
+        a = a.substr (1, a.size () - 2);
+        //~ LOGD ("p: %s\n", it.key ().c_str ());
+        
+        if (rack -> blacklist.contains (it.key ().c_str ())) {
+            continue;
+        }
+      
+        wtf ("\n\n------------| test %s |-----------------\n", a.c_str ());
+        rack -> addPluginByName ((char *) a.c_str ()) ;
+        rack -> clear () ;
+    }    
+    
+    OUT ;
+}
+
 void do_search (void * w, void *d) {
     Sorter * sorter = (Sorter *) d ;
     Rack * rack = (Rack *) sorter -> rack ;
     GtkEntry * tb = (GtkEntry *) w ;
     const char * text = gtk_entry_buffer_get_text (gtk_entry_get_buffer (tb));
+    if (text [0] == '#') {
+        auto iter = rack -> hashCommands.find(std::string (++text));
+        if (iter == rack->hashCommands.end()) {
+            wtf ("[hash command] not found: %s\n", text);
+            return ;
+        }
+
+        (*iter->second)(rack);
+        return ;
+    }
+    
     std::string str = std::string (text);
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     bool all = str.size () == 0;
@@ -490,8 +523,10 @@ void Rack::clear () {
         gtk_box_remove (list_box.gobj (), (GtkWidget *)plugs.at (i));
     }
     
-    if (engine != NULL && engine->activePlugins != NULL)
+    if (engine != NULL && engine->activePlugins != NULL) {
         engine->activePlugins->clear ();
+        engine -> buildPluginChain ();
+    }
     
     plugs.clear () ;
     OUT
@@ -629,6 +664,7 @@ Rack::Rack () {
     //~ add_effect.set_label ("+ Effect");
 
     rack = createPluginDialog () ;
+    hashCommands.emplace (std::make_pair (std::string ("test"), &test_plugins));
 }
 
 void Rack::build () {

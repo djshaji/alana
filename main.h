@@ -115,6 +115,10 @@ void onshow (void * w, void * d) {
     
 }
 
+void qquit (void *) {
+    abort () ;
+}
+
 void quit (void * w, void * d) {
     MyWindow * window = (MyWindow *) d ;
     window -> rack -> engine -> savePreset (std::string (window -> presets -> dir) .append ("/default").c_str (), "Last saved preset") ;

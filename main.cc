@@ -91,5 +91,7 @@ MyWindow::MyWindow(GtkApplication * _app)
                            G_CALLBACK (hotkeys),
                            this);
     gtk_widget_add_controller (GTK_WIDGET (gobj()), event_controller);
+    
+    rack -> hashCommands.emplace (std::make_pair (std::string ("quit"), &qquit));
 }
 
