@@ -30,6 +30,7 @@ bool json_to_filename (json j, std::string filename) {
 void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gpointer data) {
     IN
     LOGV (msg.c_str ());
+    /*
     GtkAlertDialog *dialog = gtk_alert_dialog_new (msg.c_str ());
     const char* buttons[] = {"Cancel", "Ok", NULL};
     gtk_alert_dialog_set_detail (dialog, msg.c_str ());
@@ -44,6 +45,7 @@ void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gp
     gtk_window_maximize ((GtkWindow *) dialog);
     //~ gtk_alert_dialog_show(dialog, null);
     gtk_alert_dialog_choose (dialog, (GtkWindow *)g_list_model_get_item (list, 0), null, cb, data);
+    * */
     OUT
 }
 
@@ -82,8 +84,11 @@ void alert (char * title, char * msg, AlertType type, gpointer callback, gpointe
 }
 
 void msg (std::string message) {
+    LOGD ("%s\n", message.c_str ()); 
+    #ifdef __GTK_ALERT_DIALOG_H__
     GtkAlertDialog * dialog = gtk_alert_dialog_new (message.c_str());
     gtk_alert_dialog_show (dialog, null);
+    #endif
 }
 
 bool download_file (char *name, const char * filename) {

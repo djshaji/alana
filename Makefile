@@ -6,8 +6,8 @@ JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 #OPTIMIZE=-Ofast 
 
-all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
-	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
+all: version.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
+	c++ *.o  $(GTKMM) -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
@@ -41,9 +41,13 @@ process: process.cc process.h
 
 util.o: util.c util.h
 	c++ util.c -c $(GTKMM)
+
 snd.o: snd.cc snd.h
 	c++ snd.cc -c $(SNDFILE)
 
 knobs.o: knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp
 #~ 	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp GxBigKnob.cpp
 	c++ `pkg-config gtk4 --libs --cflags`  -w -lm -fpermissive knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp -c
+
+version.o:
+	echo \#define VERSION `git rev-list --count HEAD` > version.h

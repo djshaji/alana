@@ -52,11 +52,19 @@ bool Engine::openAudio () {
 }
 
 Engine::Engine () {
-    libraryPath = strdup ("libs/linux/x86_64/");
+    struct utsname name;
+    if (uname (&name) == -1)
+        wtf ("cannot get system name!\n") ;
+    
+    std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
+    libraryPath = strdup (_p_.c_str ());
+    wtf ("trying %s ...\n", libraryPath);
     if (! std::filesystem::exists (libraryPath)) {
         free(libraryPath);
         
-        libraryPath = strdup ("/usr/share/amprack/libs/linux/x86_64/") ;        
+        std::string _p_ = std::string ("/usr/share/amprack/libs/linux/").append (name.machine).append ("/") ;
+        libraryPath = strdup (_p_.c_str ());
+        wtf ("trying %s ...\n", libraryPath);
     }
     
     if (std::filesystem::exists ("assets"))
