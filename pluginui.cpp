@@ -317,18 +317,27 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             y ++ ;
         }
         
-        auto kInfo = engine -> knobs [std::to_string (plugin->pluginControls.size ())];
-        auto layout = kInfo [std::to_string (row)];
+        KnobWidget * knob = nullptr;
+        int layout_size = 1 ;
+        if (plugin->pluginControls.size () < 15) {
+            auto kInfo = engine -> knobs [std::to_string (plugin->pluginControls.size ())];
+            auto layout = kInfo [std::to_string (row)];
+            layout_size = layout.size ();
+            
+            wtf ("[layout] %d x %d\n", col, row);
+            
+            int kSize = knob_sizes [layout [col].get <int>()];
+            knob = knob_widget_new_simple (
+                knob_get, knob_get, knob_set, spin.gobj (), control->min, control->max, kSize, 100);
+
+            gtk_widget_show ((GtkWidget *)knob);
+            gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
+            knob->arc = false;
+        } else {
+            wtf ("[layout] too many controls!\n");
+        }
         
-        int kSize = knob_sizes [layout [col].get <int>()];
-        KnobWidget * knob = knob_widget_new_simple (
-            knob_get, knob_get, knob_set, spin.gobj (), control->min, control->max, kSize, 100);
-
-        gtk_widget_show ((GtkWidget *)knob);
-        gtk_widget_set_name ((GtkWidget *)knob, std::string ("knob").append (std::to_string (layout [col].get <int>())).c_str ());
-        knob->arc = false;
-
-        if (! niceRack -> bnobs || dropdown != nullptr || bypassBtn != nullptr) {
+        if (! niceRack -> bnobs || dropdown != nullptr || bypassBtn != nullptr || knob == nullptr) {
             box.append (label);
             box.append (scale);
             spin.set_hexpand (false);
@@ -350,7 +359,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
                 g_signal_connect (bypassBtn, "toggled", (GCallback )bypass_cb, spin.gobj ());
                 gtk_widget_set_halign ((GtkWidget *) bypassBtn, GTK_ALIGN_CENTER);
             }
-        } else {
+        } else if (knob != nullptr) {
             if (currentBox == nullptr) {
                 currentBox = (GtkBox *)gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
                 gtk_box_set_homogeneous (currentBox, false);
@@ -379,7 +388,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         
         //~ wtf ("[layout] %d: %d\n", col, layout.size ());
         col ++ ;
-        if (col >= layout.size ()) {
+        if (col >= layout_size) {
             currentBox = nullptr;
             col = 0 ;
             row ++ ;
