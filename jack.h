@@ -31,6 +31,7 @@ public:
     int get_sample_rate () ;
     bool activate () ;
     bool deactivate () ;
+    int get_buffer_size ();
 } ;
 
 #endif

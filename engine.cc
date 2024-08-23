@@ -91,6 +91,10 @@ Engine::Engine () {
     knobs = filename_to_json (std::string (assetPath).append ("/knobs.json"));
 
     //~ initLilv ();
+    queueManager.init (driver -> get_buffer_size ());
+    fileWriter = new FileWriter ();
+    queueManager.add_function (fileWriter->disk_write);
+    processor->lockFreeQueueManager = & queueManager ;
 }
 
 
@@ -318,4 +322,27 @@ void Engine::print () {
     }
     
     LOGD ("------------------------\n");
+}
+
+void Engine::startRecording () {
+    IN
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+    auto str = oss.str();
+
+    fileWriter->setFileName (str);
+    fileWriter->setSampleRate (driver->get_sample_rate ());
+    fileWriter->startRecording ();
+    processor->recording = true ;
+    OUT
+}
+
+void Engine::stopRecording () {
+    IN
+    processor->recording = false ;
+    fileWriter->stopRecording ();
+    OUT
 }

@@ -4,10 +4,11 @@ GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
+OPUS=`pkg-config libopusenc opus --libs --cflags`
 #OPTIMIZE=-Ofast 
 
-all: main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
-	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE)
+all: filewriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
+	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
@@ -47,3 +48,6 @@ snd.o: snd.cc snd.h
 knobs.o: knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp
 #~ 	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp GxBigKnob.cpp
 	c++ `pkg-config gtk4 --libs --cflags`  -w -lm -fpermissive knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp -c
+
+filewriter.o: FileWriter.cpp FileWriter.h LockFreeQueue.cpp LockFreeQueue.h
+	c++  -fpermissive upwaker.c vringbuffer.c FileWriter.cpp LockFreeQueue.cpp $(OPUS) $(SNDFILE) -c -w $(JACK)

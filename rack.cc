@@ -1,6 +1,14 @@
 #include "rack.h"
 #include "presets.h"
 
+void toggle_record (GtkToggleButton * button, Engine * engine) {
+    if (gtk_toggle_button_get_active (button)) {
+        engine -> startRecording ();
+    } else {
+        engine -> stopRecording () ;
+    }
+}
+
 void preset_next (void * b, void * d) {
     Rack * rack = (Rack *) d ;
     rack -> next_preset () ;
@@ -583,6 +591,7 @@ Rack::Rack () {
     //~ onoff.set_label ("On");
     record = Gtk::ToggleButton ();
     record.set_label ("Rec");
+    g_signal_connect (record.gobj (), "toggled", (GCallback) toggle_record, engine);
     
     patch_up = Gtk::Button ("↑");
     patch_down = Gtk::Button ("↓");
@@ -656,6 +665,7 @@ Rack::Rack () {
     v.append (patch_down);
 
     v.append (title);
+    v.append (record) ;
     v.append (m) ;
     
     title.set_margin_end (10);

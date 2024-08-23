@@ -16,6 +16,9 @@
  */
 #ifndef __SAMPLE_ANDROID_DEBUG_H__
 #define __SAMPLE_ANDROID_DEBUG_H__
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 
 #ifdef __ANDROID__
 #include <android/log.h>

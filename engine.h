@@ -11,12 +11,15 @@
 #include "process.h"
 #include "util.h"
 #include "snd.h"
+#include "LockFreeQueue.h"
+#include "FileWriter.h"
 
 using json = nlohmann::json;
 
 class Engine {
 public:
     int sampleRate ;
+    FileWriter * fileWriter ;
     AudioDriver * driver = nullptr;
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
@@ -25,6 +28,7 @@ public:
     nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps, knobs ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
+    LockFreeQueueManager queueManager ;
     
     Engine ();
     void buildPluginChain ();
@@ -41,6 +45,8 @@ public:
     void set_plugin_audio_file (int index, char * filename);
     void set_plugin_file (int index, char * filename) ;
     void print ();
+    void startRecording ();
+    void stopRecording ();
 };
 
 #endif 

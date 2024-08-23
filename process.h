@@ -5,6 +5,7 @@
 #include <ladspa.h>
 #include <cstdio>
 #include "logging_macros.h"
+#include "LockFreeQueue.h"
 
 #define MAX_PLUGINS 10 // aaarrrrghhhhhh
 
@@ -30,6 +31,8 @@ public:
 
     int activePlugins = 0;
     void process (int, float *, float *);
-    bool bypass = false ;
+    bool bypass = false, recording = false ;
+    LockFreeQueueManager * lockFreeQueueManager;
+
 };
 #endif

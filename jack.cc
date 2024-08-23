@@ -136,3 +136,6 @@ int AudioDriver::get_sample_rate () {
     return jack_get_sample_rate (client);
 }
 
+int AudioDriver::get_buffer_size () {
+    return jack_get_buffer_size (client);
+}

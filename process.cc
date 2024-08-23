@@ -29,5 +29,7 @@ void Processor::process (int n_samples, float * in, float * data) {
 
     }
 
+    if (recording)
+        lockFreeQueueManager->process(in, data, n_samples) ;
 }
 
