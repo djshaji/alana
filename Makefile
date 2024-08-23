@@ -7,7 +7,7 @@ SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
 #OPTIMIZE=-Ofast 
 
-all: filewriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
+all: version.o filewriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
 	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a
 	
 main.o: main.cc main.h rack.o presets.o
@@ -49,5 +49,8 @@ knobs.o: knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp
 #~ 	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp GxBigKnob.cpp
 	c++ `pkg-config gtk4 --libs --cflags`  -w -lm -fpermissive knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp -c
 
+version.o:
+	echo \#define VERSION `git rev-list --count HEAD` > version.h
+	
 filewriter.o: FileWriter.cpp FileWriter.h LockFreeQueue.cpp LockFreeQueue.h
 	c++  -fpermissive upwaker.c vringbuffer.c FileWriter.cpp LockFreeQueue.cpp $(OPUS) $(SNDFILE) -c -w $(JACK)
