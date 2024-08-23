@@ -1,6 +1,14 @@
 #include "pluginui.h"
 #include "rack.h"
 
+void dropdown_next (GtkDropDown * dropdown) {
+    gtk_drop_down_set_selected (dropdown, gtk_drop_down_get_selected (dropdown) + 1) ;
+}
+
+void dropdown_prev (GtkDropDown * dropdown) {
+    gtk_drop_down_set_selected (dropdown, gtk_drop_down_get_selected (dropdown) - 1) ;
+}
+
 void bypass_cb (void *toggle, void * spin) {
     if (gtk_toggle_button_get_active ((GtkToggleButton *) toggle)) {
         gtk_spin_button_set_value ((GtkSpinButton *) spin, 1) ;
@@ -398,7 +406,25 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         //~ printf ("[controls] %f %f %f\n", control->val, control->min, control->max);
         
         if (dropdown != nullptr) {
+            GtkWidget * prev = (GtkWidget *) gtk_button_new ();
+            GtkWidget * next = (GtkWidget *) gtk_button_new ();
+            
+            gtk_button_set_label ((GtkButton *) prev, "<");
+            gtk_button_set_label ((GtkButton *) next, ">");
+            
+            gtk_widget_set_margin_end (prev, 10);
+            gtk_widget_set_margin_start (prev, 10);
+            gtk_widget_set_margin_top (prev, 20);
+            gtk_widget_set_margin_top (next, 20);
+            gtk_widget_set_margin_start (next, 10);
+            
+            g_signal_connect_swapped (prev, "clicked", (GCallback) dropdown_prev, dropdown);
+            g_signal_connect_swapped (next, "clicked", (GCallback) dropdown_next, dropdown);
+            
+            gtk_box_append (box.gobj (), prev);
             gtk_box_append (box.gobj (), dropdown);
+            gtk_box_append (box.gobj (), next);
+            
             scale.set_visible (false);
             spin.set_visible (false);            
             gtk_widget_set_hexpand ((GtkWidget *) dropdown, true);
