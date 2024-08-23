@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 
+#include "version.h"
 #include "json.hpp"
 #include "log.h"
 #include "defs.h"

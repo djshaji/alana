@@ -657,8 +657,9 @@ Rack::Rack () {
     //~ button_box.pack_start (m);
     Gtk::Box v = Gtk::Box (Gtk::Orientation::HORIZONTAL, 5) ;
     button_box.set_title_widget (v);
-    Gtk::Label title = Gtk::Label ("Amp Rack 5 alpha") ;
-    title.set_markup ("<big><b>Amp Rack 5 alpha</b></big>");
+    std::string version = std::string ("<big><b>Amp Rack 5 alpha build ").append (std::to_string (VERSION)).append ("</b></big>");
+    Gtk::Label title = Gtk::Label (version.c_str ()) ;
+    title.set_markup (version.c_str ());
 
     v.append (patch_up);
     v.append (current_patch);

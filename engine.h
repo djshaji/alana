@@ -5,6 +5,8 @@
 #include <iostream>
 #include <filesystem>
 #include <gtkmm.h>
+#include <sys/utsname.h>
+
 #include "SharedLibrary.h"
 #include "Plugin.h"
 #include "jack.h"
