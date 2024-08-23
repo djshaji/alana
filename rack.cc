@@ -524,8 +524,10 @@ bool Rack::load_preset (std::string filename) {
 
 bool Rack::load_preset (json j) {
     IN
+    current_patch.set_text (j ["name"].dump ().c_str ());
     auto plugins = j ["controls"];
     clear () ;
+    int index = 0 ;
     for (auto p: plugins) {
         auto plugin = p ["name"].dump () ;
         plugin = plugin.substr (1, plugin.size () - 2) ;
@@ -533,6 +535,19 @@ bool Rack::load_preset (json j) {
         auto controls = p ["controls"].dump () ;
         controls = controls.substr (1, controls.size () - 2);
         ui -> load_preset (controls) ;
+        if (p.contains ("filename")) {
+            std::string filename = p ["filename"].dump () ;
+            filename = filename.substr (1, filename.size () - 2) ;
+            wtf ("[preset] loading file: %s\n", filename.c_str ());
+            
+            if (p ["filetype"].get <int> () == 0) {
+                engine -> set_plugin_audio_file (index, (char *) filename.c_str ());
+            } else {
+                engine -> set_plugin_file (index, (char *)  filename.c_str ());          
+            }
+        }
+        
+        index ++ ;
     }
     
     //~ build () ;
@@ -660,7 +675,7 @@ Rack::Rack () {
     std::string version = std::string ("<big><b>Amp Rack 5 alpha build ").append (std::to_string (VERSION)).append ("</b></big>");
     Gtk::Label title = Gtk::Label (version.c_str ()) ;
     title.set_markup (version.c_str ());
-
+    
     v.append (patch_up);
     v.append (current_patch);
     v.append (patch_down);

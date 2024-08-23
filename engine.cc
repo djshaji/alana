@@ -191,6 +191,10 @@ json Engine::getPreset () {
         json p = {};
         
         p ["name"] = plugin->lv2_name;
+        if (! plugin->loadedFileName.empty ()) {
+            p ["filename"] = plugin -> loadedFileName ;
+            p ["filetype"] = plugin -> loadedFileType ;
+        }
         
         std::string controls = std::string () ;
         for (int x = 0 ; x < plugin->pluginControls.size () ; x ++) {
@@ -256,6 +260,8 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     activePlugins->at (index)->setBuffer (sf ->data, * sf -> len);
     processor->bypass = false ;
 
+    activePlugins->at (index)->loadedFileName = std::string (filename) ;
+    activePlugins->at (index)->loadedFileType = 0 ;
     delete (sf) ;
     OUT
 }
@@ -283,7 +289,11 @@ void Engine::set_plugin_file (int index, char * filename) {
             activePlugins->at (index)->handle, 100, (float *)buffer.str().c_str ());
         processor->bypass = false ;        
     }
-    printf ("%s\n", buffer.str().c_str ());
+
+    activePlugins->at (index)->loadedFileName = std::string (filename) ;
+    activePlugins->at (index)->loadedFileType = 1 ;
+
+    //~ printf ("%s\n", buffer.str().c_str ());
     OUT
 }
 
