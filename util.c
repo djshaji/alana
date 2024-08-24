@@ -182,3 +182,34 @@ char ** list_directory (std::string dir) {
     entries [files.size ()] = NULL;
     return entries;
 }
+
+void set_random_background (GtkWidget * widget) {
+    IN
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/backgrounds");
+    if (! std::filesystem::exists (dir))
+        return ;
+
+    std::vector <std::string> files ;
+    for (const auto & entry : std::filesystem::directory_iterator(dir)) {
+        files.push_back (entry.path ());
+    }
+
+    std::string filename ;
+    int index = rand () % files.size () ;
+    
+    filename = files.at (index);
+    wtf ("[random] filename: %s\n", filename.c_str ());
+
+    GtkCssProvider *cssProvider = gtk_css_provider_new();
+    std::string css = 
+        std::string ("#plugin {background-image:url (\"file://")
+        .append (filename)
+        .append ("\");background-repeat: no-repeat;background-size: cover;}");
+
+    wtf ("[random] css: %s\n", css.c_str ());
+
+    gtk_css_provider_load_from_string(cssProvider, css.c_str ());
+    //~ gtk_style_context_add_provider (gtk_widget_get_style_context (widget), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER) ;
+    gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+}

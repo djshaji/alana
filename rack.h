@@ -17,6 +17,8 @@
 #include "pluginui.h"
 #include "util.h"
 
+using json = nlohmann::json;
+
 typedef struct _Sorter {
     GtkWidget * creators, * categories, * listBox;
     Engine * engine ;
@@ -28,6 +30,8 @@ typedef void (*HashCommand)(void *);
 
 class Rack {
 public:
+    json config ;
+    std::string theme ;
     Engine * engine ;
     void * presets ;
     std::map <std::string, HashCommand> hashCommands ;

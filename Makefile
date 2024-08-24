@@ -14,7 +14,7 @@ main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
 rack.o: rack.cc rack.h pluginui.cpp pluginui.h knobs.o
-	g++ rack.cc pluginui.cpp -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
+	g++ rack.cc pluginui.cpp settings.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
 
 presets.o: presets.cc presets.h
 	g++ presets.cc -c $(GTKMM)  $(GTK) $(OPTIMIZE) $(LV2)

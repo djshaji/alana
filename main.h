@@ -6,6 +6,7 @@
 #include "log.h"
 #include "rack.h"
 #include "presets.h"
+#include "settings.h"
 
 using json = nlohmann::json;
 
@@ -116,7 +117,7 @@ void onshow (void * w, void * d) {
 }
 
 void qquit (void *) {
-    abort () ;
+    //~ abort () ;
 }
 
 void quit (void * w, void * d) {
@@ -133,7 +134,8 @@ void quit (void * w, void * d) {
     }
     
     json_to_filename (favs, std::string (window -> presets -> dir).append ("/fav.json"));    
-    gtk_window_destroy ((GtkWindow *)w);
+    json_to_filename (window -> rack->config, std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
+    gtk_window_destroy ((GtkWindow *)window -> gobj ());
 }
 
 // omg

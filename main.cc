@@ -6,12 +6,19 @@ int main(int argc, char* argv[])
     auto app = Gtk::Application::create("org.acoustixaudio.amprack");
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
+    GtkCssProvider *cssProvider2 = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
-    gtk_css_provider_load_from_path(cssProvider, std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str ());
-    gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     MyWindow window = MyWindow (app->gobj ());
     gtk_widget_add_css_class ((GtkWidget *) window.gobj (), "xwindow");
+
+    gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
+    gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    std::string user_css = std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str () ;
+    if (std::filesystem::exists (user_css))
+        gtk_css_provider_load_from_path(cssProvider2, user_css.c_str());
+    gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     //~ window.set_title("Gtk4 Demo");
     //~ window.set_default_size(300 , 400);
@@ -73,6 +80,10 @@ MyWindow::MyWindow(GtkApplication * _app)
     gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
     
     presets->my () ;
+    
+    Settings settings = Settings (rack);
+    gtk_notebook_append_page (presets->notebook.gobj (), (GtkWidget *)settings.gobj (), gtk_label_new ("Settings"));
+    
     
     CB * cb = new CB () ;
     cb -> engine = rack -> engine ;

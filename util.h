@@ -32,4 +32,7 @@ void msg (std::string message) ;
 bool download_file (char *name, const char * filename) ;
 void copy_file (std::string src, std::string dest) ;
 char ** list_directory (std::string dir) ;
+void set_random_background (GtkWidget * widget) ;
+
+
 #endif

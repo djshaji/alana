@@ -15,6 +15,7 @@
 #include "Plugin.h"
 #include "PluginControl.h"
 #include "callback_data.h"
+#include "util.h"
 
 
 using json = nlohmann::json;
@@ -42,7 +43,7 @@ typedef enum {
 
 class PluginUI {
 public:    
-    int knob_sizes [4] = {48, 68, 80, 100};
+    int knob_sizes [4] = {48, 84, 100, 140};
     const char * bypassContains [10] = {
             "Pull the",
             "witch",

@@ -587,6 +587,14 @@ Rack::Rack () {
     engine = new Engine () ;
     blacklist = filename_to_json ("assets/blacklist.json");
     
+    config = filename_to_json (std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
+    if (config.contains ("theme")) {
+        theme = config ["theme"].dump ();
+        theme = theme.substr (1, theme.size () - 2);
+    } else {
+        theme = std::string ("TubeAmp");
+    }
+    
     //~ for (auto b = blacklist.begin () ; b != blacklist.end () ; b ++) {
         //~ LOGD ("[blacklist] %s\n", b.key ()) ;
     //~ }

@@ -30,7 +30,7 @@ spinbutton > text, spinbutton > button {
 }
 
 #plugin, headerbar, notebook > header {
-    background-image:url("file:///home/djshaji/Pictures/ftopx.com_5e6c1484d6162.jpg");    
+    background-image:url("file:///usr/share/amprack/assets/themes/Classic/card/bg.png");    
     border-image:url("file:///usr/share/amprack/assets/themes/Classic/card/left.png") 10 round;    
     border: 5px solid ;
     border-style: solid;

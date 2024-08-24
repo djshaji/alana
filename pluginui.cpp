@@ -214,6 +214,8 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     
     card.append (container);
     container.set_name ("plugin");
+    
+    set_random_background ((GtkWidget *)container.gobj ());
 
     Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     container.append (header);
