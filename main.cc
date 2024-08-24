@@ -7,6 +7,7 @@ int main(int argc, char* argv[])
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
+    gtk_css_provider_load_from_path(cssProvider, std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str ());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     MyWindow window = MyWindow (app->gobj ());

@@ -1,0 +1,74 @@
+window, #rack {
+    font: 100% "Gruppo";
+    font-weight: bold;
+    background: #000000;
+    color: #ffffff;
+}
+notebook > header > tabs > tab, #header {
+    background: #6B2C1C;
+    color: #ffffff;
+}
+
+
+#plugin, headerbar, notebook > header   {
+    font: 100% "Gruppo";
+    opacity: 1;
+    font-weight: bold;
+    background: #6B2C1C;
+    color: #ffffff;    
+    margin: 0px;
+    padding: 10px;
+}
+
+#delete {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+spinbutton > text, spinbutton > button {
+    background: #ededed;
+}
+
+#plugin, headerbar {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/card/bg.png");    
+    border-image:url("file:///usr/share/amprack/assets/themes/Modern/card/left.png") 10 round;    
+    border: 5px solid ;
+    border-style: solid;
+    
+}
+
+#knob3 {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/knobs/5.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#knob2 {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/knobs/4.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#knob1 {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/knobs/3.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#knob0 {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/knobs/2.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/*
+#bypass > active {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/on.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#bypass {
+    background-image:url("file:///usr/share/amprack/assets/themes/Modern/off.png");    
+    background-position: center;
+    background-repeat: no-repeat;
+}
+*/
