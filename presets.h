@@ -57,8 +57,8 @@ public:
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
         LOGD ("[presets] dir: %s\n", dir.c_str ());
         
-        presets_dir = new std::string (dir);
-        presets_dir->append ("/presets/");
+        presets_dir = new std::string (getenv ("HOME"));
+        presets_dir->append ("/amprack/presets/");
         _pdir = strdup (presets_dir->c_str ());
         
         if (! g_file_test (dir.c_str (), G_FILE_TEST_IS_DIR)) {
