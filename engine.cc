@@ -56,6 +56,9 @@ Engine::Engine () {
     if (uname (&name) == -1)
         wtf ("cannot get system name!\n") ;
     
+    home = std::string (getenv("HOME")).append ("/amprack/recordings");
+    g_mkdir_with_parents  (home.c_str (), 0777);
+    
     std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
     libraryPath = strdup (_p_.c_str ());
     wtf ("trying %s ...\n", libraryPath);
@@ -263,6 +266,13 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     activePlugins->at (index)->loadedFileName = std::string (filename) ;
     activePlugins->at (index)->loadedFileType = 0 ;
     delete (sf) ;
+
+    std::string path = std::string (filename) ;
+
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    g_mkdir_with_parents (dir.c_str (), 0777) ;
+    copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
+
     OUT
 }
 
@@ -291,8 +301,12 @@ void Engine::set_plugin_file (int index, char * filename) {
     }
 
     activePlugins->at (index)->loadedFileName = std::string (filename) ;
+    std::string path = std::string (filename) ;
     activePlugins->at (index)->loadedFileType = 1 ;
 
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    g_mkdir_with_parents (dir.c_str (), 0777) ;
+    copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
     //~ printf ("%s\n", buffer.str().c_str ());
     OUT
 }
@@ -348,8 +362,9 @@ void Engine::startRecording () {
     auto tm = *std::localtime(&t);
 
     std::ostringstream oss;
-    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
-    auto str = oss.str();
+
+    oss << std::put_time(&tm, "/%d-%m-%Y %H-%M-%S");
+    auto str = std::string (home).append (oss.str());
 
     fileWriter->setFileName (str);
     fileWriter->setSampleRate (driver->get_sample_rate ());

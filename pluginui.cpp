@@ -1,6 +1,25 @@
 #include "pluginui.h"
 #include "rack.h"
 
+void select_model (GtkDropDown * down, int event, PluginUI * ui) {
+    IN
+    if (! GTK_IS_STRING_OBJECT (gtk_drop_down_get_selected_item ((GtkDropDown *)down))) {
+        HERE wtf ("AAAAAAA\n");
+        return ;
+    }
+    
+    const char * filename = gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)down));
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (std::string (ui -> name.get_text ())).append ("/").append (std::string (filename));
+    wtf ("[model] %s\n", dir.c_str ());
+    
+    if (ui -> engine -> activePlugins -> at (ui -> index) -> loadedFileType)
+        ui -> engine -> set_plugin_file (ui-> index, (char *)dir.c_str ());
+    else
+        ui -> engine -> set_plugin_audio_file (ui-> index, (char *)dir.c_str ());
+
+    OUT
+}
+
 void dropdown_next (GtkDropDown * dropdown) {
     gtk_drop_down_set_selected (dropdown, gtk_drop_down_get_selected (dropdown) + 1) ;
 }
@@ -464,6 +483,41 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     container.append (bbox);
     bbox.append (up);
     bbox.append (down);
-    if (has_file_chooser)
-        container.append (load_file);
+    if (has_file_chooser) {
+        GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+        gtk_widget_set_hexpand (box, true);
+        std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (pluginName).append ("/");
+        char ** entries = list_directory (dir);
+        GtkWidget * down = gtk_drop_down_new_from_strings (entries) ;
+        gtk_widget_set_hexpand (down, true);
+        g_signal_connect (down, "notify::selected", (GCallback) select_model, this);
+
+        GtkWidget * prev = (GtkWidget *) gtk_button_new ();
+        GtkWidget * next = (GtkWidget *) gtk_button_new ();
+        
+        gtk_button_set_label ((GtkButton *) prev, "<");
+        gtk_button_set_label ((GtkButton *) next, ">");
+        
+        //~ gtk_widget_set_margin_end (prev, 10);
+        //~ gtk_widget_set_margin_start (prev, 10);
+        //~ gtk_widget_set_margin_top (prev, 20);
+        //~ gtk_widget_set_margin_top (next, 20);
+        //~ gtk_widget_set_margin_start (next, 10);
+        
+        g_signal_connect_swapped (prev, "clicked", (GCallback) dropdown_prev, down);
+        g_signal_connect_swapped (next, "clicked", (GCallback) dropdown_next, down);
+        
+        gtk_box_append (container.gobj (), box);
+        gtk_box_append ((GtkBox *)box, prev);
+        gtk_box_append ((GtkBox *)box, down);
+        gtk_box_append ((GtkBox *)box, next);
+        gtk_box_append ((GtkBox *)box, (GtkWidget *)load_file.gobj ());
+        
+        int i = 0 ; 
+        while (entries [i] != NULL) {
+            free (entries [i++]);
+        }
+        
+        free (entries);
+    }
 }

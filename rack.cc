@@ -290,6 +290,10 @@ PluginUI * Rack::addPluginByName (char * requested) {
     //~ return ;
     if (res) {
         int index = engine -> activePlugins->size () - 1;
+        if (has_file) {
+            engine -> activePlugins -> at (index)->loadedFileType = file_type;
+        }
+        
         PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file, this);
         ui -> pType = (PluginFileType *) malloc (sizeof (int)) ;
         * ui->pType = file_type ;

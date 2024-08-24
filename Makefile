@@ -41,7 +41,7 @@ process: process.cc process.h
 	cc process.cc -c
 
 util.o: util.c util.h
-	c++ util.c -c $(GTKMM)
+	c++ util.c -c $(GTKMM) -fpermissive
 snd.o: snd.cc snd.h
 	c++ snd.cc -c $(SNDFILE)
 

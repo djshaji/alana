@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <gtkmm.h>
 #include <sys/utsname.h>
+#include <unistd.h>
 
 #include "SharedLibrary.h"
 #include "Plugin.h"
@@ -23,6 +24,7 @@ public:
     int sampleRate ;
     FileWriter * fileWriter ;
     AudioDriver * driver = nullptr;
+    std::string home ;
     std::vector <SharedLibrary *> libraries ;
     Processor * processor = nullptr ;
     char * libraryPath = nullptr; //= std::string ("libs/linux/x86_64/");

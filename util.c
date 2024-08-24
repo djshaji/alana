@@ -145,3 +145,40 @@ bool download_file (char *name, const char * filename) {
     g_object_unref(f);   
     return ret;
 }
+
+void copy_file (std::string source, std::string dest) {
+    if (std::filesystem::exists (dest)) {
+        wtf ("%s already exists, not overwriting\n", dest.c_str ());
+        return ;
+    }
+    
+    wtf ("copying %s -> %s\n", source.c_str (), dest.c_str ());
+    std::ifstream  src(source.c_str (), std::ios::binary);
+    std::ofstream  dst(dest.c_str (),   std::ios::binary);
+
+    dst << src.rdbuf();
+}
+
+
+char ** list_directory (std::string dir) {
+    if (! std::filesystem::exists (dir)) {
+        char ** entries = malloc (1) ;
+        entries [0] = NULL ;
+        return entries ;
+    }
+        
+    std::vector <std::string> files ;
+    for (const auto & entry : std::filesystem::directory_iterator(dir)) {
+        files.push_back (entry.path ());
+    }
+    
+    char ** entries = malloc (files.size () + 1);
+    for (int i = 0 ; i < files.size (); i ++) {
+        std::string path = std::string (files.at (i)) ;
+        path = path.substr(path.find_last_of("/") + 1).c_str () ;
+        entries [i] = strdup (path.c_str ());
+    }
+    
+    entries [files.size ()] = NULL;
+    return entries;
+}

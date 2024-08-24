@@ -30,4 +30,6 @@ void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gp
 void alert (char * title, char * msg, AlertType type, gpointer callback, gpointer data) ;
 void msg (std::string message) ;
 bool download_file (char *name, const char * filename) ;
+void copy_file (std::string src, std::string dest) ;
+char ** list_directory (std::string dir) ;
 #endif
