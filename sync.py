@@ -11,6 +11,13 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging, json
 from pathlib import Path
 import glob
+import gi
+import concurrent.futures
+import asyncio
+from threading import Thread
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 def copy_presets (j):
     for _preset in j:
@@ -54,9 +61,10 @@ class S(BaseHTTPRequestHandler):
         
         self._set_response()
         self.wfile.write(str.encode (json.dumps (my_presets)))
+        win.destroy ()
         exit ()
 
-def run(server_class=HTTPServer, handler_class=S, port=8080):
+def run(server_class=HTTPServer, handler_class=S, port=8081):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
@@ -70,8 +78,16 @@ def run(server_class=HTTPServer, handler_class=S, port=8080):
 
 if __name__ == '__main__':
     from sys import argv
+    win = Gtk.Window()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main_iteration_do (True)
+    thread = Thread(target=run, args = win)
+    thread.start()
 
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
+    # ~ if len(argv) == 2:
+        # ~ run(port=int(argv[1]))
+    # ~ else:
+        # ~ run()
+        
+    Gtk.main()
