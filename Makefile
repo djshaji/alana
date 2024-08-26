@@ -5,10 +5,11 @@ LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
+LAME=`pkg-config lame --libs --cflags`
 #OPTIMIZE=-Ofast 
 
 all: version.o filewriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
-	c++ $(GTKMM) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a
+	c++ *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a $(GTKMM) $(LAME)
 	
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)

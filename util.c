@@ -185,6 +185,8 @@ char ** list_directory (std::string dir) {
 
 void set_random_background (GtkWidget * widget) {
     IN
+    #ifdef __GTK_ALERT_DIALOG_H__
+
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/backgrounds");
     if (! std::filesystem::exists (dir))
         return ;
@@ -211,5 +213,5 @@ void set_random_background (GtkWidget * widget) {
     gtk_css_provider_load_from_string(cssProvider, css.c_str ());
     //~ gtk_style_context_add_provider (gtk_widget_get_style_context (widget), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER) ;
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_USER);
-
+    #endif
 }

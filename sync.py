@@ -24,6 +24,7 @@ from urllib import request, parse
 
 key = None
 httpd = None
+global port
 
 def copy_presets (j):
     for _preset in j:
@@ -136,6 +137,8 @@ if __name__ == '__main__':
     from sys import argv
     if len(argv) == 2:
         port = int (argv [1])
+    else:
+        port = 8080
     
     win = Gtk.Window()
     win.set_size_request (400, 100)
