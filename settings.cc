@@ -12,6 +12,7 @@ void switch_theme (GtkDropDown * dropdown, int event, Rack * rack) {
     
     gtk_css_provider_load_from_path(cssProvider, filename.c_str ());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    rack -> config ["theme"] = std::string (basename);
 }
 
 Settings::Settings (Rack * rack) {

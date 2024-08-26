@@ -583,6 +583,14 @@ void onoff_cb (void * s, bool state, void * d) {
     }
 }
 
+void launch_tuner (void * a, void * c) {
+    system ("$HOME/bin/xtuner") ;
+}
+
+void launch_sync (void * a, void * c) {
+    system ("python $HOME/bin/sync.py") ;
+}
+
 Rack::Rack () {
     engine = new Engine () ;
     blacklist = filename_to_json ("assets/blacklist.json");
@@ -619,6 +627,12 @@ Rack::Rack () {
     record = Gtk::ToggleButton ();
     record.set_label ("Rec");
     g_signal_connect (record.gobj (), "toggled", (GCallback) toggle_record, engine);
+    
+    Gtk::Button syn = Gtk::Button ("Sync");
+    Gtk::Button tune = Gtk::Button ("Tuner");
+    
+    g_signal_connect (syn.gobj (), "clicked", (GCallback) launch_sync, NULL);
+    g_signal_connect (tune.gobj (), "clicked", (GCallback) launch_tuner, NULL);
     
     patch_up = Gtk::Button ("↑");
     patch_down = Gtk::Button ("↓");
@@ -688,6 +702,8 @@ Rack::Rack () {
     Gtk::Label title = Gtk::Label (version.c_str ()) ;
     title.set_markup (version.c_str ());
     
+    v.append (syn);
+    v.append (tune);
     v.append (patch_up);
     v.append (current_patch);
     v.append (patch_down);
