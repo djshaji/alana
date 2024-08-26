@@ -16,6 +16,7 @@ import concurrent.futures
 import asyncio
 from threading import Thread
 import random
+import requests
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -23,11 +24,13 @@ from urllib import request, parse
 
 key = None
 httpd = None
-port = 8081
 
 def copy_presets (j):
     for _preset in j:
         preset = j [_preset]
+        if (type (preset) is str):
+            preset = json.loads (preset)
+
         filename = Path.home() / "amprack" / "presets" / preset ["name"]
         print (f'writing {filename}')
         with open(filename, 'w') as f:
@@ -91,6 +94,7 @@ def run(server_class=HTTPServer, handler_class=S, _port=8081):
     global label, button
     button.set_visible (True)
     label.set_markup (f'<big><b>{key}</b></big>')
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -101,18 +105,38 @@ def run(server_class=HTTPServer, handler_class=S, _port=8081):
 
 def do_exit (self):
     Gtk.main_quit ()
+    global thread, port
     req =  request.Request("http://localhost:" + str (port)) # this will make the method "POST"
     resp = request.urlopen(req)
 
-    global thread
-    # ~ thread.join (5)
+    # ~ thread.join (0)
     # ~ logging.info('Stopping httpd...\n')
     exit ()
 
+def sync_remote (entry): 
+    global thread, port
+    payload = get_presets ()
+    val = entry.get_text ().split (":")
+    url = f"http://{val [0]}:{val [1]}"
+    
+    headers = {'key': val [2]}
+    r = requests.post(url, data=json.dumps(payload), headers=headers)
+    print(r.content)
+    j = json.loads (r.content)
+    
+    copy_presets (j)
+    label.set_markup ('<span foreground="green" weight="bold" size="x-large">Synced Successfully</span>')
+
+def sync_remote_cb (self, ent):
+    ent.activate()
+
 if __name__ == '__main__':
     global thread
-    global label
+    global label, port
     from sys import argv
+    if len(argv) == 2:
+        port = int (argv [1])
+    
     win = Gtk.Window()
     win.set_size_request (400, 100)
     label = Gtk.Label ("Please wait ...")
@@ -148,6 +172,7 @@ if __name__ == '__main__':
     grid.attach (label, 1, 2, 2, 1)
 
     box2.pack_start (desc, True, True, 10)
+    box2.pack_start (Gtk.Label ("Use the following details to sync from another device"), True, True, 0)
     box2.pack_start (grid, True, True, 10)
     box2.pack_start (box, True, True, 10)
     # ~ box.pack_start (l2, True, True, 10)
@@ -169,6 +194,8 @@ if __name__ == '__main__':
     grid.attach (Gtk.Label ("IP:PORT:KEY"), 0, 5, 4, 1)
     
     button.connect("clicked", do_exit)
+    ent.connect ("activate", sync_remote)
+    btn.connect ("clicked", sync_remote_cb, ent)
     win.connect("destroy", do_exit)
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
