@@ -39,6 +39,28 @@ int main(int argc, char* argv[])
 
 MyWindow * global_window_really_question_mark = nullptr;
 
+void toggle_effects (GtkToggleButton * button, MyWindow * window) {
+    GtkPaned * pane = window -> pane.gobj();
+    
+    if (gtk_toggle_button_get_active (button)) {
+        gtk_paned_set_position (pane, 1600) ;
+    } else {
+        gtk_paned_set_position (pane, 1100) ;
+    }
+
+    /*
+    GtkAdjustment * h = gtk_scrolled_window_get_hadjustment ((GtkScrolledWindow *) window -> rack -> sw.gobj ());
+    GtkAdjustment * v = gtk_scrolled_window_get_vadjustment ((GtkScrolledWindow *) window -> rack -> sw.gobj ());
+    printf ("[scroll] %d %d %d | %d %d %d\n",
+        gtk_adjustment_get_lower (h),
+        gtk_adjustment_get_upper (h),
+        gtk_adjustment_get_value (h),
+        gtk_adjustment_get_lower (v),
+        gtk_adjustment_get_upper (v),
+        gtk_adjustment_get_value (v));
+    */
+}
+
 MyWindow::MyWindow(GtkApplication * _app)
 {
     app = _app ;
@@ -59,7 +81,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
     pane.set_position (900);
-    g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
+    //~ g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
     stack = Gtk::Stack () ;
     stack_box.append (stack);
@@ -109,5 +131,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     gtk_widget_add_controller (GTK_WIDGET (gobj()), event_controller);
     
     rack -> hashCommands.emplace (std::make_pair (std::string ("quit"), &qquit));
+    //~ g_signal_connect (rack -> toggle_presets.gobj (), "clicked", (GCallback) toggle_effects, this);
+
 }
 

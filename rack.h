@@ -54,6 +54,7 @@ public:
     Gtk::ToggleButton mixer_toggle, record ;
     GtkWidget * listBox ;
     Gtk::Switch onoff ;
+    Gtk::ToggleButton toggle_presets ;
     
     bool bnobs = true ;
     int patch = 0;
