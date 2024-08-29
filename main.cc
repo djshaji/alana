@@ -1,5 +1,8 @@
 #include "main.h"
 
+void position_changed (GtkPaned * pane, void *) {
+    printf ("[paned] %s\n", gtk_paned_get_position (pane)) ;
+}
 
 int main(int argc, char* argv[])
 {
@@ -56,6 +59,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
     pane.set_position (900);
+    g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
     stack = Gtk::Stack () ;
     stack_box.append (stack);

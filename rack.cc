@@ -1,6 +1,14 @@
 #include "rack.h"
 #include "presets.h"
 
+void toggle_effects (GtkToggleButton * button, Rack * rack) {
+    if (gtk_toggle_button_get_active (button)) {
+        gtk_paned_set_position (600) ;
+    } else {
+        gtk_paned_set_position (100) ;
+    }
+}
+
 void toggle_record (GtkToggleButton * button, Engine * engine) {
     if (gtk_toggle_button_get_active (button)) {
         engine -> startRecording ();
@@ -630,9 +638,11 @@ Rack::Rack () {
     
     Gtk::Button syn = Gtk::Button ("Sync");
     Gtk::Button tune = Gtk::Button ("Tuner");
+    Gtk::ToggleButton toggle_presets = Gtk::Button ("Effects");
     
     g_signal_connect (syn.gobj (), "clicked", (GCallback) launch_sync, NULL);
     g_signal_connect (tune.gobj (), "clicked", (GCallback) launch_tuner, NULL);
+    g_signal_connect (toggle_presets.gobj (), "clicked", (GCallback) toggle_effects, this);
     
     patch_up = Gtk::Button ("↑");
     patch_down = Gtk::Button ("↓");
@@ -701,7 +711,9 @@ Rack::Rack () {
     std::string version = std::string ("<big><b>Amp Rack 5 alpha build ").append (std::to_string (VERSION)).append ("</b></big>");
     Gtk::Label title = Gtk::Label (version.c_str ()) ;
     title.set_markup (version.c_str ());
+    title.set_visible (false);
     
+    v.append (toggle_presets);
     v.append (syn);
     v.append (tune);
     v.append (patch_up);
