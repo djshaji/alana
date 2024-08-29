@@ -146,10 +146,10 @@ void Presets::my () {
     library.set_name ("rack");
     favorites.set_name ("rack");
     
-    Gtk::Label l1 = Gtk::Label ("My Presets");
-    Gtk::Label l2 = Gtk::Label ("Quick Presets");
+    Gtk::Label l1 = Gtk::Label ("User");
+    Gtk::Label l2 = Gtk::Label ("Factory");
     Gtk::Label l3 = Gtk::Label ("Library");
-    Gtk::Label lf = Gtk::Label ("Favorites");
+    Gtk::Label lf = Gtk::Label ("♥");
     
     Gtk::ScrolledWindow sw_q = Gtk::ScrolledWindow (), 
         sw_l = Gtk::ScrolledWindow (),
