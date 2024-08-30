@@ -80,7 +80,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     box.append (stack_box);
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
-    pane.set_position (900);
+    pane.set_position (370);
     //~ g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
     stack = Gtk::Stack () ;
@@ -117,7 +117,10 @@ MyWindow::MyWindow(GtkApplication * _app)
     
     g_signal_connect (presets->add.gobj (), "clicked", (GCallback) save_preset_cb, cb);
     
-    pane.set_start_child (presets->master);
+    Gtk::ScrolledWindow sw = Gtk::ScrolledWindow () ;
+    gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)presets->master.gobj ());
+    
+    pane.set_start_child (sw);
     pane.set_end_child (rack->master);
     g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
     g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
@@ -132,6 +135,8 @@ MyWindow::MyWindow(GtkApplication * _app)
     
     rack -> hashCommands.emplace (std::make_pair (std::string ("quit"), &qquit));
     //~ g_signal_connect (rack -> toggle_presets.gobj (), "clicked", (GCallback) toggle_effects, this);
+    //~ XWarpPointer(gdk_x11_display_get_xdisplay (gdk_display_get_default ()),0,0, 0, 0, 0, 0, 0, 
+                //~ 0);
 
 }
 

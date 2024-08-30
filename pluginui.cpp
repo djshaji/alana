@@ -411,6 +411,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
             gtk_box_append (rowBox, (GtkWidget *)knob);
             gtk_box_append (rowBox, (GtkWidget *)label.gobj ());
             
+            //~ spin.hide ();
             scale.hide ();
             spin.set_width_chars (3);
         }

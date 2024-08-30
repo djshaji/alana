@@ -314,7 +314,7 @@ void addPluginCallback (void * b, void * c) {
     GtkWidget * button = (GtkWidget *) b ;
     Rack * rack = (Rack *) c ;
     Engine * engine = (Engine *) rack -> engine ;
-    char * requested = (char *) gtk_widget_get_name (button) ;
+    char * requested = (char *) gtk_button_get_label ((GtkButton *)button) ;
     rack -> addPluginByName (requested);
 }
 
@@ -322,7 +322,8 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         gtk_widget_set_margin_start (box, 10);
         gtk_widget_set_margin_end (box, 10);
-        GtkWidget * label = gtk_label_new (plug.c_str ());
+        GtkWidget * label = gtk_button_new_with_label (plug.c_str ());
+        gtk_label_set_wrap ((GtkLabel *)label, true);
         GtkWidget * fav = gtk_toggle_button_new ();
         gtk_button_set_label ((GtkButton *) fav, "♥");
         gtk_widget_set_name (fav, plug.c_str ());
@@ -334,21 +335,28 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         
         gtk_widget_set_name (button, plug.c_str ());
         
-        g_signal_connect (button, "clicked", GCallback (addPluginCallback), this);
+        //~ g_signal_connect (button, "clicked", GCallback (addPluginCallback), this);
+        g_signal_connect (label, "clicked", GCallback (addPluginCallback), this);
         
         gtk_widget_set_hexpand (box, true);
         GtkBox * B = (GtkBox *)gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
         gtk_widget_set_name ((GtkWidget *)B, "plugin");
-        gtk_box_append (B, label);
+        gtk_box_append (B, (GtkWidget *) label);
+        gtk_box_append (B, (GtkWidget *) fav);
         gtk_widget_set_hexpand (label, false);
         gtk_widget_set_hexpand ((GtkWidget *) B, true);
         //~ gtk_widget_set_halign (label, GTK_ALIGN);
         //~ gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
-        gtk_label_set_wrap ((GtkLabel *) label, true);
+        gtk_label_set_wrap ((GtkLabel *) gtk_button_get_child ((GtkButton *) label), true);
+        //~ gtk_button_set_has_frame ((GtkButton *)fav, false);
+        //~ gtk_widget_add_css_class (fav, "flat");
+        gtk_widget_set_name (label, "effect-button");
+        gtk_widget_set_name (fav, "effect-fav");
+        //~ gtk_widget_set_name (gtk_button_get_child ((GtkButton *) label), "effect-label");
         
         gtk_box_append ((GtkBox *)box, (GtkWidget *)B);
-        gtk_box_append ((GtkBox *)box, button);
-        gtk_box_append ((GtkBox *)box, fav);
+        //~ gtk_box_append ((GtkBox *)box, button);
+        //~ gtk_box_append ((GtkBox *)box, fav);
         
         gtk_list_box_append ((GtkListBox *)listBox, box);      
         return box ;      
@@ -424,8 +432,8 @@ GtkWidget * Rack::createPluginDialog () {
     gtk_box_append ((GtkBox *)hbox, show_only_favorites);
 
     gtk_widget_set_hexpand (hbox, false);
-    gtk_widget_set_halign (show_only_favorites, GTK_ALIGN_END);
-    gtk_widget_set_halign (hbox, GTK_ALIGN_END);
+    //~ gtk_widget_set_halign (show_only_favorites, GTK_ALIGN_END);
+    //~ gtk_widget_set_halign (hbox, GTK_ALIGN_END);
         
     Sorter * sorter = (Sorter *) malloc (sizeof (Sorter));
     sorter -> boxes = new std::vector <GtkWidget *>();
@@ -690,13 +698,13 @@ Rack::Rack () {
     Gtk::Box m = Gtk::Box () ;
     m.set_orientation (Gtk::Orientation::VERTICAL);
     
-    m.append (onoff);
+    //~ m.append (onoff);
     
     mixer_toggle.set_halign (Gtk::Align::END);
     
     Gtk::Label l = Gtk::Label ("On") ;
     
-    m.append (l);
+    //~ m.append (l);
     //~ button_box.pack_start (m);
     Gtk::Box v = Gtk::Box (Gtk::Orientation::HORIZONTAL, 5) ;
     button_box.set_title_widget (v);
@@ -714,7 +722,8 @@ Rack::Rack () {
 
     v.append (title);
     v.append (record) ;
-    v.append (m) ;
+    v.append (onoff) ;
+    v.append (l) ;
     
     title.set_margin_end (10);
     

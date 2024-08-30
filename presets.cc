@@ -395,11 +395,16 @@ void Presets::add_preset (json j, int which) {
             break;
     }
     
+    Gtk::ToggleButton fav = Gtk::ToggleButton () ;
+    fav.set_label ("♥");
+        
     Gtk::Label title = Gtk::Label () ;
     title.set_wrap (true);
+    title.set_width_chars (20);
     title.set_markup (std::string ("<big><b>").append (j ["name"]).append ( "</b></big>").c_str ());
     Gtk::Label desc = Gtk::Label (j ["desc"].dump ().c_str ());
     desc.set_wrap (true);
+    desc.set_width_chars (30);
     
     //~ title.set_hexpand (true);
     h.set_hexpand (true);
@@ -407,7 +412,11 @@ void Presets::add_preset (json j, int which) {
     
     Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     v2.append (tb);
-    tb.append (title);
+    Gtk::Button bt = Gtk::Button ();
+    bt.set_name ("effect-button");
+    bt.set_child (title);
+    tb.append (bt);
+    tb.append (fav);
     // todo: description
     if (j ["desc"].dump () != std::string ("\"\"")) {
         Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
@@ -423,11 +432,8 @@ void Presets::add_preset (json j, int which) {
     
     g_signal_connect (del.gobj (), "clicked", (GCallback)delete_callback, this);
     
-    h.append (load);
+    //~ h2.append (load);
 
-    Gtk::ToggleButton fav = Gtk::ToggleButton () ;
-    fav.set_label ("♥");
-    
     CB_Preset * cb = new CB_Preset ();
     cb -> engine = engine ;
     cb->filename = std::string (dir).append ("/favs/").append (_name);
@@ -441,6 +447,7 @@ void Presets::add_preset (json j, int which) {
         fav.set_active (true);
     
     g_signal_connect (load.gobj (), "clicked", (GCallback) load_preset_cb, cb);
+    g_signal_connect (bt.gobj (), "clicked", (GCallback) load_preset_cb, cb);
     g_signal_connect (fav.gobj (), "toggled", (GCallback) preset_fav_cb, cb);
     
     load.set_halign (Gtk::Align::END);
@@ -448,7 +455,7 @@ void Presets::add_preset (json j, int which) {
     //~ v.append (h2);
     if (which == 1)
         v.append (del);
-    h.append (fav);
+    //~ h2.append (fav);
     del.set_halign (Gtk::Align::CENTER);
     //~ OUT
 }
