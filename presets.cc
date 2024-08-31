@@ -217,13 +217,15 @@ void Presets::my () {
     Gtk::Button save_f = Gtk::Button ("Export") ;
     g_signal_connect (save_f.gobj (), "clicked",(GCallback) save_to_file, this);
     
-    Gtk::Button refresh = Gtk::Button ("Refresh") ;
+    Gtk::Button refresh = Gtk::Button ("🔃") ;
     g_signal_connect (refresh.gobj (), "clicked",(GCallback) download_cb, this);
     
-    Gtk::Button next = Gtk::Button ("Next") ;
+    Gtk::Button next = Gtk::Button (">") ;
     g_signal_connect (next.gobj (), "clicked",(GCallback) presets_next, this);
     
     Gtk::SpinButton pno = Gtk::SpinButton () ;
+    //~ pno.set_visible (false);
+
     library_json = filename_to_json (std::string (dir).append("/library.json"));
 
     adj = gtk_adjustment_new (1,1,library_json.size() / page_size,1,1,1);
@@ -233,7 +235,7 @@ void Presets::my () {
     
     page_no = (GtkWidget *)pno.gobj () ;
     
-    Gtk::Button prev = Gtk::Button ("Back") ;
+    Gtk::Button prev = Gtk::Button ("<") ;
     g_signal_connect (prev.gobj (), "clicked",(GCallback) presets_prev, this);
     
     refresh.set_halign (Gtk::Align::CENTER);
@@ -400,11 +402,11 @@ void Presets::add_preset (json j, int which) {
         
     Gtk::Label title = Gtk::Label () ;
     title.set_wrap (true);
-    title.set_width_chars (20);
+    title.set_max_width_chars (20);
     title.set_markup (std::string ("<big><b>").append (j ["name"]).append ( "</b></big>").c_str ());
     Gtk::Label desc = Gtk::Label (j ["desc"].dump ().c_str ());
     desc.set_wrap (true);
-    desc.set_width_chars (30);
+    desc.set_max_width_chars (20);
     
     //~ title.set_hexpand (true);
     h.set_hexpand (true);
@@ -422,6 +424,7 @@ void Presets::add_preset (json j, int which) {
         Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
         v2.append (tb);
         tb.append (desc);
+        desc.set_natural_wrap_mode (Gtk::NaturalWrapMode::WORD);
     }
    
     Gtk::Button load = Gtk::Button ("Load");

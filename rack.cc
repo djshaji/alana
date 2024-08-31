@@ -351,7 +351,7 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         //~ gtk_button_set_has_frame ((GtkButton *)fav, false);
         //~ gtk_widget_add_css_class (fav, "flat");
         gtk_widget_set_name (label, "effect-button");
-        gtk_widget_set_name (fav, "effect-fav");
+        //~ gtk_widget_set_name (fav, "effect-fav");
         //~ gtk_widget_set_name (gtk_button_get_child ((GtkButton *) label), "effect-label");
         
         gtk_box_append ((GtkBox *)box, (GtkWidget *)B);
@@ -620,6 +620,7 @@ Rack::Rack () {
     
     list_box = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
     sw = Gtk::ScrolledWindow () ;
+    //~ sw.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::ALWAYS);
     overlay = Gtk::Overlay ();
     
     add_effect = Gtk::Button () ;
@@ -673,6 +674,8 @@ Rack::Rack () {
     master.append (mixer);
     master.append (sw);
     sw.set_child (list_box);
+    //~ sw.set_policy (Gtk::PolicyType::ALWAYS, Gtk::PolicyType::ALWAYS);
+
     list_box.set_name ("rack");
     Gtk::Separator sep = Gtk::Separator () ;
     // list_box.append (sep);
