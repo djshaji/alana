@@ -198,6 +198,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     name = Gtk::Label (pluginName);
     Gtk::Box nb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     nb.set_hexpand (true);
+    name.set_wrap (true);
     nb.append (name);
     nb.set_halign (Gtk::Align::START);
     
