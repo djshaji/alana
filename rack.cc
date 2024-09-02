@@ -323,6 +323,8 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         gtk_widget_set_margin_start (box, 10);
         gtk_widget_set_margin_end (box, 10);
         GtkWidget * label = gtk_button_new_with_label (plug.c_str ());
+        gtk_widget_set_hexpand (box, true);
+        gtk_widget_set_hexpand (label, true);
         gtk_label_set_wrap ((GtkLabel *)label, true);
         GtkWidget * fav = gtk_toggle_button_new ();
         gtk_button_set_label ((GtkButton *) fav, "♥");
@@ -343,11 +345,15 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         gtk_widget_set_name ((GtkWidget *)B, "plugin");
         gtk_box_append (B, (GtkWidget *) label);
         gtk_box_append (B, (GtkWidget *) fav);
-        gtk_widget_set_hexpand (label, false);
+        gtk_widget_set_hexpand (label, true);
         gtk_widget_set_hexpand ((GtkWidget *) B, true);
         //~ gtk_widget_set_halign (label, GTK_ALIGN);
-        //~ gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
+        gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
+        //~ gtk_widget_set_halign ((GtkWidget *) gtk_button_get_child ((GtkButton *) label), GTK_ALIGN_START);
+        gtk_widget_set_halign ((GtkWidget *) label, GTK_ALIGN_START);
+        gtk_widget_set_hexpand ((GtkWidget *) gtk_button_get_child ((GtkButton *) label), true);
         gtk_label_set_wrap ((GtkLabel *) gtk_button_get_child ((GtkButton *) label), true);
+        gtk_label_set_justify ((GtkLabel *) gtk_button_get_child ((GtkButton *) label), GTK_JUSTIFY_LEFT);
         //~ gtk_button_set_has_frame ((GtkButton *)fav, false);
         //~ gtk_widget_add_css_class (fav, "flat");
         gtk_widget_set_name (label, "effect-button");
@@ -356,7 +362,7 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         
         gtk_box_append ((GtkBox *)box, (GtkWidget *)B);
         //~ gtk_box_append ((GtkBox *)box, button);
-        //~ gtk_box_append ((GtkBox *)box, fav);
+        //~ gtk_box_append ((GtkBox *)box,  fav);
         
         gtk_list_box_append ((GtkListBox *)listBox, box);      
         return box ;      

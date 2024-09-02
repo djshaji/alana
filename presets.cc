@@ -419,6 +419,8 @@ void Presets::add_preset (json j, int which) {
     bt.set_child (title);
     tb.append (bt);
     tb.append (fav);
+    title.set_hexpand (true);
+    title.set_halign (Gtk::Align::START);
     // todo: description
     if (j ["desc"].dump () != std::string ("\"\"")) {
         Gtk::Box tb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);

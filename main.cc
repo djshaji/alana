@@ -65,7 +65,7 @@ MyWindow::MyWindow(GtkApplication * _app)
 {
     app = _app ;
     set_title("Amp Rack 5 (Alpha)");
-    set_default_size(1200, 800);
+    set_default_size(700, 400);
     maximize ();
 
     box = Gtk::Box () ;

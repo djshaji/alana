@@ -7,7 +7,7 @@ SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
 LAME=`pkg-config lame --libs --cflags`
 X11=`pkg-config x11 --libs --cflags`
-#OPTIMIZE=-Ofast 
+OPTIMIZE=-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 
 all: version.o filewriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knobs.o
 	c++ *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a $(GTKMM) $(LAME) 
