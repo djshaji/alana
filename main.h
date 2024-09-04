@@ -102,6 +102,7 @@ public:
 };
 
 void onshow (void * w, void * d) {
+    IN
     MyWindow * window = (MyWindow *) d ;    
     std::string default_preset = std::string (window ->presets -> dir) .append ("/default") ;
     window -> rack -> load_preset (default_preset);
@@ -114,6 +115,7 @@ void onshow (void * w, void * d) {
         }
     }
     
+    OUT
 }
 
 void qquit (void *) {

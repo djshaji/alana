@@ -183,6 +183,7 @@ float knob_get (GtkSpinButton * s) {
 }
 
 PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std::string pluginName, int _index, bool has_file_chooser, void * _rack) {    
+    IN
     Rack * niceRack = (Rack *) _rack ;
     engine = _engine ;
     plugin = _plugin ;
@@ -216,7 +217,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     card.append (container);
     container.set_name ("plugin");
     
-    set_random_background ((GtkWidget *)container.gobj ());
+    //~ set_random_background ((GtkWidget *)container.gobj ());
 
     Gtk::Box header = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10) ;
     container.append (header);
@@ -260,7 +261,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
 
     load_file.set_halign (Gtk::Align::CENTER);
     load_file.set_valign (Gtk::Align::CENTER);
-    load_file.set_margin (10);
+    load_file.set_margin_bottom (20);
     
     g_signal_connect (load_file.gobj (), "clicked", (GCallback) ui_file_chooser, this);
 
@@ -313,7 +314,8 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         GtkWidget * dropdown = nullptr ;
         //~ LOGD ("searching for %s in amps\n", pluginName.c_str ());
 
-        if (engine -> amps.contains ("rkr Cabinet")) {
+        if (engine -> amps.contains (pluginName.c_str ())) {
+            wtf ("[mmmph] drop down\n");
             //~ LOGD ("plugin found, looking for control: %d\n", i);
             json mod = engine -> amps [pluginName] ;
             if (mod.contains (std::to_string (i))) {
@@ -323,9 +325,12 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
                 
                 int x = 0 ;
                 for (auto val: c) {
+                    wtf ("[drop down] %d:%s\n", x,  val.dump().c_str ());
                     //~ std::cout << val << std::endl;
                     options [x] = strdup ((char *)val.dump ().c_str ()) ;
                     x ++ ;
+                    if (x > 999)
+                        break ;
                 }
                 
                 options [x] = NULL ;
@@ -488,6 +493,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     bbox.append (up);
     bbox.append (down);
     if (has_file_chooser) {
+        wtf ("[file chooser] mmmmph\n");
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         gtk_widget_set_hexpand (box, true);
         std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (pluginName).append ("/");
@@ -511,11 +517,22 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         g_signal_connect_swapped (prev, "clicked", (GCallback) dropdown_prev, down);
         g_signal_connect_swapped (next, "clicked", (GCallback) dropdown_next, down);
         
-        gtk_box_append (container.gobj (), box);
+        GtkScrolledWindow * sw_down = (GtkScrolledWindow *) gtk_scrolled_window_new ();
+        
+        gtk_box_append (container.gobj (), (GtkWidget *)sw_down);
+        gtk_scrolled_window_set_child (sw_down, box);
+        
+        //~ gtk_widget_set_vexpand ((GtkWidget *) box, true);
+    
+        GtkWidget * dh_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+        gtk_widget_set_margin_bottom (prev, 20);
+        gtk_widget_set_margin_bottom (next, 20);
+        gtk_box_append ((GtkBox *) dh_box, down);
+        
         gtk_box_append ((GtkBox *)box, prev);
-        gtk_box_append ((GtkBox *)box, down);
+        gtk_box_append ((GtkBox *)box, dh_box);
         gtk_box_append ((GtkBox *)box, next);
-        gtk_box_append ((GtkBox *)box, (GtkWidget *)load_file.gobj ());
+        gtk_box_append ((GtkBox *)container.gobj (), (GtkWidget *)load_file.gobj ());
         
         int i = 0 ; 
         while (entries [i] != NULL) {
@@ -524,4 +541,6 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         
         free (entries);
     }
+    
+    OUT
 }

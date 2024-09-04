@@ -7,7 +7,7 @@ SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
 LAME=`pkg-config lame --libs --cflags`
 X11=`pkg-config x11 --libs --cflags`
-OPTIMIZE=-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
+OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 
 all: amprack
 

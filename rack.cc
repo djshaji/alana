@@ -244,6 +244,8 @@ void Rack::move_up (PluginUI * ui) {
 }
 
 PluginUI * Rack::addPluginByName (char * requested) {
+    IN
+    LOGD ("[plugin] %s\n", requested);
     bool res = false ;
     bool has_file = false ;
     PluginFileType file_type = FILE_AUDIO ;
@@ -302,11 +304,14 @@ PluginUI * Rack::addPluginByName (char * requested) {
         list_box.set_orientation (Gtk::Orientation::VERTICAL);
         list_box.set_vexpand (true);
         list_box.append (ui->card);
+        HERE
         plugs.push_back ((GtkWidget * ) ui->card.gobj ());
         uiv.push_back (ui);
+        OUT
         return ui ;
     } else {
         LOGD ("ERROR: failed to load plugin: %s\n", requested);
+        OUT
         return NULL ;
     }    
 }
@@ -325,7 +330,7 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         GtkWidget * label = gtk_button_new_with_label (plug.c_str ());
         gtk_widget_set_hexpand (box, true);
         gtk_widget_set_hexpand (label, true);
-        gtk_label_set_wrap ((GtkLabel *)label, true);
+        //~ gtk_label_set_wrap ((GtkLabel *)label, true);
         GtkWidget * fav = gtk_toggle_button_new ();
         gtk_button_set_label ((GtkButton *) fav, "♥");
         gtk_widget_set_name (fav, plug.c_str ());
@@ -348,7 +353,7 @@ GtkWidget * Rack::addPluginEntry (std::string plug) {
         gtk_widget_set_hexpand (label, true);
         gtk_widget_set_hexpand ((GtkWidget *) B, true);
         //~ gtk_widget_set_halign (label, GTK_ALIGN);
-        gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
+        //~ gtk_label_set_justify ((GtkLabel *) label, GTK_JUSTIFY_LEFT);
         //~ gtk_widget_set_halign ((GtkWidget *) gtk_button_get_child ((GtkButton *) label), GTK_ALIGN_START);
         gtk_widget_set_halign ((GtkWidget *) label, GTK_ALIGN_START);
         gtk_widget_set_hexpand ((GtkWidget *) gtk_button_get_child ((GtkButton *) label), true);
