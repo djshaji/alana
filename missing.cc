@@ -50,7 +50,7 @@ int main (int argc, char ** argv ) {
     for (auto plugin : json) {
         path = plugin ["library"].dump () ;
         path = path.substr (1, path.size () - 2);
-        std::string fpath = std::string ("libs/") + path ;
+        std::string fpath = std::string ("libs/linux/x86_64/") + path ;
         if (! std::filesystem::exists(fpath))
             printf ("[missing] %s\n", fpath.c_str ());
     }
