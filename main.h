@@ -1,5 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
+#include <filesystem>
 
 #include <gtkmm.h>
 #include <gtk/gtk.h>

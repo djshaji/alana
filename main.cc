@@ -15,7 +15,10 @@ int main(int argc, char* argv[])
     MyWindow window = MyWindow (app->gobj ());
     gtk_widget_add_css_class ((GtkWidget *) window.gobj (), "xwindow");
 
-    gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
+	if ( std::filesystem::exists ("assets/themes/TubeAmp/style.css"))
+		gtk_css_provider_load_from_path(cssProvider, std::string ("assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
+	else
+		gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     std::string user_css = std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str () ;

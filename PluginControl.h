@@ -1,1 +1,1 @@
-/home/djshaji/projects/amp-rack/app/src/main/cpp/PluginControl.h
+../../amp-rack/app/src/main/cpp/PluginControl.h
