@@ -17,8 +17,11 @@ amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o
 main.o: main.cc main.h rack.o presets.o
 	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) -Wno-deprecated-declarations
 
-rack.o: rack.cc rack.h  knob.o settings.cc settings.h pluginui.o
-	g++ rack.cc  settings.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) 
+rack.o: rack.cc rack.h settings.o knob.o pluginui.o
+	g++ rack.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) 
+
+settings.o: settings.cc settings.h 
+	g++ settings.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) 
 
 pluginui.o: pluginui.cpp pluginui.h
 	g++ pluginui.cpp -c $(GTKMM) $(GTK) $(LV2) -Wno-deprecated-declarations

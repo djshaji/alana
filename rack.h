@@ -36,12 +36,12 @@ public:
     void * presets ;
     std::map <std::string, HashCommand> hashCommands ;
     std::map <int, GtkWidget*> pMap ;
-    Gtk::Box master, mixer;
-    Gtk::HeaderBar button_box ;
-    Gtk::Box list_box ;
-    Gtk::Overlay overlay ;
-    Gtk::Button add_effect ;
-    Gtk::ScrolledWindow sw ;
+    GtkBox * master, * mixer;
+    GtkHeaderBar * button_box ;
+    GtkBox * list_box ;
+    GtkOverlay * overlay ;
+    GtkButton * add_effect ;
+    GtkScrolledWindow * sw ;
     std::vector <GtkWidget *> plugs;
     std::vector <PluginUI *> uiv ;
     
@@ -49,12 +49,12 @@ public:
     void move_down (PluginUI *);
     void build ();
 
-    Gtk::Button logo, menu_button, patch_up, patch_down ;
-    Gtk::Label current_patch ;
-    Gtk::ToggleButton mixer_toggle, record ;
+    GtkButton * logo, * menu_button, * patch_up, * patch_down ;
+    GtkLabel * current_patch ;
+    GtkToggleButton * mixer_toggle, * record ;
     GtkWidget * listBox ;
-    Gtk::Switch onoff ;
-    Gtk::ToggleButton toggle_presets ;
+    GtkSwitch * onoff ;
+    GtkToggleButton * toggle_presets ;
     
     bool bnobs = true ;
     int patch = 0;
@@ -79,5 +79,7 @@ public:
     void next_preset ();
     void prev_preset ();
 };
+
+void rack_clear (GtkWidget * button, Rack * rack) ;
 
 #endif // RACK_H

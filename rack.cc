@@ -194,7 +194,7 @@ void Rack::move_down (PluginUI * ui) {
     //~ auto it = plugs.begin() + ui -> index;
     //~ std::rotate(it, it - 1, plugs.end());
     
-    gtk_box_reorder_child_after (list_box.gobj (), lower, upper);
+    gtk_box_reorder_child_after (list_box, lower, upper);
     LOGD ("before sort ...\n");
     engine -> print ();
     engine -> moveActivePluginDown (index);
@@ -224,7 +224,7 @@ void Rack::move_up (PluginUI * ui) {
     //~ auto it = plugs.begin() + ui -> index;
     //~ std::rotate(it, it - 1, plugs.end());
     
-    gtk_box_reorder_child_after (list_box.gobj (), upper, lower);
+    gtk_box_reorder_child_after (list_box, upper, lower);
     
     LOGD ("before sort ...\n");
     engine -> print () ;
@@ -296,14 +296,14 @@ PluginUI * Rack::addPluginByName (char * requested) {
             engine -> activePlugins -> at (index)->loadedFileType = file_type;
         }
         
-        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), &list_box, std::string ((char *) requested), index, has_file, this);
+        PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), list_box, std::string ((char *) requested), index, has_file, this);
         ui -> pType = (PluginFileType *) malloc (sizeof (int)) ;
         * ui->pType = file_type ;
         ui -> rack = (void * )this ;
         // ui.index = index ;
-        list_box.set_orientation (Gtk::Orientation::VERTICAL);
-        list_box.set_vexpand (true);
-        gtk_box_append (list_box.gobj (), (GtkWidget *)ui->card);
+
+        gtk_widget_set_vexpand ((GtkWidget *)list_box, true);
+        gtk_box_append (list_box, (GtkWidget *)ui->card);
         HERE
         plugs.push_back ((GtkWidget * ) ui->card);
         uiv.push_back (ui);
@@ -377,11 +377,11 @@ void Rack::add () {
     //~ engine -> addPlugin ("libs/dyson_compress_1403.so", 0, SharedLibrary::PluginType::LADSPA);
     engine -> addPlugin ((char *)std::string ("http://drobilla.net/plugins/mda/Delay").c_str (), 0, SharedLibrary::PluginType::LILV);
     int index = engine -> activePlugins->size () - 1;
-    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), & list_box, std::string ("Dyson Compressor"), index, false, this);
+    PluginUI * ui = new PluginUI (engine, engine -> activePlugins->at (index), list_box, std::string ("Dyson Compressor"), index, false, this);
     // ui.index = index ;
-    list_box.set_orientation (Gtk::Orientation::VERTICAL);
-    list_box.set_vexpand (true);
-    gtk_box_append (list_box.gobj (), (GtkWidget *) ui->card);
+
+    gtk_widget_set_vexpand ((GtkWidget *) list_box, true);
+    gtk_box_append (list_box, (GtkWidget *) ui->card);
 }
 
 GtkWidget * Rack::createPluginDialog () {
@@ -547,7 +547,7 @@ bool Rack::load_preset (std::string filename) {
 
 bool Rack::load_preset (json j) {
     IN
-    current_patch.set_text (j ["name"].dump ().c_str ());
+    gtk_label_set_text (current_patch, j ["name"].dump ().c_str ());
     auto plugins = j ["controls"];
     clear () ;
     int index = 0 ;
@@ -578,10 +578,14 @@ bool Rack::load_preset (json j) {
     return true;
 }
 
+void rack_clear (GtkWidget * button, Rack * rack) {
+    rack -> clear () ;
+}
+
 void Rack::clear () {
     IN
     for (int i = 0 ; i < plugs.size () ; i ++) {
-        gtk_box_remove (list_box.gobj (), (GtkWidget *)plugs.at (i));
+        gtk_box_remove (list_box, (GtkWidget *)plugs.at (i));
     }
     
     if (engine != NULL && engine->activePlugins != NULL) {
@@ -625,125 +629,115 @@ Rack::Rack () {
     //~ for (auto b = blacklist.begin () ; b != blacklist.end () ; b ++) {
         //~ LOGD ("[blacklist] %s\n", b.key ()) ;
     //~ }
-    master = Gtk::Box ();
-    button_box = Gtk::HeaderBar ();
-    mixer = Gtk::Box ();
+    master = (GtkBox *) gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    mixer = (GtkBox *) gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    button_box = (GtkHeaderBar *) gtk_header_bar_new ();
     
-    list_box = Gtk::Box (Gtk::Orientation::VERTICAL, 10) ;
-    sw = Gtk::ScrolledWindow () ;
+    list_box = (GtkBox *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 10) ;
+    sw = (GtkScrolledWindow *)gtk_scrolled_window_new () ;
     //~ sw.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::ALWAYS);
-    overlay = Gtk::Overlay ();
+    overlay = (GtkOverlay *)gtk_overlay_new ();
     
-    add_effect = Gtk::Button () ;
-    logo = Gtk::Button () ;
-    logo.set_label ("Amp Rack");
-    menu_button = Gtk::Button () ;
-    menu_button.set_label (":");
+    add_effect = (GtkButton *)gtk_button_new ();
+    logo = (GtkButton *) gtk_button_new_with_label ("Amp Rack") ;
+    menu_button = (GtkButton *) gtk_button_new_with_label (":");
     
-    mixer_toggle = Gtk::ToggleButton ();
-    mixer_toggle.set_label ("Mixer");
-    onoff = Gtk::Switch ();
+    mixer_toggle = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Mixer");
+    onoff = (GtkSwitch *)gtk_switch_new ();
     //~ onoff.set_label ("On");
-    record = Gtk::ToggleButton ();
-    record.set_label ("Rec");
-    g_signal_connect (record.gobj (), "toggled", (GCallback) toggle_record, engine);
+    record = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Rec");
+    g_signal_connect (record, "toggled", (GCallback) toggle_record, engine);
     
-    Gtk::Button syn = Gtk::Button ("Sync");
-    Gtk::Button tune = Gtk::Button ("Tuner");
-    toggle_presets = Gtk::ToggleButton ("Effects");
+    GtkButton * syn = (GtkButton * ) gtk_button_new_with_label ("Sync");
+    GtkButton * tune = (GtkButton * ) gtk_button_new_with_label ("Tuner");
+    toggle_presets = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Effects");
     
     
-    g_signal_connect (syn.gobj (), "clicked", (GCallback) launch_sync, NULL);
-    g_signal_connect (tune.gobj (), "clicked", (GCallback) launch_tuner, NULL);
+    g_signal_connect (syn, "clicked", (GCallback) launch_sync, NULL);
+    g_signal_connect (tune, "clicked", (GCallback) launch_tuner, NULL);
     
-    patch_up = Gtk::Button ("↑");
-    patch_down = Gtk::Button ("↓");
-    menu_button.set_margin (5);
+    patch_up = (GtkButton *) gtk_button_new_with_label ("↑");
+    patch_down = (GtkButton *) gtk_button_new_with_label ("↓");
+    //~ menu_button.set_margin (5);
 
-    g_signal_connect (patch_up.gobj (), "clicked", (GCallback) preset_next, this);
-    g_signal_connect (patch_down.gobj (), "clicked", (GCallback) preset_prev, this);
+    g_signal_connect (patch_up, "clicked", (GCallback) preset_next, this);
+    g_signal_connect (patch_down, "clicked", (GCallback) preset_prev, this);
     
-    current_patch = Gtk::Label ("Patch");
+    current_patch = (GtkLabel *) gtk_label_new ("Patch");
     
-    logo.set_margin (5);
-    mixer_toggle.set_margin (5);
-    record.set_margin (5);
-    onoff.set_margin (5);
+    //~ logo.set_margin (5);
 
-    onoff.set_active (true);
-    g_signal_connect (onoff.gobj (), "state-set", (GCallback) onoff_cb, engine);
+    gtk_switch_set_active (onoff, true);
+    g_signal_connect (onoff, "state-set", (GCallback) onoff_cb, engine);
     
-    master.set_orientation (Gtk::Orientation::VERTICAL);
-    master.set_vexpand (true);
-    list_box.set_vexpand (true);
-    master.set_hexpand (true);
+    gtk_widget_set_vexpand ((GtkWidget *) master, true);
+    gtk_widget_set_hexpand ((GtkWidget *) master, true);
+    gtk_widget_set_vexpand ((GtkWidget *)list_box, true);
     //~ button_box.set_orientation (Gtk::Orientation::HORIZONTAL);
 
-    list_box.set_orientation (Gtk::Orientation::VERTICAL);
     // list_box.set_visible (false);
     //~ master.append (button_box);
-    master.append (mixer);
-    master.append (sw);
-    sw.set_child (list_box);
+    gtk_box_append (master, (GtkWidget *) mixer);
+    gtk_box_append (master, (GtkWidget *) sw);
+
+    gtk_scrolled_window_set_child (sw, (GtkWidget *)list_box);
     //~ sw.set_policy (Gtk::PolicyType::ALWAYS, Gtk::PolicyType::ALWAYS);
 
-    list_box.set_name ("rack");
-    Gtk::Separator sep = Gtk::Separator () ;
+    gtk_widget_set_name ((GtkWidget *) list_box, "rack");
+    //~ GtkSeparator * sep = gtk_separator_new ();
     // list_box.append (sep);
     // sep.set_vexpand (true);
-    master.append (add_effect);
-    add_effect.set_label ("Clear");
-    add_effect.set_name ("delete");
-    add_effect.set_valign (Gtk::Align::END);
+    gtk_box_append (master, (GtkWidget *)add_effect);
+    gtk_button_set_label (add_effect, "Clear");
+    gtk_widget_set_name ((GtkWidget *)add_effect, "delete");
+    gtk_widget_set_valign ((GtkWidget *)add_effect, GTK_ALIGN_END);
+    gtk_widget_set_halign ((GtkWidget *)add_effect, GTK_ALIGN_CENTER);
     // list_box.set_valign (Gtk::Align::END);
     // sw.set_propagate_natural_height (true);
-    add_effect.set_halign (Gtk::Align::CENTER);
     
-    add_effect.signal_clicked().connect(sigc::mem_fun(*this,
-          &Rack::clear));
+    //~ add_effect.signal_clicked().connect(sigc::mem_fun(*this,
+          //~ &Rack::clear));
+    g_signal_connect (add_effect, "clicked", (GCallback)rack_clear, this);
 
     //~ button_box.set_halign (Gtk::Align::CENTER);
     //~ button_box.set_hexpand (true);
     
     //~ button_box.pack_start (logo);
     //~ button_box.pack_start (mixer_toggle);
-    logo.set_halign (Gtk::Align::START);
+    gtk_widget_set_halign ((GtkWidget *) logo, GTK_ALIGN_START);
     
-    Gtk::Box m = Gtk::Box () ;
-    m.set_orientation (Gtk::Orientation::VERTICAL);
+    GtkBox * m = (GtkBox * )gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     
     //~ m.append (onoff);
     
-    mixer_toggle.set_halign (Gtk::Align::END);
+    gtk_widget_set_halign ((GtkWidget *)mixer_toggle, GTK_ALIGN_END);
     
-    Gtk::Label l = Gtk::Label ("On") ;
+    GtkLabel * l = (GtkLabel * )gtk_label_new ("On") ;
     
     //~ m.append (l);
     //~ button_box.pack_start (m);
-    Gtk::Box v = Gtk::Box (Gtk::Orientation::HORIZONTAL, 5) ;
-    button_box.set_title_widget (v);
+    GtkBox * v = (GtkBox * )gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
+    gtk_header_bar_set_title_widget (button_box, (GtkWidget *)v);
     std::string version = std::string ("<big><b>Amp Rack 5 alpha build ").append (std::to_string (VERSION)).append ("</b></big>");
-    Gtk::Label title = Gtk::Label (version.c_str ()) ;
-    title.set_markup (version.c_str ());
-    title.set_visible (false);
+    GtkLabel * title = (GtkLabel * )gtk_label_new (version.c_str ()) ;
+    gtk_label_set_markup (title, version.c_str ());
+    gtk_widget_set_visible ((GtkWidget *) title, false);
     
     //~ v.append (toggle_presets);
-    v.append (syn);
-    v.append (tune);
-    v.append (patch_up);
-    v.append (current_patch);
-    v.append (patch_down);
+    gtk_box_append (v, (GtkWidget *)syn);
+    gtk_box_append (v, (GtkWidget *)tune);
+    gtk_box_append (v, (GtkWidget *)patch_up);
+    gtk_box_append (v, (GtkWidget *)current_patch);
+    gtk_box_append (v, (GtkWidget *)patch_down);
 
-    v.append (title);
-    v.append (record) ;
-    v.append (onoff) ;
-    v.append (l) ;
+    gtk_box_append (v, (GtkWidget *) title);
+    gtk_box_append (v, (GtkWidget *) record);
+    gtk_box_append (v, (GtkWidget *) onoff);
+    gtk_box_append (v, (GtkWidget *) l);
     
-    title.set_margin_end (10);
-    
-    m.set_halign (Gtk::Align::END);
-    v.set_halign (Gtk::Align::END);
-    v.set_hexpand (true);
+    gtk_widget_set_halign ((GtkWidget *)m, GTK_ALIGN_END);
+    gtk_widget_set_halign ((GtkWidget *)v, GTK_ALIGN_END);
+    gtk_widget_set_hexpand ((GtkWidget *)v, true);
     
     //~ button_box.pack_start (record);
     //~ button_box.pack_start (menu_button);
@@ -767,7 +761,7 @@ void Rack::build () {
     IN
     int pos = 0 ;
     
-    GtkWidget * widget = (GtkWidget *) gtk_widget_get_first_child ((GtkWidget *)list_box.gobj ());
+    GtkWidget * widget = (GtkWidget *) gtk_widget_get_first_child ((GtkWidget *)list_box);
     char name [3] ;
     while (widget != NULL) {
         const char * _name = gtk_widget_get_name (widget) ;
@@ -807,7 +801,7 @@ void Rack:: next_preset () {
     wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
 
     rack -> load_preset (presets -> list_of_presets [which]-> at (rack -> patch));
-    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    gtk_label_set_text (rack -> current_patch, presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
     
 }
 
@@ -826,6 +820,6 @@ void Rack::prev_preset () {
     
     wtf ("[patch] tab: %d: %d\n", which, rack -> patch);
     rack -> load_preset ( presets -> list_of_presets [which]-> at (rack -> patch));
-    rack -> current_patch.set_text (presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
+    gtk_label_set_text (rack -> current_patch, presets -> list_of_presets [which]-> at (rack -> patch) ["name"].dump().c_str ());
     
 }

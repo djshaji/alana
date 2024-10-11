@@ -1,8 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#include <gtkmm.h>
-
 #define null NULL
 #define true TRUE
 #define false FALSE

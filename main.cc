@@ -97,7 +97,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     rack = new Rack () ;
     stack.add (pane);
     
-    set_titlebar (rack->button_box);
+    gtk_window_set_titlebar (gobj (), (GtkWidget *)rack->button_box);
     
     presets = new Presets () ;
     presets->_this = (void *) presets ;
@@ -125,7 +125,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)presets->master.gobj ());
     
     pane.set_start_child (sw);
-    pane.set_end_child (rack->master);
+    gtk_paned_set_end_child (pane.gobj (), (GtkWidget *)rack->master);
     g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
     g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
  
