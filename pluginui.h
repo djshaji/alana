@@ -56,15 +56,15 @@ public:
             nullptr
     } ;
 
-    Gtk::Label name ;
-    Gtk::Switch  onoff ;
-    Gtk::Button  del,  up,  down ;
+    GtkLabel * name ;
+    GtkSwitch * onoff ;
+    GtkButton * del, * up, * down ;
     Engine * engine ;
     void * rack ;
     Plugin * plugin ;
-    Gtk::Box  card ;
+    GtkBox * card ;
     GtkWidget * card_ ;
-    Gtk::Box * parent ;
+    GtkBox * parent ;
     int index, * index_p ;
     PluginFileType * pType ;
     std::vector <GtkScale *> sliders ;

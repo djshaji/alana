@@ -84,6 +84,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
     pane.set_position (370);
+    pane.set_position (800);
     //~ g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
     stack = Gtk::Stack () ;
@@ -111,7 +112,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     presets->my () ;
     
     Settings settings = Settings (rack);
-    gtk_notebook_append_page (presets->notebook.gobj (), (GtkWidget *)settings.gobj (), gtk_label_new ("Settings"));
+    gtk_notebook_append_page (presets->notebook.gobj (), (GtkWidget *)settings . grid, gtk_label_new ("Settings"));
     
     
     CB * cb = new CB () ;

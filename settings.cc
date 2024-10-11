@@ -16,9 +16,10 @@ void switch_theme (GtkDropDown * dropdown, int event, Rack * rack) {
 }
 
 Settings::Settings (Rack * rack) {
-	set_name ("plugin");
+	grid = gtk_grid_new () ;
+	gtk_widget_set_name ((GtkWidget *) grid, "plugin");
 	GtkLabel * l1 = (GtkLabel *)gtk_label_new ("Theme");
-	char * themes [5] = {
+	const char * themes [5] = {
 		"TubeAmp",
 		"Classic",
 		"Modern",
@@ -31,6 +32,6 @@ Settings::Settings (Rack * rack) {
 	
 	g_signal_connect (theme, "notify::selected", (GCallback) switch_theme, rack);
 	
-	gtk_grid_attach (gobj (), (GtkWidget *)l1, 0, 0, 1, 1);
-	gtk_grid_attach (gobj (), (GtkWidget *)theme, 1, 0, 1, 1);
+	gtk_grid_attach ((GtkGrid *) grid, (GtkWidget *)l1, 0, 0, 1, 1);
+	gtk_grid_attach ((GtkGrid *) grid, (GtkWidget *)theme, 1, 0, 1, 1);
 }

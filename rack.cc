@@ -188,7 +188,7 @@ void Rack::move_down (PluginUI * ui) {
     if (index >= engine -> activePlugins->size ())
         return ;
         
-    GtkWidget * lower = (GtkWidget *) ui -> card.gobj () ;
+    GtkWidget * lower = (GtkWidget *) ui -> card ;
     GtkWidget * upper = gtk_widget_get_next_sibling (lower);
     
     //~ auto it = plugs.begin() + ui -> index;
@@ -218,7 +218,7 @@ void Rack::move_up (PluginUI * ui) {
     if (index == 0)
         return ;
     
-    GtkWidget * lower = (GtkWidget *) ui -> card.gobj () ;
+    GtkWidget * lower = (GtkWidget *) ui -> card ;
     GtkWidget * upper = gtk_widget_get_prev_sibling (lower);
     
     //~ auto it = plugs.begin() + ui -> index;
@@ -303,9 +303,9 @@ PluginUI * Rack::addPluginByName (char * requested) {
         // ui.index = index ;
         list_box.set_orientation (Gtk::Orientation::VERTICAL);
         list_box.set_vexpand (true);
-        list_box.append (ui->card);
+        gtk_box_append (list_box.gobj (), (GtkWidget *)ui->card);
         HERE
-        plugs.push_back ((GtkWidget * ) ui->card.gobj ());
+        plugs.push_back ((GtkWidget * ) ui->card);
         uiv.push_back (ui);
         OUT
         return ui ;
@@ -381,7 +381,7 @@ void Rack::add () {
     // ui.index = index ;
     list_box.set_orientation (Gtk::Orientation::VERTICAL);
     list_box.set_vexpand (true);
-    list_box.append (ui->card);
+    gtk_box_append (list_box.gobj (), (GtkWidget *) ui->card);
 }
 
 GtkWidget * Rack::createPluginDialog () {

@@ -15,11 +15,14 @@ amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o
 	c++ *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a $(GTKMM) $(LAME) 
 	
 main.o: main.cc main.h rack.o presets.o
-	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) 
+	g++ main.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) -Wno-deprecated-declarations
 
-rack.o: rack.cc rack.h pluginui.cpp pluginui.h knob.o
-	g++ rack.cc pluginui.cpp settings.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE)
+rack.o: rack.cc rack.h  knob.o settings.cc settings.h pluginui.o
+	g++ rack.cc  settings.cc -c $(GTKMM)  $(GTK)  $(LV2) $(OPTIMIZE) 
 
+pluginui.o: pluginui.cpp pluginui.h
+	g++ pluginui.cpp -c $(GTKMM) $(GTK) $(LV2) -Wno-deprecated-declarations
+	
 presets.o: presets.cc presets.h
 	g++ presets.cc -c $(GTKMM)  $(GTK) $(OPTIMIZE) $(LV2)
 

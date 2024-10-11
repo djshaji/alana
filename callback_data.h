@@ -5,8 +5,8 @@
 #include "engine.h"
 
 typedef struct {
-    Gtk::Widget * card ;
-    Gtk::Box * parent ;
+    GtkBox * card ;
+    GtkBox * parent ;
     GtkWidget * dropdown ;
     int index ;
     int control ;

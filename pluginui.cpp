@@ -9,7 +9,7 @@ void select_model (GtkDropDown * down, int event, PluginUI * ui) {
     }
     
     const char * filename = gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)down));
-    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (std::string (ui -> name.get_text ())).append ("/").append (std::string (filename));
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (std::string (gtk_label_get_text (ui -> name))).append ("/").append (std::string (filename));
     wtf ("[model] %s\n", dir.c_str ());
     
     if (ui -> engine -> activePlugins -> at (ui -> index) -> loadedFileType)
@@ -40,7 +40,7 @@ void callback (void * p, void *c) {
   GtkButton * b = (GtkButton *) p ;
   CallbackData *cd = (CallbackData *) c ;
 
-  cd -> parent -> remove (*cd -> card);
+  gtk_box_remove (cd -> parent, (GtkWidget *)cd -> card);
   cd -> engine -> activePlugins -> erase(cd -> engine->activePlugins->begin() + cd -> index);
   cd->engine->buildPluginChain();
   // printf ("%s\n", cd -> card -> get_name  ());
@@ -76,7 +76,7 @@ void control_changed ( void * p, void * c) {
     PluginUI * ui = (PluginUI *) cd -> ui;
     
     float val = gtk_adjustment_get_value (adj) ;
-    wtf ("[%s] %d : %d-> %f\n", ui -> name.get_text ().c_str (), ui -> get_index (), cd -> control, val);
+    wtf ("[%s] %d : %d-> %f\n", gtk_label_get_text (ui -> name), ui -> get_index (), cd -> control, val);
     if (cd->dropdown != nullptr) {
         gtk_drop_down_set_selected ((GtkDropDown *)cd -> dropdown, val);
     }
@@ -159,7 +159,7 @@ int PluginUI::get_index () {
     //~ return index ;
     if (! gtk_widget_get_realized (card_))
         return index ;
-    return gtk_widget_get_name ((GtkWidget *) card.gobj ()) [0] - 48 ;
+    return gtk_widget_get_name ((GtkWidget *) card) [0] - 48 ;
 }
 
 float
@@ -190,31 +190,32 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     index = _index ;
     index_p = (int *) malloc (sizeof (int));
     *index_p = index ;
-    parent = _parent ;
+    parent = _parent->gobj () ;
     
     char * s = (char *) malloc (pluginName.size () + 3) ;
     sprintf (s, "%d %s", index, pluginName.c_str ());
     //~ printf ("[plugin ui] %d %s", index, pluginName.c_str ());
     // name =  Gtk::Label (s) ;
-    name = Gtk::Label (pluginName);
+    name = (GtkLabel *)gtk_label_new (pluginName.c_str ());
     Gtk::Box nb = Gtk::Box (Gtk::Orientation::HORIZONTAL, 10);
     nb.set_hexpand (true);
-    name.set_wrap (true);
-    nb.append (name);
+    gtk_label_set_wrap (name, true);
+    gtk_box_append (nb.gobj (), (GtkWidget *)name);
+    //~ nb.append (name);
     nb.set_halign (Gtk::Align::START);
     
     auto n = std::string ("<big><b>").append (pluginName).append ("</b></big>");
-    name.set_markup (n.c_str ());
+    gtk_label_set_markup (name, n.c_str ());
     free (s);
-    card =  Gtk::Box (Gtk::Orientation::VERTICAL, 0);
-    card_ = (GtkWidget *)card.gobj () ;
+    card =  (GtkBox *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    card_ = (GtkWidget *)card ;
     
-    card.set_orientation (Gtk::Orientation::VERTICAL);
+    //~ card.set_orientation (Gtk::Orientation::VERTICAL);
     //~ gtk_widget_add_css_class ((GtkWidget *) card.gobj (), "xwindow");
 
     Gtk::Box container = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
     
-    card.append (container);
+    gtk_box_append (card, (GtkWidget *)container.gobj ());
     container.set_name ("plugin");
     
     //~ set_random_background ((GtkWidget *)container.gobj ());
@@ -223,39 +224,50 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     container.append (header);
     header.set_hexpand (true);
     //~ name.set_hexpand (true);
-    name.set_justify (Gtk::Justification::LEFT);
+    gtk_label_set_justify (name, GTK_JUSTIFY_LEFT);
     header.append (nb);
     header.set_margin (10);
     header.set_margin_start (0);
 
-    onoff = Gtk::Switch () ;
-    onoff.set_active (true);
+    onoff = (GtkSwitch *) gtk_switch_new ();
+    gtk_switch_set_active (onoff, true);
     Gtk::Box o_o = Gtk::Box (Gtk::Orientation::VERTICAL, 10);
-    o_o.append (onoff);
+    gtk_box_append (o_o.gobj (), (GtkWidget *) onoff);
     header.append (o_o) ;
-    onoff.set_halign (Gtk::Align::END);
-    name.set_halign (Gtk::Align::START);
+    gtk_widget_set_halign ((GtkWidget *) onoff, GTK_ALIGN_END);
+    gtk_widget_set_halign ((GtkWidget *)name, GTK_ALIGN_START);
 
-    card.set_margin (20);
-    card.set_margin_bottom (0);
+    gtk_widget_set_margin_start ((GtkWidget *)card, 20);
+    gtk_widget_set_margin_end ((GtkWidget *)card, 20);
+    gtk_widget_set_margin_top ((GtkWidget *)card, 20);
+    gtk_widget_set_margin_bottom ((GtkWidget *)card, 0);
 
-    Gtk::Button up = Gtk::Button ("↑");
-    Gtk::Button down = Gtk::Button ("↓");
+    up = (GtkButton *) gtk_button_new_with_label ("↑");
+    down = (GtkButton *) gtk_button_new_with_label ("↓");
     
     
-    del = Gtk::Button ("Delete") ;
-    del.set_name ("delete");
+    del = (GtkButton *) gtk_button_new_with_label ("Delete") ;
+    gtk_widget_set_name ((GtkWidget *) del, "delete");
 
-    del.set_halign (Gtk::Align::END);
-    del.set_valign (Gtk::Align::END);
-    del.set_margin (10);
+    gtk_widget_set_halign ((GtkWidget *) del, GTK_ALIGN_END);
+    gtk_widget_set_valign ((GtkWidget *) del, GTK_ALIGN_END);
+    gtk_widget_set_margin_top ((GtkWidget *) del, 10);
+    gtk_widget_set_margin_start ((GtkWidget *) del, 10);
+    gtk_widget_set_margin_bottom ((GtkWidget *) del, 10);
+    gtk_widget_set_margin_end ((GtkWidget *) del, 10);
 
-    up.set_halign (Gtk::Align::START);
-    up.set_valign (Gtk::Align::START);
-    up.set_margin (5);
-    down.set_halign (Gtk::Align::START);
-    down.set_valign (Gtk::Align::START);
-    down.set_margin (5);
+    gtk_widget_set_halign ((GtkWidget *)up, GTK_ALIGN_START);
+    gtk_widget_set_valign ((GtkWidget *)up, GTK_ALIGN_START);
+    gtk_widget_set_margin_top ((GtkWidget *) up, 5);
+    gtk_widget_set_margin_start ((GtkWidget *) up, 5);
+    gtk_widget_set_margin_bottom ((GtkWidget *) up, 5);
+    gtk_widget_set_margin_end ((GtkWidget *) up, 5);
+    gtk_widget_set_halign ((GtkWidget *)down, GTK_ALIGN_START);
+    gtk_widget_set_valign ((GtkWidget *)down, GTK_ALIGN_START);
+    gtk_widget_set_margin_top ((GtkWidget *) down, 5);
+    gtk_widget_set_margin_start ((GtkWidget *) down, 5);
+    gtk_widget_set_margin_bottom ((GtkWidget *) down, 5);
+    gtk_widget_set_margin_end ((GtkWidget *) down, 5);
 
     Gtk::Button load_file = Gtk::Button ("Load file") ;
 
@@ -268,7 +280,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     // del.signal_clicked().connect(sigc::ptr_fun(&callback));
     CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
     cd->index = index ;
-    cd -> card = & card ;
+    cd -> card = card ;
     cd -> parent = parent ;
     cd->engine = engine;
     cd -> ui = (void*)this ;
@@ -277,11 +289,11 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     name [0] = index + 48 ;
     name [1] = 0 ;
     
-    card.set_name (name);
+    gtk_widget_set_name ((GtkWidget * )card, name);
 
-    g_signal_connect (del.gobj (), "clicked", (GCallback) callback, cd);
-    g_signal_connect (up.gobj (), "clicked", (GCallback) pu_move_up, this);
-    g_signal_connect (down.gobj (), "clicked", (GCallback) pu_move_down, this);
+    g_signal_connect (del, "clicked", (GCallback) callback, cd);
+    g_signal_connect (up, "clicked", (GCallback) pu_move_up, this);
+    g_signal_connect (down, "clicked", (GCallback) pu_move_down, this);
 
     GtkBox * currentBox = NULL ;
     int row = 0, col = 0 ;
@@ -465,7 +477,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         
         CallbackData * cd = (CallbackData *) malloc (sizeof (CallbackData));
         cd->index = index ;
-        cd -> card = & card ;
+        cd -> card = card ;
         cd -> parent = parent ;
         cd->engine = engine;
         cd->control = i ;
@@ -480,7 +492,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
         box.set_spacing (0);
         
         g_signal_connect (scale.gobj (), "value-changed", (GCallback) control_changed, cd) ;
-        g_signal_connect (onoff.gobj (), "state-set", (GCallback) bypass, cd) ;
+        g_signal_connect (onoff, "state-set", (GCallback) bypass, cd) ;
 
         container.append (box);
     }
@@ -488,10 +500,11 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, Gtk::Box * _parent, std:
     Gtk::Box bbox = Gtk::Box (Gtk::Orientation::HORIZONTAL, 0);
     bbox.set_halign (Gtk::Align::START);
     
-    container.append (del);
+    gtk_box_append (container.gobj (), (GtkWidget *)del);
     container.append (bbox);
-    bbox.append (up);
-    bbox.append (down);
+    gtk_box_append (bbox.gobj (), (GtkWidget *)up);
+    gtk_box_append (bbox.gobj (), (GtkWidget *)down);
+    
     if (has_file_chooser) {
         wtf ("[file chooser] mmmmph\n");
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
