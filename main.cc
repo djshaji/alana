@@ -6,13 +6,13 @@ void position_changed (GtkPaned * pane, void *) {
 
 int main(int argc, char* argv[])
 {
-    auto app = Gtk::Application::create("org.acoustixaudio.amprack");
+    auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     GtkCssProvider *cssProvider2 = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
 
-    MyWindow window = MyWindow (app->gobj ());
+    MyWindow window = MyWindow (app);
     gtk_widget_add_css_class ((GtkWidget *) window.gobj (), "xwindow");
 
 	if ( std::filesystem::exists ("assets/themes/TubeAmp/style.css"))
@@ -28,12 +28,15 @@ int main(int argc, char* argv[])
 
     //~ window.set_title("Gtk4 Demo");
     //~ window.set_default_size(300 , 400);
-    app->signal_activate().connect([&](){
-        app->add_window(window);
-        window.show ();
-    });
+    //~ g_signal_connect (app, "activate")
+    //~ app->signal_activate().connect([&](){
+        //~ app->add_window(window);
+        //~ window.show ();
+    //~ });
 
-    return app->run(argc , argv);
+    gtk_application_add_window (app, window.gobj ());
+    gtk_window_present (window . window);
+    return g_application_run ((GApplication *)app, argc ,argv);
 
   //~ GtkSettings * settings = gtk_settings_get_default ();
   //~ g_object_set (settings, "gtk-xft-dpi", 1.1, NULL);
@@ -67,33 +70,32 @@ void toggle_effects (GtkToggleButton * button, MyWindow * window) {
 MyWindow::MyWindow(GtkApplication * _app)
 {
     app = _app ;
-    set_title("Amp Rack 5 (Alpha)");
-    set_default_size(700, 400);
-    maximize ();
+    window = (GtkWindow *) gtk_window_new ();
+    gtk_window_set_title(window, "Amp Rack 5 (Alpha)");
+    gtk_window_set_default_size(window, 700, 400);
+    gtk_window_maximize (window);
 
-    box = Gtk::Box () ;
-    set_child (box);
+    box = (GtkBox *) gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+    gtk_window_set_child (gobj (), (GtkWidget *)box);
 
     pane = (GtkPaned *)gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
-    box.set_orientation (Gtk::Orientation::VERTICAL);
-
-    stack_box = Gtk::Box () ;
-    stack_box.set_spacing (10);
-    box.append (stack_box);
-    stack_box.set_orientation (Gtk::Orientation::VERTICAL);
+    
+    stack_box = (GtkBox *)gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+    
+    gtk_box_append (box, (GtkWidget *)stack_box);
     
     gtk_paned_set_position (pane, 800);
     //~ g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
-    stack = Gtk::Stack () ;
-    stack_box.append (stack);
-    stack_box.set_homogeneous (false);
+    stack = (GtkStack *)gtk_stack_new ();
+    gtk_box_append (stack_box, (GtkWidget *) stack);
+    gtk_box_set_homogeneous (stack_box, false);
 
-    switcher = Gtk::StackSwitcher () ;
-    stack_box.append (switcher);
+    switcher = (GtkStackSwitcher *)gtk_stack_switcher_new ();
+    gtk_box_append (stack_box, (GtkWidget *)switcher);
 
     rack = new Rack () ;
-    gtk_stack_add_child (stack.gobj (), (GtkWidget *)pane);
+    gtk_stack_add_child (stack, (GtkWidget *)pane);
     
     gtk_window_set_titlebar (gobj (), (GtkWidget *)rack->button_box);
     
@@ -119,10 +121,10 @@ MyWindow::MyWindow(GtkApplication * _app)
     
     g_signal_connect (presets->add, "clicked", (GCallback) save_preset_cb, cb);
     
-    Gtk::ScrolledWindow sw = Gtk::ScrolledWindow () ;
-    gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)presets->master);
+    GtkScrolledWindow * sw = (GtkScrolledWindow *) gtk_scrolled_window_new ();
+    gtk_scrolled_window_set_child (sw, (GtkWidget *)presets->master);
     
-    gtk_paned_set_start_child (pane, (GtkWidget *)sw.gobj ());
+    gtk_paned_set_start_child (pane, (GtkWidget *)sw);
     gtk_paned_set_end_child (pane, (GtkWidget *)rack->master);
     g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
     g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
@@ -142,3 +144,6 @@ MyWindow::MyWindow(GtkApplication * _app)
 
 }
 
+GtkWindow * MyWindow::gobj () {
+    return window ;
+}

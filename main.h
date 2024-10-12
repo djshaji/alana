@@ -89,16 +89,18 @@ void save_preset_cb (void * w, void * d) {
     //~ cb -> engine -> savePreset (std::string (cb -> presets -> presets_dir).append ("test"), "description");
 }
 
-class MyWindow : public Gtk::Window
+class MyWindow
 {
 public:
+    GtkWindow * window ;
     GtkPaned * pane ; 
-    Gtk::Stack  stack ;
-    Gtk::StackSwitcher  switcher ;
-    Gtk::Box box, stack_box ;
+    GtkStack * stack ;
+    GtkStackSwitcher * switcher ;
+    GtkBox * box, * stack_box ;
     GtkApplication * app ;
     Rack * rack ;
     Presets * presets ; 
+    GtkWindow * gobj ();
   MyWindow (GtkApplication *);
 };
 
@@ -125,6 +127,8 @@ void qquit (void *) {
 
 void quit (void * w, void * d) {
     MyWindow * window = (MyWindow *) d ;
+    window -> rack -> engine -> driver -> deactivate ();
+    window -> rack -> engine -> driver -> close ();
     window -> rack -> engine -> savePreset (std::string (window -> presets -> dir) .append ("/default").c_str (), "Last saved preset") ;
     
     json favs = {} ;
@@ -139,6 +143,7 @@ void quit (void * w, void * d) {
     json_to_filename (favs, std::string (window -> presets -> dir).append ("/fav.json"));    
     json_to_filename (window -> rack->config, std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
     gtk_window_destroy ((GtkWindow *)window -> gobj ());
+    g_application_quit ((GApplication *)window -> app);
 }
 
 // omg
@@ -160,7 +165,7 @@ hotkeys (MyWindow             *window,
             window -> rack -> prev_preset ();
             break ;
         case 65307:
-            window->destroy ();
+            quit (NULL, window);
             break;
         case 49:
             gtk_notebook_set_current_page (window -> presets -> notebook, 1);
