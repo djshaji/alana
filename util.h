@@ -1,10 +1,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <gtkmm.h>
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <gtk/gtk.h>
 
 #include "json.hpp"
 #include "log.h"

@@ -1,7 +1,7 @@
 #ifndef RACK_H
 #define RACK_H
 
-#include <gtkmm.h>
+//~ #include <gtkmm.h>
 #include <gtk/gtk.h>
 #include <vector>
 #include <iostream>

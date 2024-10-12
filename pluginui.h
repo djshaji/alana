@@ -1,7 +1,6 @@
 #ifndef PLUGINUI_H
 #define PLUGINUI_H
 
-#include <gtkmm.h>
 #include <gtk/gtk.h>
 #include <vector>
 #include <iostream>

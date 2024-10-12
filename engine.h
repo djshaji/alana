@@ -4,7 +4,6 @@
 #include <lilv/lilv.h>
 #include <iostream>
 #include <filesystem>
-#include <gtkmm.h>
 #include <sys/utsname.h>
 #include <unistd.h>
 

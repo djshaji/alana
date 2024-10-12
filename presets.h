@@ -1,6 +1,5 @@
 #ifndef PRESETS_H
 #define PRESETS_H
-#include <gtkmm.h>
 #include "logging_macros.h"
 #include <filesystem>
 #include "json.hpp"

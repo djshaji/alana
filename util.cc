@@ -51,7 +51,7 @@ void alert_yesno (std::string title, std::string msg, GAsyncReadyCallback cb, gp
 
 void alert (char * title, char * msg, AlertType type, gpointer callback, gpointer data) {
     GtkDialogFlags flags = (GtkDialogFlags) (GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
-    GtkWidget * dialog = gtk_message_dialog_new (null,
+    GtkWidget * dialog = (GtkWidget *) gtk_message_dialog_new (null,
                                      (GtkDialogFlags)flags,
                                      GTK_MESSAGE_INFO,
                                      GTK_BUTTONS_OK_CANCEL,
@@ -164,7 +164,7 @@ char ** list_directory (std::string dir) {
     IN
     wtf ("[dir] %s\n", dir.c_str ());
     if (! std::filesystem::exists (dir)) {
-        char ** entries = malloc (1) ;
+        char ** entries = (char **) malloc (1) ;
         entries [0] = NULL ;
         return entries ;
     }
@@ -175,7 +175,7 @@ char ** list_directory (std::string dir) {
         files.push_back (entry.path ());
     }
     
-    char ** entries = malloc (files.size () + 1);
+    char ** entries = (char **)malloc (files.size () + 1);
     for (int i = 0 ; i < files.size (); i ++) {
         std::string path = std::string (files.at (i)) ;
         wtf ("[before] %s\n", path);

@@ -2,7 +2,7 @@
 #define MAIN_H
 #include <filesystem>
 
-#include <gtkmm.h>
+//~ #include <gtkmm.h>
 #include <gtk/gtk.h>
 #include "log.h"
 #include "rack.h"

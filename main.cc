@@ -1,5 +1,10 @@
 #include "main.h"
 
+void activate (GApplication * app, MyWindow * window) {
+    gtk_application_add_window ((GtkApplication *)app, window -> gobj ());
+    gtk_window_present (window -> window);
+}
+
 void position_changed (GtkPaned * pane, void *) {
     printf ("[paned] %s\n", gtk_paned_get_position (pane)) ;
 }
@@ -34,8 +39,7 @@ int main(int argc, char* argv[])
         //~ window.show ();
     //~ });
 
-    gtk_application_add_window (app, window.gobj ());
-    gtk_window_present (window . window);
+    g_signal_connect (app, "activate", (GCallback) activate, &window);
     return g_application_run ((GApplication *)app, argc ,argv);
 
   //~ GtkSettings * settings = gtk_settings_get_default ();
