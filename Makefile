@@ -1,5 +1,10 @@
 # add optimizations
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
+
+TARGET=linux
+TARGET=win32
+
+ifeq ($(TARGET),linux)
 GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
@@ -10,7 +15,18 @@ X11=`pkg-config x11 --libs --cflags`
 OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 CC=cc
 CPP=c++
-
+else ifeq ($(TARGET),win32)
+GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4`
+LV2=`pkg-config --cflags lilv-0 --libs`
+JACK=`pkg-config jack --libs --cflags`
+SNDFILE=`pkg-config --libs sndfile --cflags`
+OPUS=`pkg-config libopusenc opus --libs --cflags`
+LAME=`pkg-config lame --libs --cflags`
+X11=`pkg-config x11 --libs --cflags`
+OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
+CC=x86_64-w64-mingw32-gcc
+CPP=x86_64-w64-mingw32-g++
+endif
 all: amprack
 
 amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knob.o
