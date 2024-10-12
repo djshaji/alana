@@ -1,24 +1,13 @@
 #include "main.h"
 
-void activate (GApplication * app, MyWindow * window) {
-    gtk_application_add_window ((GtkApplication *)app, window -> gobj ());
-    gtk_window_present (window -> window);
-}
-
-void position_changed (GtkPaned * pane, void *) {
-    printf ("[paned] %s\n", gtk_paned_get_position (pane)) ;
-}
-
-int main(int argc, char* argv[])
-{
-    auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
-
+void activate (GApplication * app, void * v) {
+    //~ gtk_application_add_window ((GtkApplication *)app, window -> gobj ());
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     GtkCssProvider *cssProvider2 = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
 
-    MyWindow window = MyWindow (app);
-    gtk_widget_add_css_class ((GtkWidget *) window.gobj (), "xwindow");
+    MyWindow window = MyWindow ((GtkApplication *) app);
+    gtk_widget_add_css_class ((GtkWidget *) window.window, "xwindow");
 
 	if ( std::filesystem::exists ("assets/themes/TubeAmp/style.css"))
 		gtk_css_provider_load_from_path(cssProvider, std::string ("assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
@@ -31,6 +20,17 @@ int main(int argc, char* argv[])
         gtk_css_provider_load_from_path(cssProvider2, user_css.c_str());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
+    gtk_window_present ((GtkWindow *)window.window);
+}
+
+void position_changed (GtkPaned * pane, void *) {
+    printf ("[paned] %s\n", gtk_paned_get_position (pane)) ;
+}
+
+int main(int argc, char* argv[])
+{
+    auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
+
     //~ window.set_title("Gtk4 Demo");
     //~ window.set_default_size(300 , 400);
     //~ g_signal_connect (app, "activate")
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
         //~ window.show ();
     //~ });
 
-    g_signal_connect (app, "activate", (GCallback) activate, &window);
+    g_signal_connect (app, "activate", (GCallback) activate, NULL);
     return g_application_run ((GApplication *)app, argc ,argv);
 
   //~ GtkSettings * settings = gtk_settings_get_default ();
@@ -74,7 +74,7 @@ void toggle_effects (GtkToggleButton * button, MyWindow * window) {
 MyWindow::MyWindow(GtkApplication * _app)
 {
     app = _app ;
-    window = (GtkWindow *) gtk_window_new ();
+    window = (GtkWindow *) gtk_application_window_new (app);
     gtk_window_set_title(window, "Amp Rack 5 (Alpha)");
     gtk_window_set_default_size(window, 700, 400);
     gtk_window_maximize (window);
