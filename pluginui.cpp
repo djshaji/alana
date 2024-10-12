@@ -361,9 +361,16 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
         int y = 0 ;
         while (bypassContains [y] != nullptr) {
             //~ wtf ("%s > %s = %d\n", bypassContains [y], control -> name, strcasestr (bypassContains [y], control -> name));
+            #ifdef __linux__
             if (strcasestr (control -> name, bypassContains [y]) != NULL) {
                 bypassBtn = (GtkToggleButton *) gtk_toggle_button_new_with_label (control->name);
             }
+            #else
+            if (stricmp (control -> name, bypassContains [y]) == 0) {
+                bypassBtn = (GtkToggleButton *) gtk_toggle_button_new_with_label (control->name);
+            }
+            
+            #endif
             
             y ++ ;
         }

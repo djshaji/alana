@@ -52,20 +52,32 @@ bool Engine::openAudio () {
 }
 
 Engine::Engine () {
+    #ifdef __linux__
     struct utsname name;
     if (uname (&name) == -1)
         wtf ("cannot get system name!\n") ;
+    #endif
     
     home = std::string (getenv("HOME")).append ("/amprack/recordings");
     g_mkdir_with_parents  (home.c_str (), 0777);
     
-    std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
+    # ifdef __linux__
+        std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
+    # else
+        std::string _p_ = std::string ("libs/win32/") ;
+    # endif
+    
     libraryPath = strdup (_p_.c_str ());
     wtf ("trying %s ...\n", libraryPath);
     if (! std::filesystem::exists (libraryPath)) {
         free(libraryPath);
+
+        # ifdef __linux__
+            std::string _p_ = std::string ("/usr/share/amprack/libs/linux/").append (name.machine).append ("/") ;
+        # else
+            std::string _p_ = std::string ("C:\\Program Files\\Amp Rack\\Libs") ;
+        # endif 
         
-        std::string _p_ = std::string ("/usr/share/amprack/libs/linux/").append (name.machine).append ("/") ;
         libraryPath = strdup (_p_.c_str ());
         wtf ("trying %s ...\n", libraryPath);
     }
@@ -241,6 +253,7 @@ bool Engine::load_preset (json j) {
 
 void Engine::set_plugin_audio_file (int index, char * filename) {
     IN
+    # ifdef __linux__
     SoundFile * sf = snd_read (filename) ;
     if (sf == NULL) {
         LOGD ("file read failed!\n");
@@ -250,6 +263,7 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     }
     
     LOGD ("file read ok! set plugin: %d [%d bytes]\n", index, * sf -> len);
+    # endif
     
     //~ for (int i = 0 ; i < * sf -> len; i ++)
         //~ LOGD ("[frame: %f]\n", sf -> data [i]);
@@ -260,13 +274,17 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     //~ *sf -> len = * sf -> len / 2 ;
     
     processor->bypass = true ;
+    
+    # ifdef __linux__
     activePlugins->at (index)->setBuffer (sf ->data, * sf -> len);
+    delete (sf) ;
+    # endif
+    
     processor->bypass = false ;
 
     activePlugins->at (index)->loadedFileName = std::string (filename) ;
     activePlugins->at (index)->loadedFileType = 0 ;
-    delete (sf) ;
-
+    
     std::string path = std::string (filename) ;
 
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");

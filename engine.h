@@ -1,18 +1,24 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#ifdef __linux__
 #include <lilv/lilv.h>
+#include <sys/utsname.h>
+#include "snd.h"
+#include "jack.h"
+#else
+#include "pa.h"
+#endif 
+
 #include <iostream>
 #include <filesystem>
-#include <sys/utsname.h>
+
 #include <unistd.h>
 
 #include "SharedLibrary.h"
 #include "Plugin.h"
-#include "jack.h"
 #include "process.h"
 #include "util.h"
-#include "snd.h"
 #include "LockFreeQueue.h"
 #include "FileWriter.h"
 

@@ -475,7 +475,7 @@ void Presets::load_user (bool isFav) {
     for (const auto & entry : std::filesystem::directory_iterator(where)) {
         //~ std::cout << entry.path() << std::endl;
     
-        json j = filename_to_json (entry.path ());
+        json j = filename_to_json (entry.path ().string ());
         if (! isFav)
             add_preset (j, 1);
         else
@@ -521,7 +521,7 @@ void Presets::save_presets_to_json (std::string filename) {
     int i = 0 ;
     for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
         //~ std::cout << entry.path() << std::endl;
-        json j = filename_to_json (entry.path ());
+        json j = filename_to_json (entry.path ().string ());
         ex [std::to_string (i++)] = j ;
     } 
     

@@ -56,7 +56,7 @@ public:
     GtkSwitch * onoff ;
     GtkToggleButton * toggle_presets ;
     
-    bool bnobs = true ;
+    bool bnobs = false ;
     int patch = 0;
     
     std::vector <PluginUI> plugins ;        

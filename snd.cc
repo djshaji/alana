@@ -1,3 +1,4 @@
+#ifdef __linux__
 #include "snd.h"
 
 SoundFile * snd_read (char * filename) {
@@ -25,3 +26,4 @@ SoundFile * snd_read (char * filename) {
     OUT
     return soundFile ;
 }
+#endif

@@ -169,7 +169,7 @@ char ** list_directory (std::string dir) {
         return entries ;
     }
         
-    std::vector <std::string> files ;
+    std::vector <std::filesystem::path> files ;
     for (const auto & entry : std::filesystem::directory_iterator(dir)) {
         wtf ("[file] %s\n", entry.path ());
         files.push_back (entry.path ());
@@ -177,7 +177,8 @@ char ** list_directory (std::string dir) {
     
     char ** entries = (char **)malloc (files.size () + 1);
     for (int i = 0 ; i < files.size (); i ++) {
-        std::string path = std::string (files.at (i)) ;
+        //~ std::string path = std::string (files.at (i)) ;
+        std::string path {files.at (i).string ()} ;
         wtf ("[before] %s\n", path);
         path = path.substr(path.find_last_of("/") + 1).c_str () ;
         wtf ("[after] %s\n", path);

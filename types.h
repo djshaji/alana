@@ -11,8 +11,9 @@
 #define __UTILS_TYPES_H__
 
 #include <cstdint>
-
+#ifdef __linux__
 #include "gtk_wrapper.h"
+#endif
 #include <cinttypes>
 
 #pragma GCC diagnostic push

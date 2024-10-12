@@ -10,27 +10,27 @@ LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
-LAME=`pkg-config lame --libs --cflags`
+LAME=`pkg-config lame --libs --cflags` -l:libmp3lame.a
 X11=`pkg-config x11 --libs --cflags`
 OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 CC=cc
 CPP=c++
 else ifeq ($(TARGET),win32)
-GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4`
-LV2=`pkg-config --cflags lilv-0 --libs`
-JACK=`pkg-config jack --libs --cflags`
-SNDFILE=`pkg-config --libs sndfile --cflags`
-OPUS=`pkg-config libopusenc opus --libs --cflags`
-LAME=`pkg-config lame --libs --cflags`
-X11=`pkg-config x11 --libs --cflags`
-OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
+GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4 gtk4-win32` -I/usr/x86_64-w64-mingw32/sys-root/mingw/include/gtk-4.0/
+LV2=
+JACK=
+SNDFILE=
+OPUS=
+LAME=
+X11=
+OPTIMIZE=
 CC=x86_64-w64-mingw32-gcc
-CPP=x86_64-w64-mingw32-g++
+CPP=x86_64-w64-mingw32-g++ -std=c++17
 endif
 all: amprack
 
 amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knob.o
-	$(CPP) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) -l:libmp3lame.a  $(LAME) 
+	$(CPP) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) $(LAME)  $(LAME) 
 	
 main.o: main.cc main.h rack.o presets.o
 	$(CPP) main.cc -c $(GTK)  $(LV2) $(OPTIMIZE) -Wno-deprecated-declarations
@@ -76,7 +76,7 @@ snd.o: snd.cc snd.h
 
 knob.o: knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp
 #~ 	cc -c `pkg-config gtk4 --libs --cflags` GxRegler.cpp GxControlParameter.cpp -w -lm drawingutils.cpp GxKnob.cpp GxBigKnob.cpp
-	$(CPP) `pkg-config gtk4 --libs --cflags`  -w -lm knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp -c
+	$(CPP) $(GTK)  -w -lm knob.cpp  cairo.cpp objects.cpp  dictionary.cpp  mem.cpp  pango.cpp -c
 
 version.o:
 	echo \#define VERSION `git rev-list --count HEAD` > version.h

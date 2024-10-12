@@ -1,3 +1,4 @@
+#ifdef __linux__
 #include "jack.h"
 
 int
@@ -139,3 +140,5 @@ int AudioDriver::get_sample_rate () {
 int AudioDriver::get_buffer_size () {
     return jack_get_buffer_size (client);
 }
+
+#endif
