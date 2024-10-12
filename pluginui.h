@@ -71,7 +71,7 @@ public:
   
     void load_preset (std::string);
     int get_index ();
-    Gtk::SpinButton id ;
+    GtkSpinButton * id ;
   
     PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::string pluginName, int _index, bool has_file_chooser, void * _rack) ;
     void remove () ;

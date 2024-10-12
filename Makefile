@@ -27,7 +27,7 @@ pluginui.o: pluginui.cpp pluginui.h
 	g++ pluginui.cpp -c $(GTKMM) $(GTK) $(LV2) -Wno-deprecated-declarations
 	
 presets.o: presets.cc presets.h
-	g++ presets.cc -c $(GTKMM)  $(GTK) $(OPTIMIZE) $(LV2)
+	g++ presets.cc -c $(GTKMM)  $(GTK) $(OPTIMIZE) $(LV2) -Wno-deprecated-declarations
 
 SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h PluginControl.cpp PluginControl.h
 	g++ SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp -c $(LV2) $(OPTIMIZE)

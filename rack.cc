@@ -787,7 +787,7 @@ void Rack::build () {
 void Rack:: next_preset () {
     Rack * rack = this ;
     Presets * presets = (Presets *) rack -> presets ;
-    int which = presets -> presets.get_current_page ();
+    int which = gtk_notebook_get_current_page (presets -> presets);
     
     if (presets -> list_of_presets [which]->size () == 0) {
         wtf ("[patch] no patches in %d\n", which);
@@ -808,7 +808,7 @@ void Rack:: next_preset () {
 void Rack::prev_preset () {
     Rack * rack = this ;
     Presets * presets = (Presets *) rack -> presets ;
-    int which =  presets -> presets.get_current_page ();
+    int which =  gtk_notebook_get_current_page (presets -> presets);
     if (presets -> list_of_presets [which]->size () == 0) {
         wtf ("[patch] no patches in %d\n", which);
         return ;

@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 MyWindow * global_window_really_question_mark = nullptr;
 
 void toggle_effects (GtkToggleButton * button, MyWindow * window) {
-    GtkPaned * pane = window -> pane.gobj();
+    GtkPaned * pane = window -> pane;
     
     if (gtk_toggle_button_get_active (button)) {
         gtk_paned_set_position (pane, 1600) ;
@@ -74,17 +74,15 @@ MyWindow::MyWindow(GtkApplication * _app)
     box = Gtk::Box () ;
     set_child (box);
 
-    pane = Gtk::Paned () ;
+    pane = (GtkPaned *)gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
     box.set_orientation (Gtk::Orientation::VERTICAL);
-    pane.set_orientation (Gtk::Orientation::HORIZONTAL);
 
     stack_box = Gtk::Box () ;
     stack_box.set_spacing (10);
     box.append (stack_box);
     stack_box.set_orientation (Gtk::Orientation::VERTICAL);
     
-    pane.set_position (370);
-    pane.set_position (800);
+    gtk_paned_set_position (pane, 800);
     //~ g_signal_connect (pane.gobj (), "notify::position", (GCallback) position_changed, NULL);
 
     stack = Gtk::Stack () ;
@@ -95,7 +93,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     stack_box.append (switcher);
 
     rack = new Rack () ;
-    stack.add (pane);
+    gtk_stack_add_child (stack.gobj (), (GtkWidget *)pane);
     
     gtk_window_set_titlebar (gobj (), (GtkWidget *)rack->button_box);
     
@@ -107,29 +105,29 @@ MyWindow::MyWindow(GtkApplication * _app)
     
     rack -> presets = (void *) presets;
     
-    gtk_notebook_append_page (presets->notebook.gobj (), rack->rack, gtk_label_new ("Effects"));
+    gtk_notebook_append_page (presets->notebook, rack->rack, gtk_label_new ("Effects"));
     
     presets->my () ;
     
     Settings settings = Settings (rack);
-    gtk_notebook_append_page (presets->notebook.gobj (), (GtkWidget *)settings . grid, gtk_label_new ("Settings"));
+    gtk_notebook_append_page (presets->notebook, (GtkWidget *)settings . grid, gtk_label_new ("Settings"));
     
     
     CB * cb = new CB () ;
     cb -> engine = rack -> engine ;
     cb -> presets = presets ;
     
-    g_signal_connect (presets->add.gobj (), "clicked", (GCallback) save_preset_cb, cb);
+    g_signal_connect (presets->add, "clicked", (GCallback) save_preset_cb, cb);
     
     Gtk::ScrolledWindow sw = Gtk::ScrolledWindow () ;
-    gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)presets->master.gobj ());
+    gtk_scrolled_window_set_child (sw.gobj (), (GtkWidget *)presets->master);
     
-    pane.set_start_child (sw);
-    gtk_paned_set_end_child (pane.gobj (), (GtkWidget *)rack->master);
+    gtk_paned_set_start_child (pane, (GtkWidget *)sw.gobj ());
+    gtk_paned_set_end_child (pane, (GtkWidget *)rack->master);
     g_signal_connect (this->gobj (), "close-request", (GCallback) quit, this);
     g_signal_connect (this->gobj (), "show", (GCallback) onshow, this);
  
-    presets -> notebook.set_current_page (1); 
+    gtk_notebook_set_current_page (presets->notebook, 1); 
     
     GtkEventController *   event_controller = gtk_event_controller_key_new ();
     g_signal_connect_swapped (event_controller, "key-pressed",

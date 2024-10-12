@@ -92,7 +92,7 @@ void save_preset_cb (void * w, void * d) {
 class MyWindow : public Gtk::Window
 {
 public:
-    Gtk::Paned  pane ; 
+    GtkPaned * pane ; 
     Gtk::Stack  stack ;
     Gtk::StackSwitcher  switcher ;
     Gtk::Box box, stack_box ;
@@ -163,24 +163,24 @@ hotkeys (MyWindow             *window,
             window->destroy ();
             break;
         case 49:
-            window -> presets -> notebook.set_current_page (1);
-            window -> presets -> presets.set_current_page (0);
+            gtk_notebook_set_current_page (window -> presets -> notebook, 1);
+            gtk_notebook_set_current_page (window -> presets -> presets, 0);
             break ;
         case 50:
-            window -> presets -> notebook.set_current_page (1);
-            window -> presets -> presets.set_current_page (1);
+            gtk_notebook_set_current_page (window -> presets -> notebook, 1);
+            gtk_notebook_set_current_page (window -> presets -> presets, 1);
             break ;
         case 51:
-            window -> presets -> notebook.set_current_page (1);
-            window -> presets -> presets.set_current_page (2);
+            gtk_notebook_set_current_page (window -> presets -> notebook, 1);
+            gtk_notebook_set_current_page (window -> presets -> presets, 2);
             break ;
         case 52:
-            window -> presets -> notebook.set_current_page (1);
-            window -> presets -> presets.set_current_page (3);
+            gtk_notebook_set_current_page (window -> presets -> notebook, 1);
+            gtk_notebook_set_current_page (window -> presets -> presets, 3);
             break ;
         case 96:
-            window -> presets -> notebook.set_current_page (0);
-            window -> presets -> presets.set_current_page (0);
+            gtk_notebook_set_current_page (window -> presets -> notebook, 0);
+            gtk_notebook_set_current_page (window -> presets -> presets, 0);
             break ;
     }
     

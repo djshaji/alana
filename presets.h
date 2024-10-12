@@ -25,9 +25,9 @@ class CB_Preset {
 
 class Presets {
 public:
-    Gtk::Box master, my_presets, quick, library, my_presets_rack, favorites ;
-    Gtk::Notebook notebook, presets ;
-    Gtk::Button add, imp, exp ;
+    GtkBox * master, * my_presets, * quick, * library, * my_presets_rack, * favorites ;
+    GtkNotebook * notebook, * presets ;
+    GtkButton * add, * imp, * exp ;
     void my () ;
     GtkSpinner * library_spinner ;
     void * _this ;
@@ -75,11 +75,10 @@ public:
         favs_dir = std::string (dir).append ("/favs") ;
         g_mkdir_with_parents (favs_dir.c_str (), 0777);
         
-        master = Gtk::Box () ;
-        master.set_orientation (Gtk::Orientation::VERTICAL);
+        master = (GtkBox *)gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0) ;
         
-        notebook = Gtk::Notebook () ;
-        master.append (notebook);
+        notebook = (GtkNotebook *)gtk_notebook_new ();
+        gtk_box_append (master, (GtkWidget *)notebook);
         
         //~ add = Gtk::Button ();
         //~ add.set_label ("+ Preset");
