@@ -20,17 +20,18 @@ GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4 gtk4-win32` -I/usr/x86_6
 LV2=
 JACK=
 SNDFILE=
-OPUS=
+OPUS=`x86_64-w64-mingw32-pkg-config --cflags --libs opus opusfile`
 LAME=
 X11=
 OPTIMIZE=
 CC=x86_64-w64-mingw32-gcc
 CPP=x86_64-w64-mingw32-g++ -std=c++17
+DLFCN=-llibdl
 endif
 all: amprack
 
 amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knob.o
-	$(CPP) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) $(LAME)  $(LAME) 
+	$(CPP) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) $(LAME)  $(DLFCN)
 	
 main.o: main.cc main.h rack.o presets.o
 	$(CPP) main.cc -c $(GTK)  $(LV2) $(OPTIMIZE) -Wno-deprecated-declarations
@@ -62,8 +63,13 @@ missing: SharedLibrary.o missing.cc
 test: lv2_test.c
 	$(CC) lv2_test.c $(LV2) -I/usr/include/lv2 -o lv2_test
 
+ifeq ($(TARGET),linux)
 jack.o: jack.cc jack.h 
 	$(CC) jack.cc -c $(JACK)
+else
+jack.o: pa.cc pa.h
+	$(CPP) pa.cc -c 
+endif	
 
 process.o: process.cc process.h
 	$(CC) process.cc -c

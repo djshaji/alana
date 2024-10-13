@@ -163,6 +163,7 @@ bool Engine::addPluginByName (char * pluginName) {
         stub = lv2Map [pluginName].dump();
     } 
 
+# ifdef __linux__
     LILV_FOREACH (plugins, i, plugins) {
         const LilvPlugin* p = (LilvPlugin* )lilv_plugins_get(plugins, i);
         const char * name = lilv_node_as_string (lilv_plugin_get_name (p));
@@ -184,7 +185,7 @@ bool Engine::addPluginByName (char * pluginName) {
             return addPlugin ((char *)uri, 0, SharedLibrary::PluginType::LILV);
         }
     }
-
+# endif
     return false ;
 }
 
