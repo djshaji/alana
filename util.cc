@@ -194,7 +194,12 @@ void set_random_background (GtkWidget * widget) {
     IN
     #ifdef __GTK_ALERT_DIALOG_H__
 
+    # ifdef __linux__
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/backgrounds");
+    # else
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/backgrounds");    
+    # endif
+    
     if (! std::filesystem::exists (dir))
         return ;
 

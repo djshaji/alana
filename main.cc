@@ -1,6 +1,7 @@
 #include "main.h"
 
 void activate (GApplication * app, void * v) {
+    IN
     //~ gtk_application_add_window ((GtkApplication *)app, window -> gobj ());
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     GtkCssProvider *cssProvider2 = gtk_css_provider_new();
@@ -15,12 +16,18 @@ void activate (GApplication * app, void * v) {
 		gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
+    # ifdef __linux__
     std::string user_css = std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str () ;
+    # else
+    std::string user_css = std::string (getenv ("USERPROFILE")).append ("/.config/amprack/style.css").c_str () ;
+    # endif
+    
     if (std::filesystem::exists (user_css))
         gtk_css_provider_load_from_path(cssProvider2, user_css.c_str());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     gtk_window_present ((GtkWindow *)window.window);
+    OUT
 }
 
 void position_changed (GtkPaned * pane, void *) {
@@ -29,6 +36,8 @@ void position_changed (GtkPaned * pane, void *) {
 
 int main(int argc, char* argv[])
 {
+    LOGD ("Rock and roll can never die");
+    IN
     auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
 
     //~ window.set_title("Gtk4 Demo");
@@ -73,6 +82,7 @@ void toggle_effects (GtkToggleButton * button, MyWindow * window) {
 
 MyWindow::MyWindow(GtkApplication * _app)
 {
+    IN
     app = _app ;
     window = (GtkWindow *) gtk_application_window_new (app);
     gtk_window_set_title(window, "Amp Rack 5 (Alpha)");
@@ -145,7 +155,7 @@ MyWindow::MyWindow(GtkApplication * _app)
     //~ g_signal_connect (rack -> toggle_presets.gobj (), "clicked", (GCallback) toggle_effects, this);
     //~ XWarpPointer(gdk_x11_display_get_xdisplay (gdk_display_get_default ()),0,0, 0, 0, 0, 0, 0, 
                 //~ 0);
-
+    OUT
 }
 
 GtkWindow * MyWindow::gobj () {

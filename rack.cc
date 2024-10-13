@@ -617,8 +617,13 @@ void launch_sync (void * a, void * c) {
 Rack::Rack () {
     engine = new Engine () ;
     blacklist = filename_to_json ("assets/blacklist.json");
-    
+
+    # ifdef __linux__
     config = filename_to_json (std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
+    # else
+    config = filename_to_json (std::string (getenv ("USERPROFILE")).append ("/.config/amprack/config.json"));    
+    # endif
+    
     if (config.contains ("theme")) {
         theme = config ["theme"].dump ();
         theme = theme.substr (1, theme.size () - 2);

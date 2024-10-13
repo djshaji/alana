@@ -20,12 +20,12 @@
 #include <cstdlib>
 #include <cmath>
 
-#ifdef __ANDROID__
-#include <android/log.h>
-
 #ifndef MODULE_NAME
 #define MODULE_NAME  __FILE_NAME__
 #endif
+
+#ifdef __ANDROID__
+#include <android/log.h>
 
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, MODULE_NAME, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, MODULE_NAME, __VA_ARGS__)
@@ -40,6 +40,10 @@
 #define ASSERT(cond, ...) if (!(cond)) {__android_log_assert(#cond, MODULE_NAME, __VA_ARGS__);}
 #else
 
+#define logd(msg)   g_log_default_handler (MODULE_NAME, G_LOG_LEVEL_WARNING, msg, NULL);
+
+
+#ifdef __linux__
 #define LOGI printf
 #define LOGD printf
 #define LOGW printf
@@ -50,6 +54,31 @@
 #define HERE printf("!! %s: %d\n", __FILE__, __LINE__) ;
 #define IN printf(">> %s\n", __PRETTY_FUNCTION__);
 #define OUT printf("<< %s \n", __PRETTY_FUNCTION__);
+
+#else
+#include <gtk/gtk.h>
+#define IN printf_windows(">> %s\n", __PRETTY_FUNCTION__);
+#define OUT printf_windows("<< %s \n", __PRETTY_FUNCTION__);
+#include <windows.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int printf_windows (const char* format, ...) ;
+#ifdef __cplusplus
+}
+#endif
+
+#define LOGI printf_windows
+#define LOGD printf_windows
+#define LOGW printf_windows
+#define LOGE printf_windows
+#define LOGF printf_windows
+#define ASSERT(cond, ...)
+#define LOGV(arg) printf_windows("!! [%s: %d] %s\n", __FILE__, __LINE__, arg) ;
+#define HERE printf_windows("!! %s: %d\n", __FILE__, __LINE__) ;
+
+#endif
 
 #endif
 

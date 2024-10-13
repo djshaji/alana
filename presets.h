@@ -53,10 +53,20 @@ public:
     GtkAdjustment * adj ;
     
     Presets () {
+        # ifdef __linux__
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;
+        # else
+        dir = std::string (getenv ("USERPROFILE")).append ("/.config/amprack") ;
+        # endif
+        
         LOGD ("[presets] dir: %s\n", dir.c_str ());
         
+        # ifdef __linux__
         presets_dir = new std::string (getenv ("HOME"));
+        # else
+        presets_dir = new std::string (getenv ("USERPROFILE"));
+        # endif
+        
         presets_dir->append ("/amprack/presets/");
         _pdir = strdup (presets_dir->c_str ());
         

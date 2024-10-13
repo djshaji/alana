@@ -9,7 +9,12 @@ void select_model (GtkDropDown * down, int event, PluginUI * ui) {
     }
     
     const char * filename = gtk_string_object_get_string ((GtkStringObject *)gtk_drop_down_get_selected_item ((GtkDropDown *)down));
+    # ifdef __linux__
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (std::string (gtk_label_get_text (ui -> name))).append ("/").append (std::string (filename));
+    # else
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (std::string (gtk_label_get_text (ui -> name))).append ("/").append (std::string (filename));
+    # endif
+    
     wtf ("[model] %s\n", dir.c_str ());
     
     if (ui -> engine -> activePlugins -> at (ui -> index) -> loadedFileType)
@@ -519,7 +524,12 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
         wtf ("[file chooser] mmmmph\n");
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         gtk_widget_set_hexpand (box, true);
+        # ifdef __linux__
         std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (pluginName).append ("/");
+        # else
+        std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (pluginName).append ("/");
+        # endif
+        
         char ** entries = list_directory (dir);
         GtkWidget * down = gtk_drop_down_new_from_strings (entries) ;
         gtk_widget_set_hexpand (down, true);

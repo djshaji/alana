@@ -52,15 +52,26 @@ bool Engine::openAudio () {
 }
 
 Engine::Engine () {
+    IN
     #ifdef __linux__
     struct utsname name;
     if (uname (&name) == -1)
         wtf ("cannot get system name!\n") ;
+    #else
+        wtf ("[discover] running on something not linux");
+        wtf ("profile: %s", getenv ("USERPROFILE"));
     #endif
     
-    home = std::string (getenv("HOME")).append ("/amprack/recordings");
+    # ifdef __linux__
+        home = std::string (getenv("HOME")).append ("/amprack/recordings");
+    # else 
+        home = std::string (getenv("USERPROFILE")).append ("/amprack/recordings");
+    # endif
+
     g_mkdir_with_parents  (home.c_str (), 0777);
     
+    LOGD ("home dir: %s", home.c_str ());
+
     # ifdef __linux__
         std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
     # else
@@ -118,6 +129,7 @@ Engine::Engine () {
     fileWriter = new FileWriter ();
     queueManager.add_function (fileWriter->disk_write);
     processor->lockFreeQueueManager = & queueManager ;
+    OUT
 }
 
 
@@ -288,7 +300,12 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     
     std::string path = std::string (filename) ;
 
+    # ifdef __linux__
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # else
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # endif
+    
     g_mkdir_with_parents (dir.c_str (), 0777) ;
     copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
 
@@ -323,7 +340,12 @@ void Engine::set_plugin_file (int index, char * filename) {
     std::string path = std::string (filename) ;
     activePlugins->at (index)->loadedFileType = 1 ;
 
+    # ifdef __linux__
     std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # else 
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # endif
+    
     g_mkdir_with_parents (dir.c_str (), 0777) ;
     copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
     //~ printf ("%s\n", buffer.str().c_str ());

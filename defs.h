@@ -16,7 +16,7 @@
 #define yes true
 #define no false
 #define brake break
-#define wtf printf
+#define wtf LOGD
 
 #ifdef How_to_dismantle_an_atomic_bomb
 	typedef void vodi ;

@@ -141,7 +141,12 @@ void quit (void * w, void * d) {
     }
     
     json_to_filename (favs, std::string (window -> presets -> dir).append ("/fav.json"));    
+    # ifdef __linux__
     json_to_filename (window -> rack->config, std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
+    # else
+    json_to_filename (window -> rack->config, std::string (getenv ("USERPROFILE")).append ("/.config/amprack/config.json"));    
+    # endif
+    
     gtk_window_destroy ((GtkWindow *)window -> gobj ());
     g_application_quit ((GApplication *)window -> app);
 }
