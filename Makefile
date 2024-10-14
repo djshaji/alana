@@ -24,8 +24,8 @@ OPUS=`x86_64-w64-mingw32-pkg-config --cflags --libs opus opusfile`
 LAME=
 X11=
 OPTIMIZE=
-CC=x86_64-w64-mingw32-gcc -g -mwindows
-CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows
+CC=x86_64-w64-mingw32-gcc -g -mwindows 
+CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows 
 DLFCN=-llibdl
 endif
 all: amprack
