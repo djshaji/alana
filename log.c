@@ -1,4 +1,5 @@
 # include <gtk/gtk.h>
+# ifndef __linux__
 # include <windows.h>
 
 int printf_windows (const char* format, ...) ;
@@ -9,3 +10,5 @@ int printf_windows (const char* format, ...) {
     g_free (msg);
     return 0 ;
 }
+
+# endif

@@ -2,15 +2,16 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-TARGET=win32
+#TARGET=win32
 
 ifeq ($(TARGET),linux)
 GTK=`pkg-config --cflags --libs gtk4`
 LV2=`pkg-config --cflags lilv-0 --libs`
-JACK=`pkg-config jack --libs --cflags`
+JACK=`pkg-config jack --libs --cflags portaudio-2.0`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
 LAME=`pkg-config lame --libs --cflags` -l:libmp3lame.a
+GLIB=`pkg-config glib-2.0 --libs --cflags`
 X11=`pkg-config x11 --libs --cflags`
 OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 CC=cc
@@ -18,11 +19,12 @@ CPP=c++
 else ifeq ($(TARGET),win32)
 GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4 gtk4-win32` -I/usr/x86_64-w64-mingw32/sys-root/mingw/include/gtk-4.0/
 LV2=
-JACK=
+JACK=`mingw64-pkg-config portaudio-2.0 --libs --cflags`
 SNDFILE=
 OPUS=`x86_64-w64-mingw32-pkg-config --cflags --libs opus opusfile`
 LAME=
 X11=
+GLIB=`mingw64-pkg-config glib-2.0 --libs --cflags`
 OPTIMIZE=
 CC=x86_64-w64-mingw32-gcc -g -mwindows 
 CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows 
@@ -66,12 +68,13 @@ missing: SharedLibrary.o missing.cc
 test: lv2_test.c
 	$(CC) lv2_test.c $(LV2) -I/usr/include/lv2 -o lv2_test
 
-ifeq ($(TARGET),linux)
+# DEV
+ifeq ($(TARGET),linux1)
 jack.o: jack.cc jack.h 
 	$(CC) jack.cc -c $(JACK) $(GTK) 
 else
 jack.o: pa.cc pa.h
-	$(CPP) pa.cc -c  $(GTK) 
+	$(CPP) pa.cc -c  $(GTK) $(JACK) -o jack.o $(GLIB)
 endif	
 
 process.o: process.cc process.h
