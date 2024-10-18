@@ -110,6 +110,9 @@ bool AudioDriver::open () {
 	return false;
     }
 
+    LOGD( "PortAudio version number = %d\nPortAudio version text = '%s'\n",
+            Pa_GetVersion(), Pa_GetVersionText() );
+
     OUT
     return activate () ;
 }

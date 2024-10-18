@@ -1,4 +1,3 @@
-#ifdef __linux__
 #include "jack.h"
 
 int
@@ -26,8 +25,9 @@ jack_shutdown (void *arg)
 }
 
 bool AudioDriver::activate () {
+    IN
 	if (jack_activate (client)) {
-		fprintf (stderr, "cannot activate client");
+		LOGD ( "cannot activate client");
 		return false ;
 	}
 
@@ -42,36 +42,38 @@ bool AudioDriver::activate () {
 	i_ports = jack_get_ports (client, NULL, NULL,
 				JackPortIsPhysical|JackPortIsOutput);
 	if (i_ports == NULL) {
-		fprintf(stderr, "no physical capture ports\n");
+		LOGD ("no physical capture ports\n");
 		return false ;
 	}
 
 	if (jack_connect (client, i_ports[0], jack_port_name (input_port))) {
-		fprintf (stderr, "cannot connect input ports\n");
+		LOGD ( "cannot connect input ports\n");
 	}
 
 	o_ports = jack_get_ports (client, NULL, NULL,
 				JackPortIsPhysical|JackPortIsInput);
 	if (o_ports == NULL) {
-		fprintf(stderr, "no physical playback ports\n");
+		LOGD ("no physical playback ports\n");
 		return false ;
 	}
 
 	if (jack_connect (client, jack_port_name (output_port), o_ports[0])) {
-		fprintf (stderr, "cannot connect output ports\n");
-        return false ;
+	    LOGD ( "cannot connect output ports\n");
+	    return false ;
 	}
 
     LOGD ("[audio engine ok]");
-    free (i_ports);
-	free (o_ports);
-    
+    //~ free (i_ports);
+    //~ free (o_ports);
+	
+    LOGD ("[processor %d] great success!\n", processor -> bypass);
+    OUT
     return true ;
 }
 
 bool AudioDriver::deactivate () {
     if (jack_deactivate (client)) {
-	    fprintf (stderr, "cannot deactivate client");
+	    LOGD ( "cannot deactivate client");
 	    return false ;
     }
     
@@ -80,32 +82,36 @@ bool AudioDriver::deactivate () {
 }
 
 bool AudioDriver::open () {
+    IN
+    client_name = strdup ("Amp Rack\0");
+    LOGD ("client name: %s\n", client_name);
     client = jack_client_open (client_name, options, &status, server_name);
     if (client == NULL) {
-        fprintf (stderr, "jack_client_open() failed, "
+        LOGD ("jack_client_open() failed, "
              "status = 0x%2.0x\n", status);
+	//~ abort ();
         return false ;
     }
 
     if (status & JackServerFailed) {
-        fprintf (stderr, "Unable to connect to JACK server\n");
+        LOGD ("Unable to connect to JACK server\n");
         return false ;
     }
     
 
 	if (status & JackServerStarted) {
-		fprintf (stderr, "JACK server started\n");
+		LOGD ("JACK server started\n");
 	}
 
 	if (status & JackNameNotUnique) {
 		client_name = jack_get_client_name(client);
-		fprintf (stderr, "unique name `%s' assigned\n", client_name);
+		LOGD ("unique name `%s' assigned\n", client_name);
 	}
 
     jack_set_process_callback (client, process, this);    
 	jack_on_shutdown (client, jack_shutdown, 0);
 
-	printf ("engine sample rate: %" PRIu32 "\n",
+	LOGD ("engine sample rate: %" PRIu32 "\n",
 		jack_get_sample_rate (client));
 
 	/* create two ports */
@@ -118,7 +124,7 @@ bool AudioDriver::open () {
 					  JackPortIsOutput, 0);
 
 	if ((input_port == NULL) || (output_port == NULL)) {
-		fprintf(stderr, "no more JACK ports available\n");
+		LOGD ("no more JACK ports available\n");
 		exit (1);
 	}
 
@@ -126,6 +132,7 @@ bool AudioDriver::open () {
 	 * process() callback will start running now. */
 
 
+    OUT
     return activate () ;
 }
 
@@ -141,4 +148,3 @@ int AudioDriver::get_buffer_size () {
     return jack_get_buffer_size (client);
 }
 
-#endif

@@ -24,9 +24,13 @@ void activate (GApplication * app, void * v) {
     
     if (std::filesystem::exists (user_css))
         gtk_css_provider_load_from_path(cssProvider2, user_css.c_str());
+        
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
+    window.rack -> engine -> processor -> bypass =  false ;
+
     gtk_window_present ((GtkWindow *)window.window);
+    LOGD ("we are live and rocking\n");
     OUT
 }
 

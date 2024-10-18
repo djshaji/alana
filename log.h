@@ -77,6 +77,8 @@ int printf_windows (const char* format, ...) ;
 #define ASSERT(cond, ...)
 #define LOGV(arg) printf_windows("!! [%s: %d] %s\n", __FILE__, __LINE__, arg) ;
 #define HERE printf_windows("!! %s: %d\n", __FILE__, __LINE__) ;
+#define IN printf_windows(">> %s\n", __PRETTY_FUNCTION__);
+#define OUT printf_windows("<< %s \n", __PRETTY_FUNCTION__);
 
 #endif
 

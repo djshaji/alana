@@ -76,6 +76,7 @@ Engine::Engine () {
         std::string _p_ = std::string ("libs/linux/").append (name.machine).append ("/") ;
     # else
         std::string _p_ = std::string ("libs/win32/") ;
+        LOGD ("[engine] %d\n", GetCurrentThreadId());
     # endif
     
     libraryPath = strdup (_p_.c_str ());
@@ -113,6 +114,9 @@ Engine::Engine () {
 
     processor = new Processor () ;
     openAudio () ;
+
+    HERE LOGD ("processor status %d\n", processor->bypass);
+    //~ processor -> bypass = false ;
     
     ladspaPlugins  = new std::vector <std::string> ();
     lv2Plugins = new std::vector <std::string> ();
@@ -129,6 +133,8 @@ Engine::Engine () {
     fileWriter = new FileWriter ();
     queueManager.add_function (fileWriter->disk_write);
     processor->lockFreeQueueManager = & queueManager ;
+    HERE LOGD ("processor status %d\n", processor->bypass);
+    //~ processor -> bypass = false ;
     OUT
 }
 
