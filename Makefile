@@ -63,7 +63,7 @@ clean:
 	rm -v *.o amprack
 
 missing: SharedLibrary.o missing.cc
-	$(CPP) missing.cc SharedLibrary.o -o missing -std=$(CPP)17 $(LV2) -I/usr/include/lv2 
+	$(CPP) missing.cc SharedLibrary.o log.o -o missing -std=c++17 $(LV2) -I/usr/include/lv2  $(GTK) $(DLFCN) 
 
 test: lv2_test.c
 	$(CC) lv2_test.c $(LV2) -I/usr/include/lv2 -o lv2_test

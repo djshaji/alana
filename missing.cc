@@ -4,7 +4,10 @@
 #include <vector>
 #include <iostream>
 #include "json.hpp"
+
+#ifdef __linux__
 #include <lilv/lilv.h>
+#endif 
 
 void list_ladspa (std::string path) {
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
@@ -22,6 +25,7 @@ void list_ladspa (std::string path) {
     
 }
 
+# ifdef __linux__
 void list_lilv () {
     {
         LilvWorld* world = (LilvWorld* )lilv_world_new();
@@ -36,6 +40,7 @@ void list_lilv () {
 
     
 }
+# endif
 
 int main (int argc, char ** argv ) {
     std::string path = "libs";
@@ -50,7 +55,7 @@ int main (int argc, char ** argv ) {
     for (auto plugin : json) {
         path = plugin ["library"].dump () ;
         path = path.substr (1, path.size () - 2);
-        std::string fpath = std::string ("libs/linux/x86_64/") + path ;
+        std::string fpath = std::string ("libs/win32/") + path ;
         if (! std::filesystem::exists(fpath))
             printf ("[missing] %s\n", fpath.c_str ());
     }
