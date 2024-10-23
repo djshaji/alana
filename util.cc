@@ -22,6 +22,7 @@ json filename_to_json (std::string filename) {
 
 bool json_to_filename (json j, std::string filename) {
     LOGV (filename.c_str ());
+    LOGD ("%s -> %s\n", filename.c_str (), j.dump ().c_str ());
     std::ofstream o(filename);
     o << std::setw(4) << j << std::endl;
     return true;

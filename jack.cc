@@ -72,11 +72,13 @@ bool AudioDriver::activate () {
 }
 
 bool AudioDriver::deactivate () {
+    IN
+    LOGD ("DE activate");
     if (jack_deactivate (client)) {
 	    LOGD ( "cannot deactivate client");
 	    return false ;
     }
-    
+    OUT
     return true ;
 
 }
@@ -137,7 +139,9 @@ bool AudioDriver::open () {
 }
 
 void AudioDriver::close () {
-	jack_client_close (client);    
+    IN
+    jack_client_close (client);    
+    OUT
 }
 
 int AudioDriver::get_sample_rate () {

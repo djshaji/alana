@@ -126,13 +126,19 @@ void qquit (void *) {
 }
 
 void quit (void * w, void * d) {
+    IN
     MyWindow * window = (MyWindow *) d ;
+    LOGD ("sss %d\n", window -> rack -> hearts.size ());
+    LOGD ("Closing audio ...\n");
     window -> rack -> engine -> driver -> deactivate ();
     window -> rack -> engine -> driver -> close ();
+    LOGD ("Saving preset ...\n");
+    
     window -> rack -> engine -> savePreset (std::string (window -> presets -> dir) .append ("/default").c_str (), "Last saved preset") ;
     
     json favs = {} ;
-    
+    LOGD ("Saving favorites ...\n");
+        
     for (int i = 0 ; i < window -> rack -> hearts.size (); i ++) {
         GtkWidget * fav = (GtkWidget *) window -> rack -> hearts.at (i);
         if (gtk_toggle_button_get_active ((GtkToggleButton *)fav)) {
@@ -141,14 +147,19 @@ void quit (void * w, void * d) {
     }
     
     json_to_filename (favs, std::string (window -> presets -> dir).append ("/fav.json"));    
+
+    LOGD ("Saving settings ...\n");
     # ifdef __linux__
     json_to_filename (window -> rack->config, std::string (getenv ("HOME")).append ("/.config/amprack/config.json"));    
     # else
     json_to_filename (window -> rack->config, std::string (getenv ("USERPROFILE")).append ("/.config/amprack/config.json"));    
     # endif
     
+    LOGD ("Ok done, goodbye xoxo ...\n");
+
     gtk_window_destroy ((GtkWindow *)window -> gobj ());
     g_application_quit ((GApplication *)window -> app);
+    OUT
 }
 
 // omg

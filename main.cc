@@ -1,4 +1,12 @@
 #include "main.h"
+const char * renderers [7] = {
+    "auto",
+    "cairo",
+    "gl",
+    "ngl",
+    "vulkan",
+    nullptr
+} ;
 
 void activate (GApplication * app, void * v) {
     IN
@@ -42,7 +50,23 @@ int main(int argc, char* argv[])
 {
     LOGD ("Rock and roll can never die");
     IN
-    g_setenv ("GSK_RENDERER", "cairo", 1);
+    # ifdef __linux__
+    std::string config = std::string (getenv ("HOME")).append ("/.config/amprack/config.json");    
+    # else
+    std::string config = std::string (getenv ("USERPROFILE")).append ("/.config/amprack/config.json");    
+    # endif
+    
+    LOGD ("[config] load: %s\n", config.c_str ());
+    json j = filename_to_json (config);
+    
+    if (j.contains ("renderer")) {
+        int renderer = j ["renderer"] . get <int> () ;
+        if (renderer) {
+            g_setenv ("GSK_RENDERER", renderers [renderer], 1);
+            LOGD ("[config] set renderer to %s\n", renderers [renderer]);
+        }
+    }
+
     auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
 
     //~ window.set_title("Gtk4 Demo");
