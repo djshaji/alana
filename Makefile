@@ -2,7 +2,9 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-#~ TARGET=win32
+TARGET=win32
+
+VERSION=`git rev-list --count HEAD`
 
 ifeq ($(TARGET),linux)
 GTK=`pkg-config --cflags --libs gtk4`
@@ -98,3 +100,6 @@ FileWriter.o: FileWriter.cpp FileWriter.h LockFreeQueue.cpp LockFreeQueue.h vrin
 
 vringbuffer.o: upwaker.c vringbuffer.cc
 	$(CPP) -fpermissive -c upwaker.c vringbuffer.cc $(GTK) 	
+
+win32-release:
+	export VER=$(VERSION) ; cd .. ; zip -r releases/amprack-$$VER.zip win/

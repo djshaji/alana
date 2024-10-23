@@ -15,13 +15,13 @@ void activate (GApplication * app, void * v) {
     GtkCssProvider *cssProvider2 = gtk_css_provider_new();
     gtk_css_provider_load_from_path(cssProvider, "style.css");
 
-    MyWindow window = MyWindow ((GtkApplication *) app);
-    gtk_widget_add_css_class ((GtkWidget *) window.window, "xwindow");
+    MyWindow * window = new MyWindow ((GtkApplication *) app);
+    gtk_widget_add_css_class ((GtkWidget *) window -> window, "xwindow");
 
 	if ( std::filesystem::exists ("assets/themes/TubeAmp/style.css"))
-		gtk_css_provider_load_from_path(cssProvider, std::string ("assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
+		gtk_css_provider_load_from_path(cssProvider, std::string ("assets/themes/").append (window ->rack -> theme).append ("/style.css").c_str ());
 	else
-		gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window.rack -> theme).append ("/style.css").c_str ());
+		gtk_css_provider_load_from_path(cssProvider, std::string ("/usr/share/amprack/assets/themes/").append (window ->rack -> theme).append ("/style.css").c_str ());
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     # ifdef __linux__
@@ -35,9 +35,9 @@ void activate (GApplication * app, void * v) {
         
     gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    window.rack -> engine -> processor -> bypass =  false ;
+    window ->rack -> engine -> processor -> bypass =  false ;
 
-    gtk_window_present ((GtkWindow *)window.window);
+    gtk_window_present ((GtkWindow *)window ->window);
     LOGD ("we are live and rocking\n");
     OUT
 }
@@ -65,16 +65,21 @@ int main(int argc, char* argv[])
             g_setenv ("GSK_RENDERER", renderers [renderer], 1);
             LOGD ("[config] set renderer to %s\n", renderers [renderer]);
         }
+    } else {
+        //  seems to be most stable *ahem* on win32
+        # ifndef __linux__
+        g_setenv ("GSK_RENDERER", "gl", 1);        
+        # endif
     }
 
     auto app = gtk_application_new ("org.acoustixaudio.amprack", G_APPLICATION_DEFAULT_FLAGS);
 
-    //~ window.set_title("Gtk4 Demo");
-    //~ window.set_default_size(300 , 400);
+    //~ window ->set_title("Gtk4 Demo");
+    //~ window ->set_default_size(300 , 400);
     //~ g_signal_connect (app, "activate")
     //~ app->signal_activate().connect([&](){
         //~ app->add_window(window);
-        //~ window.show ();
+        //~ window ->show ();
     //~ });
 
     g_signal_connect (app, "activate", (GCallback) activate, NULL);

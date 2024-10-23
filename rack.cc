@@ -555,6 +555,10 @@ bool Rack::load_preset (json j) {
         auto plugin = p ["name"].dump () ;
         plugin = plugin.substr (1, plugin.size () - 2) ;
         PluginUI * ui = addPluginByName ((char *) plugin.c_str ());
+        if (ui == NULL) {
+            HERE LOGD ("-----| error loading plugin %s |-------\n", plugin.c_str ());
+            continue ;
+        }
         auto controls = p ["controls"].dump () ;
         controls = controls.substr (1, controls.size () - 2);
         ui -> load_preset (controls) ;
