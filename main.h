@@ -172,7 +172,7 @@ hotkeys (MyWindow             *window,
                       GdkModifierType        state,
                       GtkEventControllerKey *event_controller)
 {
-    printf ("[keypress] %d\n", keyval);
+    //~ printf ("[keypress] %d\n", keyval);
     switch (keyval) {
         case 65365:
             window -> rack -> next_preset ();

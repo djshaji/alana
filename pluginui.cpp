@@ -189,6 +189,7 @@ float knob_get (GtkSpinButton * s) {
 
 PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::string pluginName, int _index, bool has_file_chooser, void * _rack) {    
     IN
+    LOGD ("[plugin ui] loading %s\n", pluginName.c_str ());
     Rack * niceRack = (Rack *) _rack ;
     engine = _engine ;
     plugin = _plugin ;

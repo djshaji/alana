@@ -60,5 +60,7 @@ int main (int argc, char ** argv ) {
             printf ("[missing] %s\n", fpath.c_str ());
     }
     
+    list_ladspa ("libs/win32");
+    
     
 }
