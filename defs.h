@@ -17,6 +17,7 @@
 #define no false
 #define brake break
 #define wtf LOGD
+#define GW (GtkWidget *) 
 
 #ifdef How_to_dismantle_an_atomic_bomb
 	typedef void vodi ;

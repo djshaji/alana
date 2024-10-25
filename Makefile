@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-TARGET=win32
+#TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
@@ -37,13 +37,13 @@ all: amprack
 amprack: version.o FileWriter.o main.o rack.o presets.o SharedLibrary.o engine.o jack.o process.o util.o snd.o knob.o
 	$(CPP) *.o -o amprack $(GTK) $(LV2) $(JACK) $(OPTIMIZE) $(SNDFILE) $(OPUS) $(LAME)  $(DLFCN)
 	
-main.o: main.cc main.h rack.o presets.o log.o
+main.o: main.cc main.h rack.o presets.o log.o sync.o
 	$(CPP) main.cc -c $(GTK)  $(LV2) $(OPTIMIZE) -Wno-deprecated-declarations
 
 log.o: log.c log.h
 	$(CC) log.c -c  $(GTK) 
 	
-rack.o: rack.cc rack.h settings.o knob.o pluginui.o
+rack.o: rack.cc rack.h settings.o knob.o pluginui.o 
 	$(CPP) rack.cc -c   $(GTK)  $(LV2) $(OPTIMIZE) 
 
 settings.o: settings.cc settings.h 
@@ -103,3 +103,6 @@ vringbuffer.o: upwaker.c vringbuffer.cc
 
 win32-release:
 	export VER=$(VERSION) ; cd .. ; zip -r releases/amprack-$$VER.zip win/
+
+sync.o: sync.cc sync.h
+	$(CPP) -c sync.cc $(GTK)

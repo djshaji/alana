@@ -1,5 +1,6 @@
 #include "rack.h"
 #include "presets.h"
+#include "sync.h"
 
 void toggle_record (GtkToggleButton * button, Engine * engine) {
     if (gtk_toggle_button_get_active (button)) {
@@ -614,8 +615,9 @@ void launch_tuner (void * a, void * c) {
     system ("$HOME/bin/xtuner") ;
 }
 
-void launch_sync (void * a, void * c) {
-    system ("python $HOME/bin/sync.py") ;
+void launch_sync (void * a, Rack * rack) {
+    //~ system ("python $HOME/bin/sync.py") ;
+    Sync * sync = new Sync (rack);            
 }
 
 Rack::Rack () {
@@ -661,8 +663,7 @@ Rack::Rack () {
     GtkButton * tune = (GtkButton * ) gtk_button_new_with_label ("Tuner");
     toggle_presets = (GtkToggleButton *) gtk_toggle_button_new_with_label ("Effects");
     
-    
-    g_signal_connect (syn, "clicked", (GCallback) launch_sync, NULL);
+    g_signal_connect (syn, "clicked", (GCallback) launch_sync, this);
     g_signal_connect (tune, "clicked", (GCallback) launch_tuner, NULL);
     
     patch_up = (GtkButton *) gtk_button_new_with_label ("↑");

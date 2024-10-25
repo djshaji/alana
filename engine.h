@@ -2,7 +2,7 @@
 #define ENGINE_H
 
 #ifdef __linux__
-#include <lilv/lilv.h>
+//~ #include <lilv/lilv.h>
 #include <sys/utsname.h>
 #include "snd.h"
 #include "jack.h"
