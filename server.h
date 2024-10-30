@@ -8,19 +8,24 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
+#include <thread>
 #include <string>
+#include <gtk/gtk.h>
+#include "log.h"
+#include "json.hpp"
+#include "presets.h"
 
 using namespace std;
 
 class Server {
 public:
-    Server(int port);
+    Server();
     ~Server();
 
+    Presets * presets ;
     void run();
     
-private:
+    GMainContext * context ;
     void create();
     void close_socket();
     void serve();

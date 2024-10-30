@@ -13,7 +13,12 @@
 #include <iostream>
 #include <string>
 
+
+#include "presets.h"
+#include "json.hpp"
+
 using namespace std;
+using json = nlohmann::json;
 
 class Client {
 public:
@@ -21,14 +26,15 @@ public:
     ~Client();
 
     void run();
-
-private:
+    std::string send_preset(json j) ;
     virtual void create();
     virtual void close_socket();
+    
+private:
     void echo();
     bool send_request(string);
     bool get_response();
-
+    
     string host_;
     int port_;
     int server_;

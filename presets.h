@@ -52,6 +52,8 @@ public:
     GtkWidget * page_no ;
     GtkAdjustment * adj ;
     
+    json get_all_user_presets ();
+    
     Presets () {
         # ifdef __linux__
         dir = std::string (getenv ("HOME")).append ("/.config/amprack") ;

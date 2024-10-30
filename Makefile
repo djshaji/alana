@@ -7,7 +7,7 @@ TARGET=linux
 VERSION=`git rev-list --count HEAD`
 
 ifeq ($(TARGET),linux)
-GTK=`pkg-config --cflags --libs gtk4`
+GTK=`pkg-config --cflags --libs gtk4` 
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags portaudio-2.0`
 SNDFILE=`pkg-config --libs sndfile --cflags`
@@ -16,8 +16,8 @@ LAME=`pkg-config lame --libs --cflags` -l:libmp3lame.a
 GLIB=`pkg-config glib-2.0 --libs --cflags`
 X11=`pkg-config x11 --libs --cflags`
 OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
-CC=cc
-CPP=c++
+CC=cc -g -ggdb 
+CPP=c++ -g -ggdb 
 else ifeq ($(TARGET),win32)
 GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4 gtk4-win32` -I/usr/x86_64-w64-mingw32/sys-root/mingw/include/gtk-4.0/
 LV2=
@@ -27,7 +27,7 @@ OPUS=`x86_64-w64-mingw32-pkg-config --cflags --libs opus opusfile`
 LAME=-llibmp3lame
 X11=
 GLIB=`mingw64-pkg-config glib-2.0 --libs --cflags`
-OPTIMIZE=
+OPTIMIZE=-fast
 CC=x86_64-w64-mingw32-gcc -g -mwindows -mconsole
 CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows -mconsole 
 DLFCN=-llibdl
@@ -104,5 +104,8 @@ vringbuffer.o: upwaker.c vringbuffer.cc
 win32-release:
 	export VER=$(VERSION) ; cd .. ; zip -r releases/amprack-$$VER.zip win/
 
-sync.o: sync.cc sync.h
+sync.o: sync.cc sync.h server.o
 	$(CPP) -c sync.cc $(GTK)
+
+server.o: server.cc server.h client.cc client.h
+	$(CPP) -c server.cc client.cc $(GTK) -Wall

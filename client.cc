@@ -19,16 +19,18 @@ void Client::run() {
 
 void
 Client::create() {
+    IN
     struct sockaddr_in server_addr;
 
     // use DNS to get IP address
     struct hostent *hostEntry;
     hostEntry = gethostbyname(host_.c_str());
     if (!hostEntry) {
-        cout << "No such host name: " << host_ << endl;
-        exit(-1);
+        LOGD ("No such host name: %s" , host_.c_str ());
+        return ;
     }
 
+    LOGD ("[client] connect to %s:%d\n", host_.c_str (), port_);
     // setup socket address structure
     memset(&server_addr,0,sizeof(server_addr));
     server_addr.sin_family = AF_INET;
@@ -38,12 +40,14 @@ Client::create() {
     // create socket
     server_ = socket(PF_INET,SOCK_STREAM,0);
     if (!server_) {
+        HERE LOGD ("cannot create socket\n");
         perror("socket");
         exit(-1);
     }
 
     // connect to server
     if (connect(server_,(const struct sockaddr *)&server_addr,sizeof(server_addr)) < 0) {
+        HERE LOGD ("cannot connect to server\n");
         perror("connect");
         exit(-1);
     }
@@ -51,7 +55,9 @@ Client::create() {
 
 void
 Client::close_socket() {
+    IN
     close(server_);
+    OUT
 }
 
 void
@@ -64,21 +70,65 @@ Client::echo() {
         line += "\n";
         // send request
         bool success = send_request(line);
-        // break if an error occurred
-        if (not success)
+        if (not success) {
+            printf ("[68] break if an error occurred\n");
             break;
+        }
         // get a response
         success = get_response();
-        // break if an error occurred
-        if (not success)
-            break;
+        if (not success) {
+            printf ("[73] break if an error occurred\n");
+            break; 
+        }
     }
     close_socket();
 }
 
+std::string
+Client::send_preset(json j) {
+    IN
+    // loop to handle user interface
+    bool success = send_request(j.dump ());
+    if (not success) {
+        printf ("[86] break if an error occurred\n");
+    }
+    // get a response
+    string response = "";
+    // read until we get a newline
+    while (response.find("}}") == string::npos) {
+        int nread = recv(server_,buf_,1024,0);
+        if (nread < 0) {
+            if (errno == EINTR) {
+                printf ("the socket call was interrupted -- try again\n");
+                continue;
+            }
+            else {
+                HERE LOGD ("an error occurred: %s\n", strerror (errno));
+                return "";
+            }
+        } else if (nread == 0) {
+            printf ("the socket is closed\n");
+            return "";
+        }
+        // be sure to use append in case we have binary data
+        response.append(buf_,nread);
+    }
+    
+    // a better client would cut off anything after the newline and
+    // save it in a cache
+    if (not success) {
+        HERE LOGD ("[92] break if an error occurred\n");
+    }
+
+    close_socket();
+    OUT
+    return response ;
+}
+
 bool
 Client::send_request(string request) {
-    // prepare to send request
+    //~ printf ("----------------------- -|prepare to send request: %s |- ---------------------------\n", 
+        //~ request.c_str ());
     const char* ptr = request.c_str();
     int nleft = request.length();
     int nwritten;
@@ -86,15 +136,15 @@ Client::send_request(string request) {
     while (nleft) {
         if ((nwritten = send(server_, ptr, nleft, 0)) < 0) {
             if (errno == EINTR) {
-                // the socket call was interrupted -- try again
+                LOGD ("the socket call was interrupted -- try again\n");
                 continue;
             } else {
-                // an error occurred, so break out
+                HERE LOGD ("an error occurred: %s\n", strerror (errno));
                 perror("write");
                 return false;
             }
         } else if (nwritten == 0) {
-            // the socket is closed
+            LOGD ("the socket is closed\n");
             return false;
         }
         nleft -= nwritten;
@@ -105,19 +155,22 @@ Client::send_request(string request) {
 
 bool
 Client::get_response() {
+    IN
     string response = "";
     // read until we get a newline
-    while (response.find("\n") == string::npos) {
+    while (response.find("}}") == string::npos) {
         int nread = recv(server_,buf_,1024,0);
         if (nread < 0) {
-            if (errno == EINTR)
-                // the socket call was interrupted -- try again
+            if (errno == EINTR) {
+                printf ("the socket call was interrupted -- try again\n");
                 continue;
-            else
-                // an error occurred, so break out
+            }
+            else {
+                HERE LOGD ("an error occurred, so break out\n");
                 return "";
+            }
         } else if (nread == 0) {
-            // the socket is closed
+            printf ("the socket is closed\n");
             return "";
         }
         // be sure to use append in case we have binary data
@@ -125,6 +178,7 @@ Client::get_response() {
     }
     // a better client would cut off anything after the newline and
     // save it in a cache
-    cout << response;
+    HERE LOGD ("[client] response: %s\n", response.c_str ());
+    OUT
     return true;
 }

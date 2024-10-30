@@ -1,10 +1,14 @@
 #include "server.h"
 
-Server::Server(int port) {
+Server::Server() {
+    IN
     // setup variables
+    int port = 6906 ;
     port_ = port;
     buflen_ = 1024;
     buf_ = new char[buflen_+1];
+    context = g_main_context_get_thread_default ();
+    OUT
 }
 
 Server::~Server() {
@@ -13,13 +17,17 @@ Server::~Server() {
 
 void
 Server::run() {
+    IN
     // create and run the server
     create();
+    //~ std::thread t (&Server::serve, this);
     serve();
+    OUT
 }
 
 void
 Server::create() {
+    IN
     struct sockaddr_in server_addr;
 
     // setup socket address structure
@@ -58,26 +66,37 @@ Server::create() {
 
 void
 Server::close_socket() {
+    IN
+    shutdown(server_, SHUT_RD);
     close(server_);
+    OUT
 }
 
 void
 Server::serve() {
+    IN
     // setup client
     int client;
     struct sockaddr_in client_addr;
     socklen_t clientlen = sizeof(client_addr);
+    while (g_main_context_pending (context))
+        g_main_context_iteration (context, true);
 
       // accept clients
     while ((client = accept(server_,(struct sockaddr *)&client_addr,&clientlen)) > 0) {
+        while (g_main_context_pending (context))
+            g_main_context_iteration (context, true);
 
         handle(client);
     }
+    
+    OUT
     close_socket();
 }
 
 void
 Server::handle(int client) {
+    IN
     // loop to handle all requests
     while (1) {
         // get a request
@@ -86,11 +105,18 @@ Server::handle(int client) {
         if (request.empty())
             break;
         // send response
+        LOGD ("[server] request: %s\n", request.c_str ());
+        //~ json j = json::parse (request);
+        //~ presets->import_presets_from_json (j);
         bool success = send_response(client,request);
         // break if an error occurred
-        if (not success)
+        if (not success) {
+            HERE LOGD ("break if an error occurred\n");
             break;
+        }
     }
+    
+    OUT
     close(client);
 }
 
@@ -98,22 +124,31 @@ string
 Server::get_request(int client) {
     string request = "";
     // read until we get a newline
-    while (request.find("\n") == string::npos) {
+    int count = -1 ;
+    while (request.find("}}") == string::npos) {
+        count ++ ;
+        
         int nread = recv(client,buf_,1024,0);
         if (nread < 0) {
-            if (errno == EINTR)
-                // the socket call was interrupted -- try again
+            if (errno == EINTR) {
+                LOGD ("the socket call was interrupted -- try again\n");
                 continue;
-            else
-                // an error occurred, so break out
+            }
+            else {
+                HERE LOGD ("an error occurred, so break out\n");
                 return "";
+            }
         } else if (nread == 0) {
-            // the socket is closed
+            LOGD ("the socket is closed\n");
             return "";
         }
+
         // be sure to use append in case we have binary data
+        HERE LOGD ("[request %d:%d] %s\n", count, nread, buf_);
         request.append(buf_,nread);
     }
+    
+    LOGD ("[server] read ended: \n");
     // a better server would cut off anything after the newline and
     // save it in a cache
     return request;
@@ -121,6 +156,7 @@ Server::get_request(int client) {
 
 bool
 Server::send_response(int client, string response) {
+    IN
     // prepare to send response
     const char* ptr = response.c_str();
     int nleft = response.length();
@@ -129,19 +165,25 @@ Server::send_response(int client, string response) {
     while (nleft) {
         if ((nwritten = send(client, ptr, nleft, 0)) < 0) {
             if (errno == EINTR) {
-                // the socket call was interrupted -- try again
+                OUT
+                LOGD ("the socket call was interrupted -- try again\n");
                 continue;
             } else {
-                // an error occurred, so break out
+                HERE LOGD ("an error occurred, so break out\n");
                 perror("write");
+                OUT
                 return false;
             }
         } else if (nwritten == 0) {
-            // the socket is closed
+            LOGD ("the socket is closed\n");
+            OUT
             return false;
         }
         nleft -= nwritten;
         ptr += nwritten;
     }
+    OUT
+    
+    //~ close_socket ();
     return true;
 }

@@ -530,3 +530,15 @@ void Presets::save_presets_to_json (std::string filename) {
     else 
         msg ("Error exporting presets");
 }
+
+json Presets::get_all_user_presets () {
+    json ex = json {};
+    int i = 0 ;
+    for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
+        //~ std::cout << entry.path() << std::endl;
+        json j = filename_to_json (entry.path ().string ());
+        ex [std::to_string (i++)] = j ;
+    } 
+
+    return ex ;
+}
