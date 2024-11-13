@@ -11,6 +11,8 @@ class Sync {
     public:
     GtkEntry * entry ;
     Server * server ;
+    GtkLabel * status ;
+    GtkLabel * header ;
     GtkWindow * window ;
     std::thread * t;
     Rack * rack;

@@ -499,7 +499,7 @@ void Presets::add_preset_multi (json j, int which) {
     OUT
 }
 
-void Presets::import_presets_from_json (json j) {
+int Presets::import_presets_from_json (json j) {
     IN
     int how_many = 0 ;
     LOGV (presets_dir->c_str());
@@ -514,6 +514,7 @@ void Presets::import_presets_from_json (json j) {
     }
     
     msg (std::string ("Imported ").append (std::to_string (how_many)).append (" presets successfully."));
+    return how_many ;
 }
 
 void Presets::save_presets_to_json (std::string filename) {

@@ -109,3 +109,7 @@ sync.o: sync.cc sync.h server.o
 
 server.o: server.cc server.h client.cc client.h
 	$(CPP) -c server.cc client.cc $(GTK) -Wall
+
+echo-client: echo-client.cc server.o
+	$(CPP) -o echo-client echo-client.cc client.cc $(GTK) -Wall
+

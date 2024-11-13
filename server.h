@@ -23,6 +23,7 @@ public:
     ~Server();
 
     Presets * presets ;
+    void * sync ;
     void run();
     
     GMainContext * context ;

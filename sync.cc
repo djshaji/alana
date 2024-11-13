@@ -16,12 +16,21 @@ void sync_send (Sync * sync) {
     std::string response = client -> send_preset (j);
     LOGD ("[client] response: %s\n", response.c_str ());
     LOGD ("ip: %s, port: %s, key: %s\n", ip.c_str(), port.c_str (), key.c_str ());
+
+    int how_many = p -> import_presets_from_json (j);
+    char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+    gtk_label_set_markup (sync -> header, ss);
+    g_free (ss);
+    
+    LOGD ("[client] synced %d presets\n", how_many);
+    client -> close_socket ();
     OUT
 }
 
 void run_server (Sync * sync) {
     IN
     sync -> server = new Server();
+    sync -> server -> sync = sync ;
     sync -> server -> presets = (Presets *) sync -> rack -> presets ;
     sync -> server->run();
 
@@ -56,7 +65,7 @@ Sync::Sync (Rack * r) {
     gtk_widget_set_margin_bottom (GW grid, 10);
     gtk_widget_set_margin_end (GW grid, 10);
 
-    GtkLabel * header = (GtkLabel *) gtk_label_new ("Sync Presets");
+    header = (GtkLabel *) gtk_label_new ("Sync Presets");
     gtk_label_set_justify (header, GTK_JUSTIFY_CENTER);
     gtk_label_set_markup (header, "<span weight='bold' size='xx-large'>Sync Amp Rack Presets</span>");
                                         //      col row w h
@@ -82,7 +91,7 @@ Sync::Sync (Rack * r) {
     
     g_signal_connect_swapped (btn, "clicked", (GCallback) sync_send, this);
     
-    GtkLabel * status = (GtkLabel *) gtk_label_new ("IP:PORT:KEY") ;
+    status = (GtkLabel *) gtk_label_new ("IP:PORT:KEY") ;
     
     gtk_grid_attach (grid, GW entry, 0, 6, 2, 1);
     gtk_grid_attach (grid, GW btn, 2, 6, 1, 1);

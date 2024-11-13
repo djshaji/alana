@@ -1,4 +1,5 @@
 #include "server.h"
+#include "sync.h"
 
 Server::Server() {
     IN
@@ -106,8 +107,16 @@ Server::handle(int client) {
             break;
         // send response
         LOGD ("[server] request: %s\n", request.c_str ());
-        //~ json j = json::parse (request);
-        //~ presets->import_presets_from_json (j);
+        request.pop_back () ; ///| aargh!
+        json j = json::parse (request);
+        int how_many = presets->import_presets_from_json (j);
+        char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+        Sync * _sync = (Sync *) sync ;
+        gtk_label_set_markup (_sync -> header, ss);
+        g_free (ss);
+        
+        LOGD ("[server] synced %d presets\n", how_many);
+        
         bool success = send_response(client,request);
         // break if an error occurred
         if (not success) {
@@ -122,10 +131,11 @@ Server::handle(int client) {
 
 string
 Server::get_request(int client) {
+    IN
     string request = "";
     // read until we get a newline
     int count = -1 ;
-    while (request.find("}}") == string::npos) {
+    while (request.find("}}}") == string::npos) {
         count ++ ;
         
         int nread = recv(client,buf_,1024,0);
@@ -135,7 +145,7 @@ Server::get_request(int client) {
                 continue;
             }
             else {
-                HERE LOGD ("an error occurred, so break out\n");
+                HERE LOGD ("[%s]  an error occurred, so break out\n", strerror (errno));
                 return "";
             }
         } else if (nread == 0) {
@@ -151,6 +161,7 @@ Server::get_request(int client) {
     LOGD ("[server] read ended: \n");
     // a better server would cut off anything after the newline and
     // save it in a cache
+    OUT
     return request;
 }
 
@@ -158,8 +169,10 @@ bool
 Server::send_response(int client, string response) {
     IN
     // prepare to send response
+    response.append ("}");
     const char* ptr = response.c_str();
     int nleft = response.length();
+    int nleft_ = response.length();
     int nwritten;
     // loop to be sure it is all sent
     while (nleft) {
@@ -169,7 +182,7 @@ Server::send_response(int client, string response) {
                 LOGD ("the socket call was interrupted -- try again\n");
                 continue;
             } else {
-                HERE LOGD ("an error occurred, so break out\n");
+                HERE LOGD ("[%s] an error occurred, so break out\n", strerror (errno));
                 perror("write");
                 OUT
                 return false;
@@ -182,8 +195,9 @@ Server::send_response(int client, string response) {
         nleft -= nwritten;
         ptr += nwritten;
     }
-    OUT
-    
+
+    LOGD ("[send response] left %d of %d bytes\n", nleft, nleft_);
+    OUT    
     //~ close_socket ();
     return true;
 }

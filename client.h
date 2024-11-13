@@ -29,11 +29,11 @@ public:
     std::string send_preset(json j) ;
     virtual void create();
     virtual void close_socket();
+    void echo();
+    bool get_response();
     
 private:
-    void echo();
     bool send_request(string);
-    bool get_response();
     
     string host_;
     int port_;

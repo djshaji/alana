@@ -95,7 +95,7 @@ Client::send_preset(json j) {
     // get a response
     string response = "";
     // read until we get a newline
-    while (response.find("}}") == string::npos) {
+    while (response.find("}}}") == string::npos) {
         int nread = recv(server_,buf_,1024,0);
         if (nread < 0) {
             if (errno == EINTR) {
@@ -120,17 +120,22 @@ Client::send_preset(json j) {
         HERE LOGD ("[92] break if an error occurred\n");
     }
 
-    close_socket();
+    //~ close_socket();
     OUT
     return response ;
 }
 
 bool
 Client::send_request(string request) {
-    //~ printf ("----------------------- -|prepare to send request: %s |- ---------------------------\n", 
-        //~ request.c_str ());
+    IN
+    ///| WARNING: we append another } to the message so that we know when to stop reading
+    ///| HACKETY HACKETY HACK
+    request.append ("}");
+    printf ("----------------------- -|prepare to send request: %s |- ---------------------------\n", 
+        request.c_str ());
     const char* ptr = request.c_str();
     int nleft = request.length();
+    int nleft_ = request.length();
     int nwritten;
     // loop to be sure it is all sent
     while (nleft) {
@@ -150,6 +155,8 @@ Client::send_request(string request) {
         nleft -= nwritten;
         ptr += nwritten;
     }
+    LOGD ("left %d / %d bytes to write\n", nleft, nleft_);
+    OUT
     return true;
 }
 
@@ -158,7 +165,7 @@ Client::get_response() {
     IN
     string response = "";
     // read until we get a newline
-    while (response.find("}}") == string::npos) {
+    while (response.find("}}}") == string::npos) {
         int nread = recv(server_,buf_,1024,0);
         if (nread < 0) {
             if (errno == EINTR) {
@@ -166,7 +173,7 @@ Client::get_response() {
                 continue;
             }
             else {
-                HERE LOGD ("an error occurred, so break out\n");
+                HERE LOGD ("[%s] an error occurred, so break out\n", strerror (errno));
                 return "";
             }
         } else if (nread == 0) {

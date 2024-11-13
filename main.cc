@@ -1,4 +1,6 @@
 #include "main.h"
+#include "sync.h"
+
 const char * renderers [7] = {
     "auto",
     "cairo",
@@ -149,9 +151,13 @@ hotkeys (MyWindow             *window,
                       GtkEventControllerKey *event_controller)
 {
     //~ printf ("[keypress] %d\n", keyval);
+    Sync * sync ;
     switch (keyval) {
         case 65365:
             window -> rack -> next_preset ();
+            break ;
+        case 115: // 's'
+            sync = new Sync (window -> rack);
             break ;
         case 65366:
             window -> rack -> prev_preset ();
