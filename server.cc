@@ -109,9 +109,17 @@ Server::handle(int client) {
         LOGD ("[server] request: %s\n", request.c_str ());
         request.pop_back () ; ///| aargh!
         json j = json::parse (request);
+        Sync * _sync = (Sync *) sync ;
+        /*
+        if (! j.contains ("key") || j ["key"].get <int>() != _sync -> sec_key) {
+            LOGD ("[key] %d %d\n", j ["key"].get <int>(), _sync -> sec_key);
+            gtk_label_set_markup (_sync -> status, "Security key mismatch");
+            return ;
+        }
+        */
+        
         int how_many = presets->import_presets_from_json (j);
         char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
-        Sync * _sync = (Sync *) sync ;
         gtk_label_set_markup (_sync -> header, ss);
         g_free (ss);
         

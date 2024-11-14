@@ -6,6 +6,7 @@
 # include "server.h"
 # include "util.h"
 # include "client.h"
+# include "random"
 
 class Sync {
     public:
@@ -17,6 +18,7 @@ class Sync {
     std::thread * t;
     Rack * rack;
     int port ;
+    int sec_key ;
     Sync (Rack * w) ;
 };
 

@@ -35,6 +35,7 @@ main(int argc, char **argv)
     Client client = Client(host, port);
     std::ifstream ifs(argv [1]);
     json j = json::parse(ifs);
+    j ["key"] = 3817 ;
     client.create ();
     cout << client.send_preset (j) << endl;
 

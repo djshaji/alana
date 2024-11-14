@@ -1,4 +1,5 @@
 # include "sync.h"
+# include "net.cc"
 
 void sync_send (Sync * sync) {
     IN
@@ -13,6 +14,8 @@ void sync_send (Sync * sync) {
     client -> create ();
     Presets * p = (Presets *) sync -> rack -> presets ;
     json j =  p -> get_all_user_presets ();
+    //~ j ["key"] = std::stoi (key);
+    //~ j ["end"] = {"end: end of input"};
     std::string response = client -> send_preset (j);
     LOGD ("[client] response: %s\n", response.c_str ());
     LOGD ("ip: %s, port: %s, key: %s\n", ip.c_str(), port.c_str (), key.c_str ());
@@ -74,15 +77,28 @@ Sync::Sync (Rack * r) {
     GtkLabel * desc = (GtkLabel *) gtk_label_new ("Use the following details to sync from another device");
     gtk_grid_attach (grid, (GtkWidget *) desc, 0, 1, 3, 1);       
     
-    GtkLabel * ip = (GtkLabel * ) gtk_label_new ("xxx.xxx.xxx.xxx");
-    GtkLabel * key = (GtkLabel * ) gtk_label_new ("xxxxxx");
+    NET net = NET ();
+    std::string addresses ;
+    for (int i= 0 ; i < net.addresses.size () ; i ++) {
+        addresses.append (net.addresses.at (i));
+        addresses.append (" ");
+    }
+
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(1000, 9999); // define the range
+
+    sec_key = distr(gen) ;
+    
+    GtkLabel * ip = (GtkLabel * ) gtk_label_new (addresses.c_str ());
+    GtkLabel * key = (GtkLabel * ) gtk_label_new (g_strdup_printf ("%d", sec_key));
     
     gtk_grid_attach (grid, GW gtk_label_new ("IP:"), 0, 2, 1, 1);
     gtk_grid_attach (grid, GW gtk_label_new ("Port:"), 0, 3, 1, 1);
     gtk_grid_attach (grid, GW ip, 1, 2, 2, 1);
     gtk_grid_attach (grid, GW gtk_label_new (g_strdup_printf ("%d", port)), 1, 3, 2, 1);
-    gtk_grid_attach (grid, GW gtk_label_new ("Key:"), 0, 4, 1, 1);
-    gtk_grid_attach (grid, GW key, 1, 4, 2, 1);
+    //~ gtk_grid_attach (grid, GW gtk_label_new ("Key:"), 0, 4, 1, 1);
+    //~ gtk_grid_attach (grid, GW key, 1, 4, 2, 1);
     
     gtk_grid_attach (grid, gtk_label_new ("Enter details below to sync from this device"), 0, 5, 3, 1);
 
@@ -91,7 +107,7 @@ Sync::Sync (Rack * r) {
     
     g_signal_connect_swapped (btn, "clicked", (GCallback) sync_send, this);
     
-    status = (GtkLabel *) gtk_label_new ("IP:PORT:KEY") ;
+    status = (GtkLabel *) gtk_label_new ("IP:PORT") ;
     
     gtk_grid_attach (grid, GW entry, 0, 6, 2, 1);
     gtk_grid_attach (grid, GW btn, 2, 6, 1, 1);
