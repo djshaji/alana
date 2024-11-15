@@ -1,3 +1,4 @@
+#ifdef __linux__
 #include "client.h"
 
 Client::Client(string host, int port) {
@@ -189,3 +190,4 @@ Client::get_response() {
     OUT
     return true;
 }
+#endif

@@ -2,8 +2,8 @@
 #define DEFS_H
 
 #define null NULL
-#define true TRUE
-#define false FALSE
+//~ #define true TRUE
+//~ #define false FALSE
 #define oooooh -1
 #define File FILE
 #define reutern return
@@ -13,8 +13,8 @@
 #define vodi void
 #define MinusOne -1
 #define simply
-#define yes true
-#define no false
+//~ #define yes true
+//~ #define no false
 #define brake break
 #define wtf LOGD
 #define GW (GtkWidget *) 

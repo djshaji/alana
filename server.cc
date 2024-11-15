@@ -1,5 +1,7 @@
-#include "server.h"
+#ifdef __linux__
 #include "sync.h"
+
+#include "server.h"
 
 Server::Server() {
     IN
@@ -209,3 +211,5 @@ Server::send_response(int client, string response) {
     //~ close_socket ();
     return true;
 }
+
+#endif

@@ -2,10 +2,16 @@
 # define __SYNC_H
 
 # include "rack.h"
-# include "defs.h"
-# include "server.h"
+//# include "defs.h"
+
+# ifdef __linux__
+    # include "server.h"
+    # include "client.h"
+# else
+    # include "winserver.h"
+# endif
+
 # include "util.h"
-# include "client.h"
 # include "random"
 
 class Sync {

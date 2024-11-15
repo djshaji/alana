@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-#TARGET=win32
+TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
@@ -27,10 +27,10 @@ OPUS=`x86_64-w64-mingw32-pkg-config --cflags --libs opus opusfile`
 LAME=-llibmp3lame
 X11=
 GLIB=`mingw64-pkg-config glib-2.0 --libs --cflags`
-OPTIMIZE=-fast
+OPTIMIZE=-Ofast
 CC=x86_64-w64-mingw32-gcc -g -mwindows -mconsole
 CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows -mconsole 
-DLFCN=-llibdl
+DLFCN=-llibdl -lws2_32 -lwsock32
 endif
 all: amprack
 
@@ -107,8 +107,8 @@ win32-release:
 sync.o: sync.cc sync.h server.o
 	$(CPP) -c sync.cc $(GTK)
 
-server.o: server.cc server.h client.cc client.h
-	$(CPP) -c server.cc client.cc $(GTK) -Wall
+server.o: server.cc server.h client.cc client.h winserver.cc winserver.h
+	$(CPP) -c winserver.cc server.cc client.cc $(GTK) -Wall 
 
 echo-client: echo-client.cc server.o
 	$(CPP) -o echo-client echo-client.cc client.cc $(GTK) -Wall

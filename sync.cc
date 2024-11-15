@@ -1,5 +1,8 @@
 # include "sync.h"
+
+# ifdef __linux__
 # include "net.cc"
+#endif
 
 void sync_send (Sync * sync) {
     IN

@@ -39,3 +39,4 @@ public:
     int buflen_;
     char* buf_;
 };
+
