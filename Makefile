@@ -113,3 +113,5 @@ server.o: server.cc server.h client.cc client.h winserver.cc winserver.h
 echo-client: echo-client.cc server.o
 	$(CPP) -o echo-client echo-client.cc client.cc $(GTK) -Wall
 
+win-net: win_net.cc
+	$(CPP) -o win-net win_net.cc -lws2_32 -lwsock32

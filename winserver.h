@@ -30,14 +30,17 @@ class TheServer {
   private:
   
     void do_accept() {
+        IN
         m_Acceptor.async_accept([this](boost::system::error_code ec, tcp::socket s) {
             if (!ec) {
                 std::thread(read_session, std::move(s)).detach();
                 do_accept(); // and immediately accept new connection(s)
             } else {
-                std::cout << "Connection error (" << ec.message() << ")" << std::endl;
+                //~ std::cout << "Connection error (" << ec.message() << ")" << std::endl;
+                LOGD ("connection error %s", ec.message ().c_str ());
             }
         });
+        OUT
     }
 
     tcp::acceptor m_Acceptor;
@@ -75,6 +78,7 @@ public:
     void run();
     
     GMainContext * context ;
+    GMainLoop * main_loop ;
     void create();
     void close_socket();
     void serve();

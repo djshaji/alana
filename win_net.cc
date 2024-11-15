@@ -1,3 +1,4 @@
+#include <winsock2.h>
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/optional.hpp>
@@ -75,7 +76,7 @@ void run_client() {
 
         for (std::string msg : {"Hello World", "Bye World"}) {
             write(m_Socket, asio::buffer(msg));
-            std::this_thread::sleep_for(100ms);
+            sleep(100);
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

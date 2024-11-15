@@ -51,23 +51,28 @@ std::string Client::send_preset (json j) {
         std::cerr << "Exception: " << e.what() << "\n";
     }
     
-    return string ("");
+    return string ("{}}");
     OUT
 }
 
 void Server::close_socket () {
+    g_main_loop_quit (main_loop);
     ioc.stop();
     ioc.join();
 }
 
 void Client::close_socket () {
-}
-
-Server::Server () {
     
 }
 
+Server::Server () {
+}
+
 void Server::run () {
+    IN
     TheServer        server(ioc.get_executor(), 6906);    
+    main_loop = g_main_loop_new (null, true);
+    g_main_loop_run (main_loop);
+    OUT
 }
 
