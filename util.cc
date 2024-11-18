@@ -3,11 +3,12 @@
 json filename_to_json (std::string filename) {
     //~ IN
     if (! std::filesystem::exists (filename)) {
+        HERE LOGD ("%s does not exist!\n", filename.c_str ());
         filename = std::string ("/usr/share/amprack/").append (filename);
         if (! std::filesystem::exists (filename)) {
             HERE LOGD ("file does not exist! %s\n", filename.c_str ()) ;
             // instead of null, empty json is better
-            return json {} ;
+            return json::parse ("{}");
         }
     }
     

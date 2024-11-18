@@ -16,15 +16,18 @@ using asio::ip::tcp;
 using namespace std::chrono_literals;
 using boost::system::error_code;
 
-void read_session(tcp::socket sock) ;
+void read_session(Presets * p, tcp::socket sock) ;
 
 class TheServer {
   public:
+    Presets * presets ;
     TheServer(asio::any_io_executor ex, uint16_t port)   //
         : m_Acceptor{ex, tcp::endpoint{tcp::v4(), port}} //
     {
+        IN
         m_Acceptor.set_option(tcp::acceptor::reuse_address(true));
         do_accept();
+        OUT
     }
 
   private:
@@ -33,7 +36,7 @@ class TheServer {
         IN
         m_Acceptor.async_accept([this](boost::system::error_code ec, tcp::socket s) {
             if (!ec) {
-                std::thread(read_session, std::move(s)).detach();
+                std::thread(read_session, presets, std::move(s)).detach();
                 do_accept(); // and immediately accept new connection(s)
             } else {
                 //~ std::cout << "Connection error (" << ec.message() << ")" << std::endl;

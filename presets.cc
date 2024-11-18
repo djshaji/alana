@@ -1,5 +1,7 @@
 #include "presets.h"
 
+std::string * Presets::presets_dir ;
+
 void
 change_value (
   GtkSpinButton* self,
@@ -474,6 +476,7 @@ void Presets::load_user (bool isFav) {
         
     for (const auto & entry : std::filesystem::directory_iterator(where)) {
         //~ std::cout << entry.path() << std::endl;
+        LOGD ("[preset] %s\n", entry.path ().string ().c_str ());
     
         json j = filename_to_json (entry.path ().string ());
         if (! isFav)
@@ -533,6 +536,7 @@ void Presets::save_presets_to_json (std::string filename) {
 }
 
 json Presets::get_all_user_presets () {
+    IN
     json ex = json {};
     int i = 0 ;
     for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
@@ -541,5 +545,6 @@ json Presets::get_all_user_presets () {
         ex [std::to_string (i++)] = j ;
     } 
 
+    OUT
     return ex ;
 }

@@ -62,7 +62,7 @@ engine.o: engine.cc engine.h snd.cc snd.h
 	$(CPP) engine.cc -c $(JACK) $(LV2) $(OPTIMIZE) $(SNDFILE) $(GTK)
 
 clean:
-	rm -v *.o amprack
+	rm -v *.o
 
 missing: SharedLibrary.o missing.cc
 	$(CPP) missing.cc SharedLibrary.o log.o -o missing -std=c++17 $(LV2) -I/usr/include/lv2  $(GTK) $(DLFCN) 

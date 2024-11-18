@@ -7,6 +7,10 @@
 void sync_send (Sync * sync) {
     IN
     std::string where = std::string (gtk_entry_buffer_get_text (gtk_entry_get_buffer ((sync -> entry))));
+    if (where.size () == 0) {
+        where = std::string ("localhost:6906");
+    }
+    
     int find1 = where.find (":") ;
     int find2 = where.find (":", find1 + 1) - find1;
     
@@ -23,12 +27,13 @@ void sync_send (Sync * sync) {
     LOGD ("[client] response: %s\n", response.c_str ());
     LOGD ("ip: %s, port: %s, key: %s\n", ip.c_str(), port.c_str (), key.c_str ());
 
-    int how_many = p -> import_presets_from_json (j);
-    char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
-    gtk_label_set_markup (sync -> header, ss);
-    g_free (ss);
+    /// ayyo, importing what we already have!
+    //~ int how_many = p -> import_presets_from_json (j);
+    //~ char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+    //~ gtk_label_set_markup (sync -> header, ss);
+    //~ g_free (ss);
     
-    LOGD ("[client] synced %d presets\n", how_many);
+    //~ LOGD ("[client] synced %d presets\n", how_many);
     client -> close_socket ();
     OUT
 }

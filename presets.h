@@ -44,7 +44,8 @@ public:
     void add_preset_multi (std::string, int) ;
     int import_presets_from_json (json);
     void save_presets_to_json (std::string);
-    std::string dir, * presets_dir, favs_dir ;
+    std::string dir, favs_dir ;
+    static std::string * presets_dir ;
     std::vector <json> * list_of_presets [4] ;
     char * _pdir ;
     void library_load () ;
@@ -65,11 +66,14 @@ public:
         
         # ifdef __linux__
         presets_dir = new std::string (getenv ("HOME"));
+        presets_dir->append ("/amprack/presets/");
         # else
         presets_dir = new std::string (getenv ("USERPROFILE"));
+        presets_dir->append ("\\amprack\\presets\\");
         # endif
         
-        presets_dir->append ("/amprack/presets/");
+        LOGD ("[presets dir] %s\n", presets_dir->c_str ());
+        
         _pdir = strdup (presets_dir->c_str ());
         
         if (! g_file_test (dir.c_str (), G_FILE_TEST_IS_DIR)) {

@@ -1,22 +1,35 @@
+#ifndef __linux__
 #include "winserver.h"
 
 asio::thread_pool ioc(1);
 
 
-void read_session(tcp::socket sock) {
-    std::cout << "Connection established " << sock.remote_endpoint() << std::endl;
+void read_session(Presets * p, tcp::socket sock) {
+    IN
+    LOGD ("Connection established");
 
     std::array<char, 1000> buffer;
+    std::string str ("");
 
     for (boost::system::error_code ec;;) {
         size_t n = sock.read_some(asio::buffer(buffer), ec);
-        std::cout << "Received " << n << " " << quoted(std::string(buffer.data(), n)) << " (" << ec.message() << ")" << std::endl;
+        LOGD( "Received %d bytes: %s (%s)", n, std::string(buffer.data(), n).c_str (), ec.message().c_str ());
 
-        if (ec.failed())
+        str.append (std::string(buffer.data(), n));
+        if (ec.failed() || str.find("}}}") != string::npos)
             break;
     }
 
-    std::cout << "Connection closed" << std::endl;
+    str.pop_back () ;
+    LOGD ("[server] got request: %s", str.c_str ());
+    json j = json::parse (str);
+    int how_many = p -> import_presets_from_json (j);
+    char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+    LOGD("[server] %s\n", ss);
+    //~ gtk_label_set_markup (sync -> header, ss);
+    g_free (ss);
+    LOGD ("Connection closed");
+    OUT
 }
 
 void Client::create () {
@@ -39,16 +52,20 @@ std::string Client::send_preset (json j) {
     try {
         tcp::socket m_Socket(ioc);
         ///| todo enter hostname here
-        m_Socket.connect({{}, port_});
+        boost::asio::ip::tcp::endpoint endpoint(
+            boost::asio::ip::address::from_string(host_), 6906);
+        
+        m_Socket.connect(endpoint);
 
-        std::cout << "Client connected" << std::endl;
+        LOGD ("Client connected");
 
         ///| todo: add extra } here
         std::string msg = j.dump ().append (string ("}")) ;
+        LOGD ("[client] send message: %s", msg.c_str ());
         write(m_Socket, asio::buffer(msg));
         std::this_thread::sleep_for(100ms);
     } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
+        LOGD("Exception: %s",e.what());
     }
     
     return string ("{}}");
@@ -76,3 +93,4 @@ void Server::run () {
     OUT
 }
 
+#endif
