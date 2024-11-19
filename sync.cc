@@ -28,11 +28,15 @@ void sync_send (Sync * sync) {
     LOGD ("ip: %s, port: %s, key: %s\n", ip.c_str(), port.c_str (), key.c_str ());
 
     /// ayyo, importing what we already have!
-    //~ int how_many = p -> import_presets_from_json (j);
-    //~ char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
-    //~ gtk_label_set_markup (sync -> header, ss);
-    //~ g_free (ss);
-    
+    if (response.size () > 0) {
+        j = json::parse (response);
+        int how_many = p -> import_presets_from_json (j);
+        char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+        gtk_label_set_markup (sync -> header, ss);
+        g_free (ss);
+    } else {
+        LOGD ("[client] server returned empty response\n");
+    }    
     //~ LOGD ("[client] synced %d presets\n", how_many);
     client -> close_socket ();
     OUT
@@ -42,6 +46,11 @@ void run_server (Sync * sync) {
     IN
     sync -> server = new Server();
     sync -> server -> sync = sync ;
+    
+    # ifndef __linux__
+        sync -> server -> status = sync -> header ;
+    # endif 
+    
     sync -> server -> presets = (Presets *) sync -> rack -> presets ;
     sync -> server->run();
 
@@ -53,6 +62,10 @@ void close_sync (Sync * sync) {
     sync -> server -> close_socket ();
     sync -> t -> join () ;
     gtk_window_destroy (sync -> window);
+    # ifndef __linux__
+        Presets * p = (Presets *) sync -> rack -> presets ;
+        p -> load_user (false);
+    # endif
     OUT
 }
 

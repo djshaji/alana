@@ -513,7 +513,10 @@ int Presets::import_presets_from_json (json j) {
         std::string filename = std::string (presets_dir->c_str ()) .append (basename) ;
         wtf ("writing file: %s\n", filename.c_str ());
         json_to_filename (preset, filename) ;
-        add_preset (preset, 1);
+        LOGD ("[presets] warning: not adding preset to UI\n");
+        # ifdef __linux__
+            add_preset (preset, 1);
+        # endif
     }
     
     msg (std::string ("Imported ").append (std::to_string (how_many)).append (" presets successfully."));
