@@ -94,6 +94,8 @@ void msg (std::string message) {
 }
 
 bool download_file (char *name, const char * filename) {
+    IN
+    LOGD ("[download] %s -> %s\n", name, filename);
     GFile *f = g_file_new_for_uri(name);
     GFileInputStream *fis = NULL;
     GDataInputStream* dis = NULL;
@@ -109,20 +111,27 @@ bool download_file (char *name, const char * filename) {
 
     /* get input stream */
     fis = g_file_read(f, NULL, &err);
+    LOGV ("file read ok");
 
     if (err != NULL) {
-        fprintf(stderr, "ERROR: opening %s\n", name);
+        LOGD("ERROR: opening %s\n", name);
         g_object_unref(f);
+        OUT
         return false;
     }
 
     info = g_file_input_stream_query_info (G_FILE_INPUT_STREAM (fis),G_FILE_ATTRIBUTE_STANDARD_SIZE,NULL, &err);
     if (info)
     {
-        if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE))
+        if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_SIZE)) {
             total_size = g_file_info_get_size (info);
-            printf( "total_size = %d\n", total_size);
+            LOGD( "total_size = %d\n", total_size);
             g_object_unref (info);
+        } else {
+            LOGV ("no attribute info on file!");
+        }
+    } else {
+        LOGV ("file input query info failed!");
     }
 
     // fill buffer
@@ -133,18 +142,21 @@ bool download_file (char *name, const char * filename) {
         int i = 0 ;
         while  ((length = g_input_stream_read (G_INPUT_STREAM(fis),
                     buffer, total_size, NULL, &err)) != -1 && i < total_size) {
-                //~ printf( "%s\n", buffer);
+                LOGD( "%s\n", buffer);
             fwrite (buffer, length, 1, fd);
-            //~ printf ("%d/%d\n", i, total_size);
+            LOGD ("%d/%d\n", i, total_size);
             i += length ;
         }
         
         fclose (fd);
         ret = true;
+    } else {
+        LOGV ("error: total size < 0");
     }
     // close streams
     g_object_unref(fis);
     g_object_unref(f);   
+    OUT
     return ret;
 }
 

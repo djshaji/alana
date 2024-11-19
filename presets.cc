@@ -22,6 +22,7 @@ void load_preset_cb (void * c, void * d) {
 void download_cb (void * w, void * d) {
     ///>    TODO: 
     //      clear box before refresh
+    IN
     Presets * presets = (Presets *) d ;
     gtk_spinner_start (presets->library_spinner);
     std::string lJson = std::string (presets->dir).append ("/").append ("library.json") ;
@@ -32,6 +33,7 @@ void download_cb (void * w, void * d) {
     presets->library_json = filename_to_json (std::string (presets->dir).append("/library.json"));
     gtk_adjustment_set_upper (presets->adj, presets->library_json.size() / presets->page_size);
     presets->library_load ();
+    OUT
 }
 
 void presets_on_response (GtkNativeDialog *native,
