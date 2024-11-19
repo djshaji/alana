@@ -115,3 +115,6 @@ echo-client: echo-client.cc server.o
 
 win-net: win_net.cc
 	$(CPP) -o win-net win_net.cc -lws2_32 -lwsock32
+
+win32-installer:
+	makensis nsis.nsh
