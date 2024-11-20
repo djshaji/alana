@@ -37,7 +37,7 @@ public:
     nlohmann::json ladspaJson, lv2Json, creators, categories, lv2Map, amps, knobs ;
     std::vector <std::string> * ladspaPlugins, * lv2Plugins ;
     LilvPlugins* plugins = nullptr ;
-    LockFreeQueueManager queueManager ;
+    LockFreeQueueManager * queueManager ;
     
     Engine ();
     void buildPluginChain ();

@@ -8,6 +8,7 @@ int Processor::inputPorts2 [MAX_PLUGINS];
 int Processor::outputPorts [MAX_PLUGINS];
 int Processor::outputPorts2 [MAX_PLUGINS];
 void * Processor::handle [MAX_PLUGINS] ;
+LockFreeQueueManager * Processor::lockFreeQueueManager;
 
 void (*Processor::connect_port [MAX_PLUGINS])(LADSPA_Handle Instance,
                      unsigned long Port,

@@ -36,7 +36,7 @@ public:
     static int activePlugins;
     void process (int, float *, float *);
     static bool bypass, recording;
-    LockFreeQueueManager * lockFreeQueueManager;
+    static LockFreeQueueManager * lockFreeQueueManager;
     
     Processor () ;
 };

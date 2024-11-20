@@ -129,10 +129,11 @@ Engine::Engine () {
     knobs = filename_to_json (std::string (assetPath).append ("/knobs.json"));
 
     //~ initLilv ();
-    queueManager.init (driver -> get_buffer_size ());
+    queueManager = new LockFreeQueueManager ();
+    queueManager->init (driver -> get_buffer_size ());
     fileWriter = new FileWriter ();
-    queueManager.add_function (fileWriter->disk_write);
-    processor->lockFreeQueueManager = & queueManager ;
+    queueManager->add_function (fileWriter->disk_write);
+    processor->lockFreeQueueManager = queueManager ;
     HERE LOGD ("processor status %d\n", processor->bypass);
     //~ processor -> bypass = false ;
     OUT
