@@ -7,7 +7,7 @@ TARGET=win32
 VERSION=`git rev-list --count HEAD`
 
 ifeq ($(TARGET),linux)
-GTK=`pkg-config --cflags --libs gtk4` 
+GTK=`pkg-config --cflags --libs gtk4`  -lssl -lcrypto
 LV2=`pkg-config --cflags lilv-0 --libs`
 JACK=`pkg-config jack --libs --cflags portaudio-2.0`
 SNDFILE=`pkg-config --libs sndfile --cflags`
@@ -30,7 +30,7 @@ GLIB=`mingw64-pkg-config glib-2.0 --libs --cflags`
 OPTIMIZE=-Ofast
 CC=x86_64-w64-mingw32-gcc -g -mwindows -mconsole
 CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows -mconsole 
-DLFCN=-llibdl -lws2_32 -lwsock32
+DLFCN=-llibdl -lws2_32 -lwsock32 -lssl -lcrypto -lcrypt32
 endif
 all: amprack
 

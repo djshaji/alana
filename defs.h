@@ -8,8 +8,10 @@
 #define File FILE
 #define reutern return
 #define car char
+#ifndef on
 #define on true
 #define off false
+#endif
 #define vodi void
 #define MinusOne -1
 #define simply

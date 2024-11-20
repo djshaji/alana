@@ -1,3 +1,7 @@
+# ifndef __linux__1
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+# include "httplib.h"
+# endif
 #include "util.h"
 
 json filename_to_json (std::string filename) {
@@ -93,6 +97,7 @@ void msg (std::string message) {
     #endif
 }
 
+# ifdef __linux__1
 bool download_file (char *name, const char * filename) {
     IN
     LOGD ("[download] %s -> %s\n", name, filename);
@@ -111,13 +116,15 @@ bool download_file (char *name, const char * filename) {
 
     /* get input stream */
     fis = g_file_read(f, NULL, &err);
-    LOGV ("file read ok");
 
     if (err != NULL) {
         LOGD("ERROR: opening %s\n", name);
         g_object_unref(f);
         OUT
         return false;
+    } else {
+        LOGV ("file read ok");
+        
     }
 
     info = g_file_input_stream_query_info (G_FILE_INPUT_STREAM (fis),G_FILE_ATTRIBUTE_STANDARD_SIZE,NULL, &err);
@@ -131,7 +138,7 @@ bool download_file (char *name, const char * filename) {
             LOGV ("no attribute info on file!");
         }
     } else {
-        LOGV ("file input query info failed!");
+        LOGD ("file input query info failed! [%d] %s\n", err -> code, err -> message);
     }
 
     // fill buffer
@@ -159,7 +166,21 @@ bool download_file (char *name, const char * filename) {
     OUT
     return ret;
 }
+# else
+bool download_file (char *name, const char * filename) {
+    IN
+    httplib::Client cli("http://amprack.in");
+    LOGV ("client init ok, getting file ...");
+    auto res = cli.Get ("/presets.json");
+    LOGD ("[download] %s\n[%d] -> %s\n", name, res -> status, res -> body.c_str ());
+    std::ofstream out (filename);
+    out << res -> body ;
+    out.close ();
+    OUT
+    return true;
+}
 
+# endif
 void copy_file (std::string source, std::string dest) {
     if (std::filesystem::exists (dest)) {
         wtf ("%s already exists, not overwriting\n", dest.c_str ());
