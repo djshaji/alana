@@ -152,9 +152,25 @@ hotkeys (MyWindow             *window,
 {
     //~ printf ("[keypress] %d\n", keyval);
     Sync * sync ;
+    # ifdef __linux__
+        std::string user_css = std::string (getenv ("HOME")).append ("/.config/amprack/style.css").c_str () ;
+    # else
+        std::string user_css = std::string (getenv ("USERPROFILE")).append ("/.config/amprack/style.css").c_str () ;
+    # endif
+            
+    GtkCssProvider *cssProvider2 ; 
+    if (keyval == 114)
+        cssProvider2 =  gtk_css_provider_new();
+        
     switch (keyval) {
         case 65365:
             window -> rack -> next_preset ();
+            break ;
+        case 'r':
+            if (std::filesystem::exists (user_css))
+                gtk_css_provider_load_from_path(cssProvider2, user_css.c_str());
+                
+            gtk_style_context_add_provider_for_display (gdk_display_get_default (), (GtkStyleProvider *)cssProvider2, GTK_STYLE_PROVIDER_PRIORITY_USER);          
             break ;
         case 115: // 's'
             sync = new Sync (window -> rack);
