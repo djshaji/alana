@@ -112,7 +112,7 @@ static void *my_malloc(size_t size1, size_t size2) {
 
     // Touch all pages. (earlier all memory was nulled out, but that puts a strain on the memory bus)
     {
-        long pagesize = sysconf(_SC_PAGESIZE);
+        long pagesize  ;//sysconf(_SC_PAGESIZE);
         char *cret = (char *)ret;
         size_t i = 0;
         for (i = 0; i < size; i += pagesize)

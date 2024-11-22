@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-TARGET=win32
+#~ TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
@@ -96,10 +96,10 @@ version.o:
 	echo \#define VERSION `git rev-list --count HEAD` > version.h
 	
 FileWriter.o: FileWriter.cpp FileWriter.h LockFreeQueue.cpp LockFreeQueue.h vringbuffer.o
-	$(CPP)   $(GTK)  upwaker.c vringbuffer.cc FileWriter.cpp LockFreeQueue.cpp $(OPUS) $(SNDFILE) -c -w $(JACK)
+	$(CPP)   $(GTK)  upwaker.c vringbuffer.c FileWriter.cpp LockFreeQueue.cpp $(OPUS) $(SNDFILE) -c -w $(JACK)
 
-vringbuffer.o: upwaker.c vringbuffer.cc
-	$(CPP) -fpermissive -c upwaker.c vringbuffer.cc $(GTK) 	
+vringbuffer.o: upwaker.c vringbuffer.c
+	$(CPP) -fpermissive -c upwaker.c vringbuffer.c $(GTK) 	
 
 win32-release:
 	export VER=$(VERSION) ; cd .. ; zip -r releases/amprack-$$VER.zip win/

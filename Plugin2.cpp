@@ -1,1 +1,5 @@
-../../amp-rack/app/src/main/cpp/Plugin2.cpp
+//
+// Created by djshaji on 12/20/22.
+//
+
+#include "Plugin2.h"
