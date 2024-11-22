@@ -9,7 +9,7 @@ VERSION=`git rev-list --count HEAD`
 ifeq ($(TARGET),linux)
 GTK=`pkg-config --cflags --libs gtk4`  -lssl -lcrypto
 LV2=`pkg-config --cflags lilv-0 --libs`
-JACK=`pkg-config jack --libs --cflags portaudio-2.0`
+JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
 LAME=`pkg-config lame --libs --cflags` -l:libmp3lame.a
