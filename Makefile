@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-#~ TARGET=win32
+TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
@@ -118,3 +118,6 @@ win-net: win_net.cc
 
 win32-installer:
 	makensis nsis.nsh
+
+rpm:
+	rpmbuild -bb ~/rpmbuild/SPECS/amprack.spec

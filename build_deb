@@ -1,0 +1,5 @@
+cp -v ~/projects/alana/amprack amprack/usr/bin
+dpkg -b amprack
+mv -v amprack.deb amprack-`cat ~/projects/alana/version.h |cut -d ' ' -f 3`.deb
+zip -r amprack-`cat ~/projects/alana/version.h |cut -d ' ' -f 3` zip
+scp amprack-`cat ~/projects/alana/version.h |cut -d ' ' -f 3`.* wanderer:projects/alana/releases
