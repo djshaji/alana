@@ -3,6 +3,8 @@
 * Custom Amp Rack Pedal Board 
 
 ## Install
+Download the latest release for Linux and Windows from https://github.com/djshaji/alana/releases/
+Amp Rack is also available for Android: https://github.com/djshaji/amp-rack
 ### Windows
 Install using the setup installer.
 
