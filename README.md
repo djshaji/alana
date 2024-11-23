@@ -1,6 +1,5 @@
-# The Alana Project
-* Port / Clone Amp Rack for PC (Linux, Windows)
-* Custom Amp Rack Pedal Board 
+# Amp Rack Guitar Effects Processor
+Amp Rack is a Guitar / Voice Audio Effects Processor for PC and Android. Amp Rack is an Open Source LV2 / LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar!
 
 ## Install
 Download the latest release for Linux and Windows from https://github.com/djshaji/alana/releases/
@@ -35,6 +34,10 @@ zita-convolver (needed by some plugins)
 
 ![Screenshot_2024-08-05_15-44-15](https://github.com/user-attachments/assets/39b7e54a-e0c5-46f7-b843-52a44f1f63c3)
 ![Screenshot from 2024-08-05 15-44-35](https://github.com/user-attachments/assets/4cc98b17-c577-4ec5-a45f-5d2cbdd81b00)
+
+# The Alana Project
+* Port / Clone Amp Rack for PC (Linux, Windows)
+* Custom Amp Rack Pedal Board 
 
 ## PC Clone
 Since the Audio Engine is written in C++, it is already cross platform. [How can it not be cross platform? All platforms are written in it.](https://www.youtube.com/watch?v=s7wLYzRJt3s)
