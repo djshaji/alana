@@ -121,3 +121,4 @@ win32-installer:
 
 rpm:
 	rpmbuild -bb ~/rpmbuild/SPECS/amprack.spec
+	mv -v ~/rpmbuild/RPMS/x86_64/amprack-5-${VERSION}.* ~/projects/alana/releases/

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Amp Rack
+GenericName=Guitar Effects Processor
+Exec=amprack
+Icon=amprack
+Categories=GTK;
+StartupNotify=true
+Keywords=Guitar;Effects
