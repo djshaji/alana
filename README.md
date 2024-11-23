@@ -3,23 +3,33 @@
 * Custom Amp Rack Pedal Board 
 
 ## Install
-Download the latest release and extract somewhere, then run `./amprack`
+### Windows
+Install using the setup installer.
+
+### Linux
+- Install using .deb or .rpm package
+- Download the zip file and extract somewhere, then run `./amprack`
 
 ## Building from source
+Both linux and win32 binaries are built on linux. mingw64 is used for win32 target.
+In Makefile, set TARGET to either linux or win32.
 Simply run `make`
 
 ## Dependencies
 ```
-gtkmm-4.0
+gtk-4.0
 jack-devel
 libsamplerate
 libsndfile
+openssl-dev
+opusenc-dev
+dlfcn (for mingw64)
+
 fftw3 (needed by some plugins)
 fftw3f (needed by some plugins)
 zita-resampler (needed by some plugins)
 zita-convolver (needed by some plugins)
 ```
-> For now, some files are symlinked from the [Amp Rack](https://github.com/djshaji/amp-rack/) source
 
 ![Screenshot_2024-08-05_15-44-15](https://github.com/user-attachments/assets/39b7e54a-e0c5-46f7-b843-52a44f1f63c3)
 ![Screenshot from 2024-08-05 15-44-35](https://github.com/user-attachments/assets/4cc98b17-c577-4ec5-a45f-5d2cbdd81b00)
