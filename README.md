@@ -1,6 +1,8 @@
 # Amp Rack Guitar Effects Processor
 Amp Rack is a Guitar / Voice Audio Effects Processor for PC and Android. Amp Rack is an Open Source LV2 / LADSPA Plugins Host for Android. More than 150 high quality audio plugins are available which can be added in any order to the audio effect chain to create distinct high quality tones for your guitar!
 
+![Capture](https://github.com/user-attachments/assets/f9377a63-20f9-4100-bf14-e405ac04d850)
+
 ## Install
 Download the latest release for Linux and Windows from https://github.com/djshaji/alana/releases/
 Amp Rack is also available for Android: https://github.com/djshaji/amp-rack
