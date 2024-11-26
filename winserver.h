@@ -7,6 +7,10 @@
 #include <boost/optional.hpp>
 #include <iomanip>
 #include <iostream>
+#include <iphlpapi.h>
+
+#define MALLOC(x) HeapAlloc(GetProcessHeap(), 0, (x))
+#define FREE(x) HeapFree(GetProcessHeap(), 0, (x))
 
 using namespace std;
 using json = nlohmann::json;
@@ -99,10 +103,15 @@ public:
     char* buf_;
 };
 
+string getMachineIPAddr() ;
 
 class NET {
     public:
     vector <string> addresses;
+    
+    NET () {
+        addresses.push_back (getMachineIPAddr ());
+    }
 } ;
 
 

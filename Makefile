@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-#~ TARGET=win32
+TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
@@ -30,7 +30,7 @@ GLIB=`mingw64-pkg-config glib-2.0 --libs --cflags`
 OPTIMIZE=-Ofast
 CC=x86_64-w64-mingw32-gcc -g -mwindows -mconsole
 CPP=x86_64-w64-mingw32-g++ -std=c++17 -g -mwindows -mconsole 
-DLFCN=-llibdl -lws2_32 -lwsock32 -lssl -lcrypto -lcrypt32
+DLFCN=-llibdl -lws2_32 -lwsock32 -lssl -lcrypto -lcrypt32 -liphlpapi
 endif
 all: amprack
 
@@ -122,3 +122,6 @@ win32-installer:
 rpm:
 	rpmbuild -bb ~/rpmbuild/SPECS/amprack.spec
 	mv -v ~/rpmbuild/RPMS/x86_64/amprack-5-${VERSION}.* ~/projects/alana/releases/
+
+win32-ip: win_ip.cc
+	$(CPP) -o win-ip win_ip.cc -lws2_32 -lwsock32 -liphlpapi
