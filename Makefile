@@ -2,7 +2,7 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-TARGET=win32
+#~ TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 

@@ -547,6 +547,7 @@ json Presets::get_all_user_presets () {
     for (const auto & entry : std::filesystem::directory_iterator(*presets_dir)) {
         //~ std::cout << entry.path() << std::endl;
         json j = filename_to_json (entry.path ().string ());
+        LOGD ("[preset] %s: %s\n", entry.path ().string ().c_str (), j.dump().c_str ());
         ex [std::to_string (i++)] = j ;
     } 
 

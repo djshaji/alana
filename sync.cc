@@ -29,6 +29,9 @@ void sync_send (Sync * sync) {
 
     /// ayyo, importing what we already have!
     if (response.size () > 0) {
+        while (response.find ("}}}") != std::string::npos)
+            response.pop_back ();
+            
         j = json::parse (response);
         int how_many = p -> import_presets_from_json (j);
         char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);

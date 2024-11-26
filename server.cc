@@ -109,7 +109,9 @@ Server::handle(int client) {
             break;
         // send response
         LOGD ("[server] request: %s\n", request.c_str ());
-        request.pop_back () ; ///| aargh!
+        while (request.find ("}}}") != string::npos)
+            request.pop_back () ; ///| aargh!
+        //~ LOGD ("[pop] request: %s\n", request.c_str ());
         json j = json::parse (request);
         Sync * _sync = (Sync *) sync ;
         /*
@@ -120,6 +122,7 @@ Server::handle(int client) {
         }
         */
         
+        json toSend = presets->get_all_user_presets ();
         int how_many = presets->import_presets_from_json (j);
         char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
         gtk_label_set_markup (_sync -> header, ss);
@@ -127,7 +130,7 @@ Server::handle(int client) {
         
         LOGD ("[server] synced %d presets\n", how_many);
         
-        bool success = send_response(client,request);
+        bool success = send_response(client,toSend.dump ());
         // break if an error occurred
         if (not success) {
             HERE LOGD ("break if an error occurred\n");
@@ -179,7 +182,8 @@ bool
 Server::send_response(int client, string response) {
     IN
     // prepare to send response
-    response.append ("}");
+    response.append ("}\n");
+    LOGD ("[server] send: %s", response.c_str ());
     const char* ptr = response.c_str();
     int nleft = response.length();
     int nleft_ = response.length();
