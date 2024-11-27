@@ -101,36 +101,46 @@ void
 Server::handle(int client) {
     IN
     // loop to handle all requests
+    json toSend = presets->get_all_user_presets ();
+    
     while (1) {
         // get a request
         string request = get_request(client);
         // break if client is done or an error occurred
-        if (request.empty())
-            break;
-        // send response
-        LOGD ("[server] request: %s\n", request.c_str ());
-        while (request.find ("}}}") != string::npos)
-            request.pop_back () ; ///| aargh!
-        //~ LOGD ("[pop] request: %s\n", request.c_str ());
-        json j = json::parse (request);
-        Sync * _sync = (Sync *) sync ;
-        /*
-        if (! j.contains ("key") || j ["key"].get <int>() != _sync -> sec_key) {
-            LOGD ("[key] %d %d\n", j ["key"].get <int>(), _sync -> sec_key);
-            gtk_label_set_markup (_sync -> status, "Security key mismatch");
-            return ;
+        if (request.empty()) {
+            LOGD ("[server] empty response recieved from client\n");
+            //~ break;
         }
-        */
+        // send response
+        else {
+            LOGD ("[server] request: %s\n", request.c_str ());
+            while (request.find ("}}}") != string::npos)
+                request.pop_back () ; ///| aargh!
+            //~ LOGD ("[pop] request: %s\n", request.c_str ());
+            json j = json::parse (request);
+            Sync * _sync = (Sync *) sync ;
+            /*
+            if (! j.contains ("key") || j ["key"].get <int>() != _sync -> sec_key) {
+                LOGD ("[key] %d %d\n", j ["key"].get <int>(), _sync -> sec_key);
+                gtk_label_set_markup (_sync -> status, "Security key mismatch");
+                return ;
+            }
+            */
+            
+            int how_many = presets->import_presets_from_json (j);
+            char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
+            gtk_label_set_markup (_sync -> header, ss);
+            g_free (ss);
+            
+            LOGD ("[server] synced %d presets\n", how_many);
+        }
         
-        json toSend = presets->get_all_user_presets ();
-        int how_many = presets->import_presets_from_json (j);
-        char * ss = g_strdup_printf ("<span foreground=\"green\" weight=\"bold\" size=\"x-large\">Imported %d presets successfully</span>", how_many);
-        gtk_label_set_markup (_sync -> header, ss);
-        g_free (ss);
+        std::string toSendStr = toSend.dump () ;
+        if (toSend.empty ()) {
+            toSendStr = std::string ("{}");
+        }
         
-        LOGD ("[server] synced %d presets\n", how_many);
-        
-        bool success = send_response(client,toSend.dump ());
+        bool success = send_response(client,toSendStr);
         // break if an error occurred
         if (not success) {
             HERE LOGD ("break if an error occurred\n");
@@ -169,7 +179,7 @@ Server::get_request(int client) {
         // be sure to use append in case we have binary data
         HERE LOGD ("[request %d:%d] %s\n", count, nread, buf_);
         request.append(buf_,nread);
-        if (request.c_str ()[0] == '}')
+        if (request.c_str ()[1] == '}')
             return std::string ("");
     }
     

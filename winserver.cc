@@ -32,7 +32,12 @@ void read_session(Presets * p, GtkLabel * status, tcp::socket sock) {
     json j = json::parse (str);
     
     json our = p -> get_all_user_presets ();
-    std::string msg = our.dump ().append (string ("}\n")) ;
+    std::string toSendStr = our.dump () ;
+    if (our.empty ()) {
+        toSendStr = std::string ("{}");
+    }
+    
+    std::string msg = toSendStr.append (string ("}\n")) ;
     LOGD ("[server] send message: %s", msg.c_str ());
     write(sock, asio::buffer(msg));
 
@@ -76,6 +81,8 @@ std::string Client::send_preset (json j) {
 
         ///| todo: add extra } here
         std::string msg = j.dump ().append (string ("}")) ;
+        if (j.empty ())
+            msg = string ("{}}");
         LOGD ("[client] send message: %s", msg.c_str ());
         write(m_Socket, asio::buffer(msg));
         std::this_thread::sleep_for(100ms);

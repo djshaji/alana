@@ -89,7 +89,11 @@ std::string
 Client::send_preset(json j) {
     IN
     // loop to handle user interface
-    bool success = send_request(j.dump ());
+    string toSend = j.dump () ;
+    if (j.empty ())
+        toSend = string ("{}");
+        
+    bool success = send_request(toSend);
     if (not success) {
         printf ("[86] break if an error occurred\n");
     }
@@ -113,7 +117,7 @@ Client::send_preset(json j) {
         }
         // be sure to use append in case we have binary data
         response.append(buf_,nread);
-        if (response.c_str ()[0] == '}')
+        if (response.c_str ()[1] == '}')
             return std::string ("");
     }
     
