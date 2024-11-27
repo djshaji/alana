@@ -159,16 +159,18 @@ Server::get_request(int client) {
             }
             else {
                 HERE LOGD ("[%s]  an error occurred, so break out\n", strerror (errno));
-                return "";
+                return std::string ("");
             }
         } else if (nread == 0) {
             LOGD ("the socket is closed\n");
-            return "";
+            return std::string ("");
         }
 
         // be sure to use append in case we have binary data
         HERE LOGD ("[request %d:%d] %s\n", count, nread, buf_);
         request.append(buf_,nread);
+        if (request.c_str ()[0] == '}')
+            return std::string ("");
     }
     
     LOGD ("[server] read ended: \n");

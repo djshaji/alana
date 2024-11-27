@@ -105,14 +105,16 @@ Client::send_preset(json j) {
             }
             else {
                 HERE LOGD ("an error occurred: %s\n", strerror (errno));
-                return "";
+                return std::string ("");
             }
         } else if (nread == 0) {
             printf ("the socket is closed\n");
-            return "";
+            return std::string ("");
         }
         // be sure to use append in case we have binary data
         response.append(buf_,nread);
+        if (response.c_str ()[0] == '}')
+            return std::string ("");
     }
     
     // a better client would cut off anything after the newline and

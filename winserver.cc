@@ -16,12 +16,17 @@ void read_session(Presets * p, GtkLabel * status, tcp::socket sock) {
         LOGD( "Received %d bytes: %s (%s)", n, std::string(buffer.data(), n).c_str (), ec.message().c_str ());
 
         str.append (std::string(buffer.data(), n));
-        if (ec.failed() || str.find("}}}") != string::npos)
+        if (ec.failed() || str.find("}}}") != string::npos || str.c_str () [1] == '}')
             break;
     }
 
-    while (str.find ("}}}") != std::string::npos)
-        str.pop_back () ;
+    if (str.c_str () [1] != '}') {
+        while (str.find ("}}}") != std::string::npos)
+            str.pop_back () ;
+    } else {
+        while (str.find ("}}") != std::string::npos)
+            str.pop_back () ;        
+    }
         
     LOGD ("[server] got request: %s", str.c_str ());
     json j = json::parse (str);
@@ -81,13 +86,18 @@ std::string Client::send_preset (json j) {
             LOGD( "Received %d bytes: %s (%s)", n, std::string(buffer.data(), n).c_str (), ec.message().c_str ());
 
             str.append (std::string(buffer.data(), n));
-            if (ec.failed() || str.find("}}}") != string::npos)
+            if (ec.failed() || str.find("}}}") != string::npos || str.c_str () [1] == '}')
                 break;
         }
 
         LOGV (str.c_str ());
-        str.pop_back () ;
-
+        if (str.c_str () [1] != '}') {
+            while (str.find ("}}}") != std::string::npos)
+                str.pop_back () ;
+        } else {
+            while (str.find ("}}") != std::string::npos)
+                str.pop_back () ;            
+        }
     } catch (std::exception& e) {
         LOGD("Exception: %s",e.what());
     }
