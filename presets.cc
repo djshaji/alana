@@ -334,7 +334,14 @@ void delete_callback (void * b, void * d) {
     Presets * presets = (Presets *) d ;
     std::string name = std::string (gtk_widget_get_name (button));
     LOGV (name.c_str ());
+    #ifdef __linux__
     std::string filename = std::string (presets->presets_dir->c_str());
+    #else
+    std::string filename = std::string ("");
+    if (name.find (":\\") == std::string::npos)
+        filename.append (presets->presets_dir->c_str ());
+    #endif
+    
     filename.append (name);
     LOGV (filename.c_str ());
     
