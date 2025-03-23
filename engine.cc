@@ -319,6 +319,27 @@ void Engine::set_plugin_audio_file (int index, char * filename) {
     OUT
 }
 
+void Engine::set_atom_port (int index, int control, char * filename) {
+    processor->bypass = true ;
+    if (activePlugins->at (index)->lv2Descriptor != nullptr) {
+        activePlugins->at (index)->setAtomPortValue (control, std::string (filename));
+    }
+    
+    activePlugins->at (index)->loadedFileType = 2 ;
+    std::string path = std::string (filename) ;
+
+    # ifdef __linux__
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # else 
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (activePlugins->at (index)->lv2_name).append ("/");
+    # endif
+    
+    g_mkdir_with_parents (dir.c_str (), 0777) ;
+    copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
+    processor->bypass = true ;
+
+}
+
 void Engine::set_plugin_file (int index, char * filename) {
     IN
     std::ifstream fJson(filename);

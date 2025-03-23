@@ -16,6 +16,8 @@
 #include "SharedLibrary.h"
 #include "json.hpp"
 #include "lv2_ext.h"
+#include "atom.h"
+#include "symap.h"
 //~ #include "lv2/atom/forge.h"
 
 class Plugin {
@@ -23,16 +25,22 @@ class Plugin {
     unsigned long sampleRate ;
 public:
     URID urid = URID ();
+    LV2_URID_Map * ampMap = nullptr;
     std::vector<const LV2_Feature*> features;
     std::vector<const LV2_Feature*> m_featurePointers;
     LV2_URID_Map lv2UridMap ;
     LV2_Feature featureURID ;
     LV2_Log_Log logLog ;
+    Symap * symap = nullptr;
+    AmpAtom * ampAtom = nullptr;
     LV2_Feature featureLog ;
     LV2_Feature featureSchedule ;
     LV2_Worker_Schedule lv2WorkerSchedule ;
     LV2_Feature featureState ;
-    LV2_Atom_Sequence * filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
+    int filePortSize = 8192 ;
+    std::string prefix ;
+    LV2_Atom_Sequence * filePort = nullptr;//= static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
+    LV2_Atom_Sequence * notifyPort = nullptr;//= static_cast<LV2_Atom_Sequence *>(malloc(sizeof (LV2_Atom_Sequence)));
     int filePortIndex = -1 ;
 //    LV2_Atom_Forge forge;
 
@@ -86,6 +94,9 @@ public:
     void setFilePortValue(std::string filename);
 
     void setFilePortValue1(std::string filename);
+    void setAtomPortValue (int control, std::string text) ;
+
+    void check_notify();
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);

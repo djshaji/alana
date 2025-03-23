@@ -2,13 +2,13 @@
 #~ GTKMM=`pkg-config --cflags --libs gtkmm-4.0` 
 
 TARGET=linux
-TARGET=win32
+#TARGET=win32
 
 VERSION=`git rev-list --count HEAD`
 
 ifeq ($(TARGET),linux)
 GTK=`pkg-config --cflags --libs gtk4`  -lssl -lcrypto
-LV2=`pkg-config --cflags lilv-0 --libs`
+LV2=`pkg-config --cflags lilv-0 --libs zix-0`
 JACK=`pkg-config jack --libs --cflags`
 SNDFILE=`pkg-config --libs sndfile --cflags`
 OPUS=`pkg-config libopusenc opus --libs --cflags`
@@ -17,7 +17,7 @@ GLIB=`pkg-config glib-2.0 --libs --cflags`
 X11=`pkg-config x11 --libs --cflags`
 OPTIMIZE=#-Ofast -mtune=cortex-a72 -mcpu=cortex-a72 
 CC=cc -g -ggdb 
-CPP=c++ -g -ggdb 
+CPP=c++ -g -ggdb -std=c++23
 else ifeq ($(TARGET),win32)
 GTK=`x86_64-w64-mingw32-pkg-config --cflags --libs gtk4 gtk4-win32` -I/usr/x86_64-w64-mingw32/sys-root/mingw/include/gtk-4.0/
 LV2=
@@ -56,7 +56,7 @@ presets.o: presets.cc presets.h
 	$(CPP) presets.cc -c   $(GTK) $(OPTIMIZE) $(LV2) -Wno-deprecated-declarations
 
 SharedLibrary.o: SharedLibrary.cpp SharedLibrary.h Plugin.cpp Plugin.h PluginControl.cpp PluginControl.h
-	$(CPP) SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp -c $(LV2) $(OPTIMIZE) $(GTK) 	
+	$(CPP) SharedLibrary.cpp Plugin.cpp PluginControl.cpp lv2_ext.cpp symap.c atom.cpp -c $(LV2) $(OPTIMIZE) $(GTK) 	
 
 engine.o: engine.cc engine.h snd.cc snd.h
 	$(CPP) engine.cc -c $(JACK) $(LV2) $(OPTIMIZE) $(SNDFILE) $(GTK)

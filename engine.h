@@ -43,6 +43,7 @@ public:
     void buildPluginChain ();
     int moveActivePluginDown (int);
     int moveActivePluginUp (int);
+    void set_atom_port (int index, int control, char * filename);
     
     static std::vector<Plugin *> * activePlugins ;
     bool addPlugin(char* library, int pluginIndex, SharedLibrary::PluginType _type) ;

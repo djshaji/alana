@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <print>
+#include <filesystem>
 
 #include "knob.h"
 #include "json.hpp"
@@ -37,7 +39,8 @@ void knob_set (GtkSpinButton * w, float val) ;
 float knob_get (GtkSpinButton * s) ;
 typedef enum {
     FILE_AUDIO,
-    FILE_JSON
+    FILE_JSON,
+    FILE_ATOM
 } PluginFileType ;
 
 class PluginUI {

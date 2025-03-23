@@ -9,7 +9,14 @@ LADSPA_Data PluginControl::control_rounding(LADSPA_Data _val)
 
 void PluginControl::setValue (float value) {
 //    val = value ;
+//    if (isLogarithmic) {
+//        float ex = expf(value) ;
+//        LOGD ("is log %f -> %f", value, ex);
+//        *def = ex;
+//    }
+//    else {
     *def = value;
+//    }
 }
 
 void PluginControl::setPresetValue (float value) {
@@ -208,65 +215,92 @@ void PluginControl::freeMemory () {
 
 PluginControl::PluginControl(const LV2_Descriptor *descriptor, nlohmann::json j) {
     IN ;
+    if (j.contains("logarithmic") and j.find ("logarithmic").value ()) {
+        isLogarithmic = true;
+    }
+
     int _port = j .find("index").value();
     name = strdup (j.find("name").value().dump().c_str());
     name_allocated = true ;
     lv2_name = j.find("name").value();
     port = _port ;
 
-    //~ LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
-    std::string _min  ;
-    std::string _max  ;
-    LADSPA_Data lower_bound  ;
-    LADSPA_Data upper_bound ;
+    if (j.contains ("InputPort") and j.contains ("ControlPort") and j.find("InputPort").value() == true && j.find("ControlPort").value() == true) {
+        if (j.contains("toggle") and j.find("toggle").value() == true)
+            type = TOGGLE;
+        else
+            type = FLOAT;
+        //~ LOGD("Setting up control %d: %s for %s", _port, descriptor -> URI , name);
+        std::string _min  ;
+        std::string _max  ;
+        LADSPA_Data lower_bound  ;
+        LADSPA_Data upper_bound ;
 
-    if (j.find("maximum")->is_string()) {
-        _max = j.find("maximum").value();
-        upper_bound = std::stof (_max);
-    } else {
-        upper_bound = j.find("maximum").value();
-    }
-
-    if (j.find("minimum")->is_string()) {
-        _min = j.find("minimum").value();
-        LOGD("minimum: %s is string", _min.c_str());
-        lower_bound = std::stof (_min);
-    } else {
-        lower_bound = j.find("minimum").value();
-    }
-
-    //~ LOGD("[control] %s", name);
-
-    min = lower_bound;
-    max = upper_bound;
-    def = (float *) malloc (sizeof (long int));
-    std::string _def ;
-    if (j.find("default")->is_string()) {
-        LOGD("plugin default is string ..");
-        *def = std::stof(std::string(j.find("default").value()));
-    } else
-        *def = j.find ("default").value();
-
-    /* Check the default */
-    if (def) {
-        if (*def < min) {
-            LOGD("[plugin] %s: default smaller than the minimum", name);
-            *def = min;
+        if (j.find("maximum")->is_string()) {
+            _max = j.find("maximum").value();
+            upper_bound = std::stof (_max);
+        } else {
+            upper_bound = j.find("maximum").value();
         }
-        if (*def > max) {
-            LOGD("[plugin] %s: default greater than the maximum\n", name);
-            *def = max;
+
+        if (j.find("minimum")->is_string()) {
+            _min = j.find("minimum").value();
+            LOGD("minimum: %s is string", _min.c_str());
+            lower_bound = std::stof (_min);
+        } else {
+            lower_bound = j.find("minimum").value();
         }
+
+        //~ LOGD("[control] %s", name);
+
+        min = lower_bound;
+        max = upper_bound;
+
+//        if (isLogarithmic) {
+//            min = logf (lower_bound);
+//            max = logf (upper_bound);
+//        }
+
+
+        def = (float *) malloc (sizeof (long int));
+        std::string _def ;
+        if (j.find("default")->is_string()) {
+            LOGD("plugin default is string ..");
+            *def = std::stof(std::string(j.find("default").value()));
+        } else {
+            *def = j.find("default").value();
+//            if (isLogarithmic)
+//                * def = logf (* def);
+        }
+
+        /* Check the default */
+        if (def) {
+            if (*def < min) {
+                LOGD("[plugin] %s: default smaller than the minimum", name);
+                *def = min;
+            }
+            if (*def > max) {
+                LOGD("[plugin] %s: default greater than the maximum\n", name);
+                *def = max;
+            }
+        }
+
+        /* control->sel, control->val */
+        if (def)
+            sel = *def;
+        else
+            sel = min;
+        val = sel;
+
+        //~ LOGD("[LV2 Plugin] %s: found control %s <%f - %f> default value %f",
+             //~ descriptor ->URI, name, lower_bound, upper_bound, *def);
+    } else if (j.find("InputPort").value() == true && j.find("AtomPort").value() == true) {
+        type = ATOM ;
+        lv2AtomSequence = (LV2_Atom_Sequence *) malloc (j .find("minimumSize").value());
+        def = (float *) malloc (sizeof (long int)); // aye, compatibility!
+        min = 0;
+        max = 1;
     }
 
-    /* control->sel, control->val */
-    if (def)
-        sel = *def;
-    else
-        sel = min;
-    val = sel;
-
-    //~ LOGD("[LV2 Plugin] %s: found control %s <%f - %f> default value %f",
-         //~ descriptor ->URI, name, lower_bound, upper_bound, *def);
     OUT ;
 }

@@ -1392,5 +1392,97 @@
     "file": true,
     "fileType": 0,
     "library": "ir_cab.so"
+  },  
+  "33800": {
+    "id": 8109,
+    "name": "Fonin Overdrive",
+    "index": 0,
+    "desc": "Effects from the GNUitar project",
+    "library": "overdrive.so"
+  },
+  "33900": {
+    "id": 8110,
+    "name": "Fonin Tube Amplifier",
+    "desc": "Effects from the GNUitar project",
+    "index": 0,
+    "library": "fonin-tubeamp.so"
+  },
+  "34000": {
+    "id": 8111,
+    "name": "Fonin Distortion",
+    "desc": "Effects from the GNUitar project",
+    "index": 0,
+    "library": "distortion.so"
+  },
+  "34100": {
+    "id": 8112,
+    "name": "Fonin Sustain",
+    "desc": "Effects from the GNUitar project",
+    "index": 0,
+    "library": "sustain.so"
+  },
+  "34200": {
+    "id": 8113,
+    "name": "PowerAmpImpulses",
+    "index": 0,
+    "desc": "Simulate valve amplifiers",
+    "library": "PowerAmpImpulses.so"
+  },
+  "34300": {
+    "id": 8114,
+    "name": "PowerAmps",
+    "desc": "Simulate valve amplifiers",
+    "index": 0,
+    "library": "poweramps.so"
+  },
+  "34400": {
+    "id": 8115,
+    "name": "PreAmpImpulses",
+    "desc": "Simulate valve amplifiers",
+    "index": 0,
+    "library": "PreAmpImpulses.so"
+  },
+  "34500": {
+    "id": 8116,
+    "name": "PreAmps",
+    "index": 0,
+    "desc": "Simulate valve amplifiers",
+    "library": "PreAmps.so"
+  },
+  "34600": {
+    "id": 8117,
+    "name": "Ratatouille",
+    "index": 0,
+    "desc": "Neural Model loader and mixer with IR",
+    "library": "Ratatouille.so"
+  },
+  "34700": {
+    "id": 8118,
+    "name": "Impulse Loader",
+    "index": 0,
+    "desc": "This is a simple, mono, IR-File loader/convolution LV2 plugin",
+    "library": "ImpulseLoader.so"
+  },
+  "34800": {
+    "id": 8119,
+    "name": "Neural Amp Modeler NG",
+    "index": 0,
+    "desc": "Deep learning plugin to create models of guitar amplifiers and pedals with state-of-the-art accuracy",
+    "library": "nam.so"
+  },
+  "34900": {
+    "id": 8120,
+    "name": "Tamg Amp",
+    "index": 3,
+    "desc": "Guitar amp simulator",
+    "library": "tamgamp-lv2.so"
+  },
+  "35000": {
+    "id": 8121,
+    "name": "x42 - IR Convolver Mono => Stereo",
+    "index": 3,
+    "desc": "Impulse response loader",
+    "library": "zeroconvolv.so"
   }
+
 }

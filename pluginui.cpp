@@ -124,13 +124,22 @@ void on_response (GtkNativeDialog *native,
       GFile *file = gtk_file_chooser_get_file (chooser);
       PluginUI * ui = (PluginUI *) data;
       char * filename = g_file_get_path (file);
+      const char * _name = gtk_native_dialog_get_title (native);
       LOGV (filename);
+      if (_name != nullptr)
+        * ui->pType = PluginFileType::FILE_ATOM ;
+        
       LOGD ("requested file type : %d\n", * ui -> pType) ;
       if ( *ui -> pType == 0) {
           LOGD ("[response] %d -> %s\n", * ui -> index_p, filename);
           ui -> engine ->set_plugin_audio_file (* ui -> index_p, filename);
-      } else {
+      } else if (*ui -> pType == 1){
           ui -> engine ->set_plugin_file (ui -> index, filename);          
+      } else {
+          // this is fucking brilliant          
+          int control =  _name[0];
+          std::print ("[load atom] {}: {}", control, filename);
+          ui -> engine -> set_atom_port (ui -> index, control, filename);
       }
       
       free (filename);
@@ -149,10 +158,16 @@ void ui_file_chooser (void * b, void * d) {
                                         action,
                                         "_Open",
                                         "_Cancel");
+  const char * name = gtk_widget_get_name ((GtkWidget *) b) ;
+  if (name != nullptr) {
+      std::print ("[file chooser] {}\n", name);
+      gtk_native_dialog_set_title ((GtkNativeDialog *)native, name) ;
+  } else {
+      std::print ("horse with no name\n");
+  }
 
   g_signal_connect (native, "response", G_CALLBACK (on_response), d);
   gtk_native_dialog_show (GTK_NATIVE_DIALOG (native));
-
 
 }
 
@@ -308,7 +323,64 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
     int row = 0, col = 0 ;
     
     for (int i = 0 ; i < plugin->pluginControls.size () ; i ++) {
+        bool isAtom = false ;
         PluginControl * control = plugin->pluginControls.at (i) ;
+        std::print ("[plugin control] {} type {}\n", i, plugin->pluginControls.at (i)->type);
+        
+        if (plugin->pluginControls.at (i)->type == PluginControl::Type::ATOM) {
+            isAtom = true; 
+            GtkButton * load_file = (GtkButton * )gtk_button_new_with_label ("Load file") ;
+
+            gtk_widget_set_halign ((GtkWidget *) load_file, GTK_ALIGN_CENTER);
+            gtk_widget_set_valign ((GtkWidget *) load_file, GTK_ALIGN_CENTER);
+            gtk_widget_set_margin_bottom ((GtkWidget *) load_file, 20);
+
+            const char * options [1000] ;
+            options [0] = strdup ("one");
+            options [1] = strdup ("two");
+            options [2] = nullptr ;
+            
+            GtkWidget * dropdown = gtk_drop_down_new_from_strings (options);
+            
+            char * name = (char *) malloc (3) ;
+            name [0] = i ;
+            name [1] = 0 ;
+            
+            gtk_widget_set_name ((GtkWidget *)load_file, name);
+            g_signal_connect (load_file, "clicked", (GCallback) ui_file_chooser, this);
+
+            GtkBox * box = (GtkBox * ) gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+            gtk_box_append (container, (GtkWidget *)box);
+            gtk_box_append (container, (GtkWidget *)load_file);
+            
+            gtk_widget_set_hexpand ((GtkWidget *) box, true);
+            gtk_widget_set_hexpand ((GtkWidget *) dropdown, true);
+            
+            GtkWidget * prev = (GtkWidget *) gtk_button_new ();
+            GtkWidget * next = (GtkWidget *) gtk_button_new ();
+            
+            gtk_button_set_label ((GtkButton *) prev, "<");
+            gtk_button_set_label ((GtkButton *) next, ">");
+            
+            gtk_widget_set_margin_end (prev, 10);
+            gtk_widget_set_margin_start (prev, 10);
+            gtk_widget_set_margin_top (prev, 20);
+            gtk_widget_set_margin_top (next, 20);
+            gtk_widget_set_margin_start (next, 10);
+            
+            g_signal_connect_swapped (prev, "clicked", (GCallback) dropdown_prev, dropdown);
+            g_signal_connect_swapped (next, "clicked", (GCallback) dropdown_next, dropdown);
+            
+            gtk_box_append (box, (GtkWidget *) prev);
+            gtk_box_append (box, (GtkWidget *) dropdown);
+            gtk_box_append (box, (GtkWidget *) next);
+            
+            pType = (PluginFileType *) malloc (sizeof (PluginFileType));
+            *pType = FILE_ATOM ;
+            
+            continue ;
+                        
+        }
 
         // Gtk::Adjustment  adj =  Gtk::Adjustment (control->val, control->min, control->max, 1, 1, 1);
         GtkAdjustment * adj =  gtk_adjustment_new (control->val, control->min, control->max, .001, .001, 0);
@@ -510,7 +582,9 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
         g_signal_connect (scale, "value-changed", (GCallback) control_changed, cd) ;
         g_signal_connect (onoff, "state-set", (GCallback) bypass, cd) ;
 
-        gtk_box_append (container, (GtkWidget *)box);
+        // wtf fr?
+        if (not isAtom)
+            gtk_box_append (container, (GtkWidget *)box);
     }
 
     GtkBox * bbox = (GtkBox * )gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);

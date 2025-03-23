@@ -172,6 +172,8 @@ void Plugin::load () {
     //~ LOGD ("parsing json: %s\n", json_.c_str ());
     json j = json::parse(json_);
     lv2_name = j ["-1"]["pluginName"];
+    if (j["-1"].contains("prefix"))
+        prefix = j ["-1"]["prefix"];
 
     //~ LOGD("[LV2 JSON] %s", std::string (j ["1"]["name"]).c_str());
     for (auto& el : j.items())
@@ -183,10 +185,16 @@ void Plugin::load () {
         }
 
         json jsonPort = json::parse (el.value ().dump ());
-        const char * portName = std::string (jsonPort ["name"]).c_str ();
+        std::string portNameStr = std::string (jsonPort ["name"]);
+        const char * portName = portNameStr.c_str ();
+        // ayyo why ...?
+        // this used to be the following
+        // i can;t remember why tho
         const char * pluginName = sharedLibrary->so_file.c_str() ;
+//        const char * pluginName = lv2_name.c_str();
 
         LADSPA_PortDescriptor port = jsonPort .find ("index").value();
+        LOGD("[%s %s:%d]", pluginName, portName, port);
         if (jsonPort.find ("AudioPort") != jsonPort.end ()) {
             if (jsonPort.find ("InputPort")  != jsonPort.end ()) {
                 //~ LOGD("[%s %d]: found input port", portName, port);
@@ -212,13 +220,48 @@ void Plugin::load () {
             lv2Descriptor->connect_port(handle, port, pluginControls.at (pluginIndex) ->def);
         } else if (jsonPort.find ("OutputPort") != jsonPort.end() && jsonPort.find("ControlPort") != jsonPort.end()) {
             LOGD("[%s %d]: found possible monitor port", lv2Descriptor->URI, port);
-//            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
+            lv2Descriptor->connect_port(handle, port, &dummy_output_control_port);
         } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("InputPort") != jsonPort.end()) {
-//            filePort = static_cast<LV2_Atom_Sequence *>(malloc(sizeof(LV2_Atom_Sequence)));
-            filePortIndex = port ;
-            lv2Descriptor->connect_port(handle, filePortIndex, filePort);
+            LOGD ("configuring atom control port");
+            if (filePort == nullptr) {
+                int portSize = (int) jsonPort.find("minimumSize").value() + sizeof(LV2_Atom_Sequence) + sizeof (LV2_Atom) + 1 ;
+                filePort = (LV2_Atom_Sequence *) malloc(portSize);
+                filePort->atom.size = portSize - 1;
+                LOGD ("file port allocated ok");
+                /*
+                 *  Implement map properly here
+                 *  it's simply a function? that returns an int approximation
+                 *  of a string
+                 *  i think rest of it is done
+                 */
 
-            LOGD("[%s %d]: found possible file port", lv2Descriptor->URI, port);
+                ampMap = ampMap_new ();
+                ampMap->handle = symap;
+//                ampMap->map = ampMap_map ;
+                ampAtom = new AmpAtom (ampMap, portSize);
+                filePortSize = portSize;
+            }
+
+            std::string uri_ = std::string (prefix).append(portName);
+            int pluginIndex = addPluginControl(lv2Descriptor, jsonPort) - 1;
+
+            pluginControls.at(pluginIndex)->urid = ampAtom->urid_map->map (ampAtom->urid_map->handle, uri_.c_str());
+            LOGD ("[urid] %s -> %d", uri_.c_str(), pluginControls.at(pluginIndex)->urid);
+            lv2Descriptor->connect_port(handle, port, filePort);
+
+            LOGD("[%s %d/%d]: found possible atom port", lv2Descriptor->URI, port, pluginIndex);
+        } else if (jsonPort.find ("AtomPort") != jsonPort.end() && jsonPort.find ("OutputPort") != jsonPort.end()) {
+            if (notifyPort == nullptr) {
+                notifyPort = (LV2_Atom_Sequence *) malloc((int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + sizeof (LV2_Atom) + 1);
+                notifyPort->atom.size = (int) jsonPort.find("minimumSize").value() + sizeof (LV2_Atom_Sequence) + sizeof (LV2_Atom)  ;
+//                notifyPort->atom.type =
+
+            }
+
+            lv2Descriptor->connect_port(handle, port, notifyPort);
+//            lv2Descriptor->connect_port(handle, port, filePort);
+
+            LOGD("[%s %d]: found possible notify port", lv2Descriptor->URI, port);
         } else {
             LOGD("[LV2] Cannot understand port %d of %s: %s", port, pluginName, portName);
         }
@@ -349,8 +392,11 @@ void Plugin::setFileName (std::string filename) {
 }
 
 void Plugin::lv2FeaturesURID () {
-    lv2UridMap.handle = &urid ;
-    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+//    lv2UridMap.handle = &urid ;
+    symap = symap_new();
+    lv2UridMap.handle = symap;
+//    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_map);
+    lv2UridMap.map = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(symap_map);
 //    lv2UridMap.unmap = reinterpret_cast<LV2_URID (*)(LV2_URID_Map_Handle, const char *)>(lv2_urid_unmap);
 
     featureURID.URI = strdup (LV2_URID__map);
@@ -384,6 +430,7 @@ void Plugin::lv2FeaturesURID () {
 void Plugin::lv2FeaturesInit () {
     IN
     lv2FeaturesURID();
+
     OUT
 }
 
@@ -395,8 +442,13 @@ void Plugin::lv2ConnectWorkers () {
 }
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle handle, uint32_t size, const void * data) {
+    IN
     Plugin * plugin = reinterpret_cast<Plugin *>(handle);
-    return plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
+    LV2_Worker_Status status = plugin->lv2WorkerInterface->work (plugin->handle, plugin->lv2WorkerInterface->work_response, plugin->handle, size, data);
+
+//    plugin->check_notify();
+    OUT
+    return status ;
 }
 
 uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options) {
@@ -405,6 +457,27 @@ uint32_t lv2_options_set (LV2_Handle instance, const LV2_Options_Option* options
 
 uint32_t lv2_options_get (LV2_Handle instance, LV2_Options_Option* options) {
     return 0u;
+}
+
+void Plugin::setAtomPortValue (int control, std::string text) {
+    IN
+    if (filePort == nullptr) {
+        LOGD("no atom control port for %s", lv2_name.c_str());
+        OUT
+        return ;
+    }
+
+    /*  some mechanism here to figure out which button was clicked
+     *  on the plugin. maybe separate with | ?
+     */
+//    ampAtom->sendFilenameToPlugin(filePort, text.c_str());
+//    ampAtom->send_filename_to_plugin(ampMap, text.c_str(), reinterpret_cast<uint8_t *>(filePort), 8192 + sizeof (LV2_Atom));
+//    ampAtom->son_of_a(filePort, text.c_str());
+    LOGD ("writing control for %d / %s [%d]", control, pluginControls.at(control)->name, pluginControls.at(control)->urid);
+    ampAtom->write_control(filePort, filePortSize, pluginControls.at(control)->urid, text.c_str());
+//    ampAtom->write_control(notifyPort, filePortSize, text.c_str());
+//    ampAtom->setControl(filePort, const_cast<char *>(text.c_str()));
+    OUT
 }
 
 void Plugin::setFilePortValue (std::string filename) {
@@ -498,6 +571,23 @@ void Plugin::setFilePortValue1 (std::string filename) {
 
     }
     OUT
+}
+
+void Plugin::check_notify () {
+//    IN
+    if (notifyPort == nullptr) {
+//        LOGD ("notify port is null, so .. well.. this is awkward");
+        return;
+    }
+
+    if (ampAtom != nullptr && filePort != nullptr && ampAtom->has_file_path(filePort)) {
+        LOGD ("[atom port] reset file port");
+        ampAtom->resetAtom(filePort, filePortSize);
+        LOGD ("[atom port] reset notify port");
+        ampAtom->resetAtom(notifyPort, filePortSize);
+    }
+
+//    OUT
 }
 
 #ifndef __ANDROID__
