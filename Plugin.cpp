@@ -573,11 +573,12 @@ void Plugin::setFilePortValue1 (std::string filename) {
     OUT
 }
 
-void Plugin::check_notify () {
-//    IN
+bool Plugin::check_notify () {
+    IN
     if (notifyPort == nullptr) {
-//        LOGD ("notify port is null, so .. well.. this is awkward");
-        return;
+        LOGD ("notify port is null, so .. well.. this is awkward");
+        OUT
+        return true;
     }
 
     if (ampAtom != nullptr && filePort != nullptr && ampAtom->has_file_path(filePort)) {
@@ -585,9 +586,12 @@ void Plugin::check_notify () {
         ampAtom->resetAtom(filePort, filePortSize);
         LOGD ("[atom port] reset notify port");
         ampAtom->resetAtom(notifyPort, filePortSize);
+        OUT
+        return true ;
     }
 
-//    OUT
+    OUT
+    return false;
 }
 
 #ifndef __ANDROID__

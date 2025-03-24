@@ -329,6 +329,13 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
         
         if (plugin->pluginControls.at (i)->type == PluginControl::Type::ATOM) {
             isAtom = true; 
+
+            GtkLabel * label =  (GtkLabel * ) gtk_label_new ("");
+            gtk_label_set_wrap (label, true);
+            gtk_label_set_justify (label, GTK_JUSTIFY_CENTER);
+            //~ LOGD ("control name: %s\n", control->lv2_name.c_str());
+            gtk_label_set_label (label, control->lv2_name.c_str ());
+
             GtkButton * load_file = (GtkButton * )gtk_button_new_with_label ("Load file") ;
 
             gtk_widget_set_halign ((GtkWidget *) load_file, GTK_ALIGN_CENTER);
@@ -350,6 +357,7 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
             g_signal_connect (load_file, "clicked", (GCallback) ui_file_chooser, this);
 
             GtkBox * box = (GtkBox * ) gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+            gtk_box_append (container, (GtkWidget *)label);
             gtk_box_append (container, (GtkWidget *)box);
             gtk_box_append (container, (GtkWidget *)load_file);
             

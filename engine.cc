@@ -325,6 +325,12 @@ void Engine::set_atom_port (int index, int control, char * filename) {
         activePlugins->at (index)->setAtomPortValue (control, std::string (filename));
     }
     
+    usleep (1400) ; // ayyo
+    while (! activePlugins->at (index)->check_notify ()) {
+        LOGD ("[check notify] wait ..\n");
+        usleep (400);
+    }
+    
     activePlugins->at (index)->loadedFileType = 2 ;
     std::string path = std::string (filename) ;
 
@@ -336,7 +342,7 @@ void Engine::set_atom_port (int index, int control, char * filename) {
     
     g_mkdir_with_parents (dir.c_str (), 0777) ;
     copy_file (activePlugins->at (index)->loadedFileName, dir.append (path.substr(path.find_last_of("/") + 1)));
-    processor->bypass = true ;
+    processor->bypass = false ;
 
 }
 

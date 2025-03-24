@@ -96,7 +96,7 @@ public:
     void setFilePortValue1(std::string filename);
     void setAtomPortValue (int control, std::string text) ;
 
-    void check_notify();
+    bool check_notify();
 };
 
 LV2_Worker_Status lv2ScheduleWork (LV2_Worker_Schedule_Handle  handle, uint32_t size, const void * data);

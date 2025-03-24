@@ -44,12 +44,14 @@
 
 
 #ifdef __linux__
+
 #define LOGI printf
 #define LOGD printf
 #define LOGW printf
 #define LOGE printf
 #define LOGF printf
 #define ASSERT(cond, ...)
+//~ #define LOGD(arg) printf("%s [%s: %d] %s\n", time_str, __FILE__, __LINE__, arg) ;
 #define LOGV(arg) printf("!! [%s: %d] %s\n", __FILE__, __LINE__, arg) ;
 #define HERE printf("!! %s: %d\n", __FILE__, __LINE__) ;
 #define IN printf(">> %s\n", __PRETTY_FUNCTION__);
