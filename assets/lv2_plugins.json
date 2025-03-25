@@ -1473,7 +1473,7 @@
   "34900": {
     "id": 8120,
     "name": "Tamg Amp",
-    "index": 3,
+    "index": 1,
     "desc": "Guitar amp simulator",
     "library": "tamgamp-lv2.so"
   },
