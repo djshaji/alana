@@ -204,6 +204,12 @@ float knob_get (GtkSpinButton * s) {
 
 PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::string pluginName, int _index, bool has_file_chooser, void * _rack) {    
     IN
+    # ifdef __linux__
+    std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (pluginName).append ("/");
+    # else
+    std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (pluginName).append ("/");
+    # endif
+
     LOGD ("[plugin ui] loading %s\n", pluginName.c_str ());
     Rack * niceRack = (Rack *) _rack ;
     engine = _engine ;
@@ -342,12 +348,21 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
             gtk_widget_set_valign ((GtkWidget *) load_file, GTK_ALIGN_CENTER);
             gtk_widget_set_margin_bottom ((GtkWidget *) load_file, 20);
 
-            const char * options [1000] ;
-            options [0] = strdup ("one");
-            options [1] = strdup ("two");
-            options [2] = nullptr ;
+            char ** options = list_directory (dir);
+            LOGD ("looking for models in %s\n", dir.c_str());
+            //~ options [0] = strdup ("one");
+            //~ options [1] = strdup ("two");
+            //~ options [2] = nullptr ;
             
             GtkWidget * dropdown = gtk_drop_down_new_from_strings (options);
+            //~ char * f = options [0] ;            
+            int ii = 0 ;
+            while (options [++ii]!= nullptr)
+                free (options [ii]);
+            //~ while (f != nullptr) {
+                //~ free (f);
+                //~ f++ ;
+            //~ }
             
             char * name = (char *) malloc (3) ;
             name [0] = i ;
@@ -607,11 +622,6 @@ PluginUI::PluginUI (Engine * _engine, Plugin * _plugin, GtkBox * _parent, std::s
         wtf ("[file chooser] mmmmph\n");
         GtkWidget * box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
         gtk_widget_set_hexpand (box, true);
-        # ifdef __linux__
-        std::string dir = std::string (getenv ("HOME")).append ("/amprack/models/").append (pluginName).append ("/");
-        # else
-        std::string dir = std::string (getenv ("USERPROFILE")).append ("/amprack/models/").append (pluginName).append ("/");
-        # endif
         
         char ** entries = list_directory (dir);
         GtkWidget * down = gtk_drop_down_new_from_strings (entries) ;

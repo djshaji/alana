@@ -57,6 +57,7 @@ public:
     void print ();
     void startRecording ();
     void stopRecording ();
+    static int check_notify (AudioBuffer * a) ;
 };
 
 #endif 

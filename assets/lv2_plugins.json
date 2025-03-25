@@ -1458,7 +1458,7 @@
   },
   "34700": {
     "id": 8118,
-    "name": "Impulse Loader",
+    "name": "ImpulseLoader",
     "index": 0,
     "desc": "This is a simple, mono, IR-File loader/convolution LV2 plugin",
     "library": "ImpulseLoader.so"

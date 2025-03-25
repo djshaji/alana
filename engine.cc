@@ -133,6 +133,7 @@ Engine::Engine () {
     queueManager->init (driver -> get_buffer_size ());
     fileWriter = new FileWriter ();
     queueManager->add_function (fileWriter->disk_write);
+    queueManager->add_function (check_notify);
     processor->lockFreeQueueManager = queueManager ;
     HERE LOGD ("processor status %d\n", processor->bypass);
     //~ processor -> bypass = false ;
@@ -325,11 +326,11 @@ void Engine::set_atom_port (int index, int control, char * filename) {
         activePlugins->at (index)->setAtomPortValue (control, std::string (filename));
     }
     
-    usleep (1400) ; // ayyo
-    while (! activePlugins->at (index)->check_notify ()) {
-        LOGD ("[check notify] wait ..\n");
-        usleep (400);
-    }
+    //~ usleep (1400000) ; // ayyo
+    //~ while (! activePlugins->at (index)->check_notify ()) {
+        //~ LOGD ("[check notify] wait ..\n");
+        //~ usleep (400000);
+    //~ }
     
     activePlugins->at (index)->loadedFileType = 2 ;
     std::string path = std::string (filename) ;
@@ -453,4 +454,19 @@ void Engine::stopRecording () {
     processor->recording = false ;
     fileWriter->stopRecording ();
     OUT
+}
+
+int Engine::check_notify (AudioBuffer * a) {
+    int ret = 0 ;
+    if (activePlugins == nullptr) 
+        return -1 ;
+        
+    for (int i = 0 ; i < activePlugins->size () ; i ++) {
+        if (activePlugins->at (i)->filePort != nullptr) {
+            activePlugins->at (i)->check_notify () ;
+            ret ++ ;
+        }
+    }
+    
+    return ret ;
 }

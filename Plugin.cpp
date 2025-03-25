@@ -574,23 +574,23 @@ void Plugin::setFilePortValue1 (std::string filename) {
 }
 
 bool Plugin::check_notify () {
-    IN
+    //~ IN
     if (notifyPort == nullptr) {
-        LOGD ("notify port is null, so .. well.. this is awkward");
+        //~ LOGD ("notify port is null, so .. well.. this is awkward");
         OUT
         return true;
     }
 
     if (ampAtom != nullptr && filePort != nullptr && ampAtom->has_file_path(filePort)) {
-        LOGD ("[atom port] reset file port");
+        //~ LOGD ("[atom port] reset file port");
         ampAtom->resetAtom(filePort, filePortSize);
-        LOGD ("[atom port] reset notify port");
+        //~ LOGD ("[atom port] reset notify port");
         ampAtom->resetAtom(notifyPort, filePortSize);
-        OUT
+        //~ OUT
         return true ;
     }
 
-    OUT
+    //~ OUT
     return false;
 }
 
